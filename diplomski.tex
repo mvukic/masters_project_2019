@@ -23,113 +23,10 @@
 \zahvala{Ovo je zahvala meni, meni i samo meni!}
 
 \tableofcontents
-
-\chapter{Uvod}
-Uvod rada. Nakon uvoda dolaze poglavlja u kojima se obrađuje tema.
-
-\chapter{Slika}
-We can se one cute cat on the image below.
-\begin{figure}[ht!]
-  \centering
-  \includegraphics{images/cat.jpg}
-  \caption{Cute cat}
-  \label{fig:cute_cat}
-\end{figure}
-
-Figure \ref{fig:cute_cat} shows one cute cat.
-
-\begin{figure}[ht!]
-  \centering
-  \begin{subfigure}[b]{0.4\linewidth}
-    \includegraphics[width=\linewidth]{images/cat.jpg}
-    \caption{Left cat.}
-  \end{subfigure}
-  \begin{subfigure}[b]{0.4\linewidth}
-    \includegraphics[width=\linewidth]{images/cat.jpg}
-    \caption{Right cat.}
-  \end{subfigure}
-  \caption{The same cute cat. Two times.}
-  \label{fig:two_cats}
-\end{figure}
-
-
-\begin{figure}[ht!]
-
-  \centering
-  \begin{subfigure}[b]{0.2\linewidth}
-    \includegraphics[width=\linewidth]{images/cat.jpg}
-     \caption{Left cat.}
-  \end{subfigure}
-  \begin{subfigure}[b]{0.2\linewidth}
-    \includegraphics[width=\linewidth]{images/cat.jpg}
-    \caption{Middle cat.}
-  \end{subfigure}
-  \begin{subfigure}[b]{0.2\linewidth}
-    \includegraphics[width=\linewidth]{images/cat.jpg}
-    \caption{Right cat.}
-  \end{subfigure}
-
-  \begin{subfigure}[b]{0.5\linewidth}
-    \includegraphics[width=\linewidth]{images/cat.jpg}
-    \caption{Big cat.}
-  \end{subfigure}
-
-  \caption{The same cute cat. Multiple times.}
-  \label{fig:multiple_cats}
-\end{figure}
-
-\chapter{Formula}
-Formula $f(x) = x^2$ is an example of embeded formula.
-
-Equation:
-\begin{equation*}
-  1 + 2 = 3
-\end{equation*}
-
-Lined formulas for showing solving by step:
-\begin{align*}
-  1 + 2 &= 3\\
-  1 &= 3 - 2
-\end{align*}
-
-Fractions:
-\begin{align*}
-  f(x) &= x^2\\
-  g(x) &= \frac{1}{x}\\
-  F(x) &= \int^a_b \frac{1}{3}x^3 \mathrm{d}x\\
-  G(x) &= \int^4_{-\infty} \frac{1}{3}x^3 \mathrm{d}x\\
-  G(x) &= \int^{\frac{\pi}{2}}_{\frac{-\pi}{2}} \frac{1}{3}x^3 \mathrm{d}x
-\end{align*}
-
-\begin{equation*}
-  \left(
-    \frac{1}{\sqrt{x}}
-  \right)
-\end{equation*}
-
-Sqrt:
-\begin{equation*}
-  \frac{1}{\sqrt{x}}
-\end{equation*}
-
-Matrices:
-\begin{equation*}
-  \begin{matrix}
-  1 & 0\\
-  0 & 1
-  \end{matrix}
-\end{equation*}
-\begin{equation*}
-\left[
-  \begin{matrix}
-  1 & 0\\
-  0 & 1
-  \end{matrix}
-\right]
-\end{equation*}
-
-\chapter{Zaključak}
-Zaključak.
+\include{chapters/uvod}
+\include{chapters/slike}
+\include{chapters/formule}
+\include{chapters/zakljucak}
 
 \bibliography{literatura}
 \bibliographystyle{fer}
@@ -137,7 +34,7 @@ Zaključak.
 \begin{sazetak}
 Sažetak na hrvatskom jeziku.
 
-\kljucnerijeci{Ključne riječi, odvojene zarezima.}
+\kljucnerijeci{lokalizacija, simulacija}
 \end{sazetak}
 
 % TODO: Navedite naslov na engleskom jeziku.
@@ -145,7 +42,7 @@ Sažetak na hrvatskom jeziku.
 \begin{abstract}
 Abstract.
 
-\keywords{Keywords.}
+\keywords{simulation, localization.}
 \end{abstract}
 
 \end{document}
