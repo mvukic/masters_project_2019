@@ -2,7 +2,7 @@ import random
 import time
 import carla
 from properties.carla_properties import CarlaProperties
-from utils.utils import get_lidar_sensor, get_spawn_points, get_vehicle, get_rgb_camera, get_depth_camera
+from utils.utils import get_lidar_sensor, get_spawn_points, get_vehicle, get_rgb_camera, get_depth_camera, print_sensor_blueprint_data
 
 class CarlaSpawner:
 
@@ -45,11 +45,18 @@ class CarlaSpawner:
   def setup_sensor(self):
     blueprint_sensor = get_lidar_sensor(self.world.get_blueprint_library())
     # set camera time step in seconds
-    blueprint_sensor.set_attribute('sensor_tick', '2')
+    blueprint_sensor.set_attribute('sensor_tick', '10')
+    blueprint_sensor.set_attribute('channels', '256')
+    blueprint_sensor.set_attribute('range', '2000')
+    blueprint_sensor.set_attribute('rotation_frequency', '15')
+    blueprint_sensor.set_attribute('points_per_second', '100000')
+    blueprint_sensor.set_attribute('upper_fov', '45')
+    blueprint_sensor.set_attribute('lower_fov', '-45')
+    print_sensor_blueprint_data(blueprint_sensor)
     # create transform relative to vehicle
     transform = carla.Transform(carla.Location(x=1.5, z=2.4))
     self.lidar_sensor = self.world.spawn_actor(blueprint_sensor, transform, attach_to=self.vehicle)
-    self.lidar_sensor.listen(lambda data: print(data))
+    self.lidar_sensor.listen(lambda data: on_receive_data(data))
     print("Lidar sensor setup... Done")
 
   def setup_vehicle(self):
@@ -90,8 +97,15 @@ class CarlaSpawner:
   def try_spawn(self, blueprint, transform):
     return self.world.spawn_actor(blueprint, transform)
 
+
+def on_receive_data(data):
+  data.save_to_disk('output/lidar/%06d.ply' % data.frame_number)
+  # print(f"Points on channel 1: {data.get_point_count(1)}")
+  print("Saved lidar data")
+
 if __name__ == '__main__':
   try:
+    saved = False
     spawner = CarlaSpawner()
     spawner.start()
   except KeyboardInterrupt:

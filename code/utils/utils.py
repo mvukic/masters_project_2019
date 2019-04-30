@@ -12,3 +12,12 @@ def get_vehicle(blueprint_library):
 
 def get_spawn_points(world):
     return list(world.get_map().get_spawn_points())
+
+def print_sensor_blueprint_data(blueprint_sensor):
+  print(f"Sensor tick: {blueprint_sensor.get_attribute('sensor_tick')}")
+  print(f"Channels: {blueprint_sensor.get_attribute('channels')}")
+  print(f"Range: {blueprint_sensor.get_attribute('range')}")
+  print(f"Points per second: {blueprint_sensor.get_attribute('points_per_second')}")
+  print(f"Rotation frequency: {blueprint_sensor.get_attribute('rotation_frequency')}")
+  print(f"Upper FOV: {blueprint_sensor.get_attribute('upper_fov')}")
+  print(f"Lower FOV: {blueprint_sensor.get_attribute('lower_fov')}")
