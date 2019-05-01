@@ -5,17 +5,17 @@ from properties.carla_properties import CarlaProperties
 from utils.utils import get_lidar_sensor, get_spawn_points, get_vehicle, get_rgb_camera, get_depth_camera, print_sensor_blueprint_data
 
 class CarlaSpawner:
-
-  def __init__(self):
-    # Carla world reference
-    self.world = None
-    # Carla server properties
-    self.properties = CarlaProperties()
-    # Vehicle reference
-    self.vehicle = None
-    self.camera_depth = None
-    self.camera_rgb = None
-    self.lidar_sensor = None
+  # Carla world reference
+  world = None
+  # Carla server properties
+  properties = CarlaProperties()
+  # Vehicle reference
+  vehicle = None
+  camera_depth = None
+  camera_rgb = None
+  lidar_sensor = None
+  # array of reading
+  readings = []
 
   def start(self):
     client = carla.Client(self.properties.host, self.properties.port)
@@ -25,6 +25,7 @@ class CarlaSpawner:
       self.setup_vehicle()
       # self.setup_depth_camera()
       # self.setup_rbg_camera()
+      time.sleep(5)
       self.setup_sensor()
 
       print("Simulation in progress...")
@@ -32,31 +33,34 @@ class CarlaSpawner:
       while True:
         time.sleep(10)
     finally:
-      if self.camera_depth is not None:
-        self.camera_depth.destroy()
-      if self.camera_rgb is not None:
-        self.camera_rgb.destroy()
-      if self.lidar_sensor is not None:
-        self.lidar_sensor.destroy()
-      if self.vehicle is not None:
-        self.vehicle.destroy()
-      print("Simulation done")
+      self.terminate()
+
+  def terminate(self):
+    if self.camera_depth is not None and self.camera_depth.is_alive:
+      self.camera_depth.destroy()
+    if self.camera_rgb is not None and self.camera_rgb.is_alive:
+      self.camera_rgb.destroy()
+    if self.lidar_sensor is not None and self.lidar_sensor.is_alive:
+      self.lidar_sensor.destroy()
+    if self.vehicle is not None and self.vehicle.is_alive:
+      self.vehicle.destroy()
+    print("Simulation done")
 
   def setup_sensor(self):
     blueprint_sensor = get_lidar_sensor(self.world.get_blueprint_library())
     # set camera time step in seconds
-    blueprint_sensor.set_attribute('sensor_tick', '10')
-    blueprint_sensor.set_attribute('channels', '256')
-    blueprint_sensor.set_attribute('range', '2000')
-    blueprint_sensor.set_attribute('rotation_frequency', '15')
-    blueprint_sensor.set_attribute('points_per_second', '100000')
-    blueprint_sensor.set_attribute('upper_fov', '45')
-    blueprint_sensor.set_attribute('lower_fov', '-45')
-    print_sensor_blueprint_data(blueprint_sensor)
+    blueprint_sensor.set_attribute('sensor_tick', '0.5')
+    blueprint_sensor.set_attribute('channels', '360')
+    blueprint_sensor.set_attribute('range', '5000')
+    blueprint_sensor.set_attribute('rotation_frequency', '10')
+    blueprint_sensor.set_attribute('points_per_second', '1000000')
+    blueprint_sensor.set_attribute('upper_fov', '90')
+    blueprint_sensor.set_attribute('lower_fov', '-80')
+    # print_sensor_blueprint_data(blueprint_sensor)
     # create transform relative to vehicle
-    transform = carla.Transform(carla.Location(x=1.5, z=2.4))
+    transform = carla.Transform(carla.Location(x=3, z=3))
     self.lidar_sensor = self.world.spawn_actor(blueprint_sensor, transform, attach_to=self.vehicle)
-    self.lidar_sensor.listen(lambda data: on_receive_data(data))
+    self.lidar_sensor.listen(lambda data: self.on_receive_data(data))
     print("Lidar sensor setup... Done")
 
   def setup_vehicle(self):
@@ -97,11 +101,21 @@ class CarlaSpawner:
   def try_spawn(self, blueprint, transform):
     return self.world.spawn_actor(blueprint, transform)
 
+  def save_to_files(self):
+    print("Saving scans to disk...")
+    for scan in self.readings[1:]:
+      scan.save_to_disk('output/lidar/%06d.ply' % scan.frame_number)
+    print(f"Saved {len(self.readings)-1} scans to disk")
 
-def on_receive_data(data):
-  data.save_to_disk('output/lidar/%06d.ply' % data.frame_number)
-  # print(f"Points on channel 1: {data.get_point_count(1)}")
-  print("Saved lidar data")
+  def on_receive_data(self, data):
+    # data.save_to_disk('output/lidar/%06d.ply' % data.frame_number)
+    # print(f"Points on channel 1: {data.get_point_count(1)}")
+    print(f"Readings: {len(self.readings)} Lidar data: {data.frame_number}")
+    self.readings.append(data)
+    if len(self.readings) is 21:
+      # stop reading and close
+      self.terminate()
+      self.save_to_files()
 
 if __name__ == '__main__':
   try:
