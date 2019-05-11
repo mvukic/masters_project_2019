@@ -262,6 +262,4 @@ TSWLatexianTemp*
 
 # python files
 __pycache__/
-code/properties/__pycache__/
-code/utils/__pycache__/
 *.py[cod]
