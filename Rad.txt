@@ -1,0 +1,28 @@
+1) Uvod
+2) Ideja rada
+	2.1) Opis problema
+	2.2) Simulator - Carla
+3) Priprema podataka
+	3.1) LIDAR senzor
+	3.2) Point Cloud - kolekcija .ply datoteka
+	3.3) Ground truth - lokacija i rotacija vozila
+4) Algoritmi
+	4.1) Algoritam 1
+		4.1.1) Opis algoritma
+		4.1.2) Rezultat algoritma (grafovi, podaci)
+		4.1.3) Usporedba s ground truth
+	4.2) Algoritam 2
+		4.2.1) Opis algoritma
+		4.2.2) Rezultat algoritma (grafovi, podaci)
+		4.2.3) Usporedba s ground truth
+	4.N) Algoritam N
+		4.N.1) Opis algoritma
+		4.N.2) Rezultat algoritma (grafovi, podaci)
+		4.N.3) Usporedba s ground truth
+5) Zaključak
+
+
+
+
+
+
