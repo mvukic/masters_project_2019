@@ -22,8 +22,12 @@ class DataCollector:
   lidar = None
   # array of LIDAR scans
   scans = []
+  # LIDAR relative position to actor
+  lidar_relative_postion = carla.Transform(carla.Location(x=0, y=0, z=4))
+  # Actor transformations
+  transformations = []
   # Number of scans to save
-  scan_number = 5
+  scan_number = 2
   # Number of npc's to spawn
   npc_number = 0
   # Indicates if data collection is in progress
@@ -92,18 +96,17 @@ class DataCollector:
     lidar_blueprint.set_attribute('lower_fov', self.lidar_properties.lower_fov)
     utils.print_sensor_blueprint_data(lidar_blueprint)
     # LIDAR position relative to observed actor
-    transform = carla.Transform(carla.Location(x=0, z=4))
-    self.lidar = self.world.try_spawn_actor(lidar_blueprint, transform, attach_to=self.actor)
+    self.lidar = self.world.try_spawn_actor(lidar_blueprint, self.lidar_relative_postion, attach_to=self.actor)
     self.lidar.listen(lambda data: self.lidar_callback(data))
     print("LIDAR setup done")
 
   def lidar_callback(self, data):
     print(f"\tLidar data frame: {data.frame_number}")
-    print(self.actor.get_transform())
+    self.transformations.append(self.actor.get_transform())
     self.scans.append(data)
     if self.reading_should_stop():
       self.destroy()
-      # self.collect_data_to_disk()
+      self.collect_data_to_disk()
 
   def reading_should_stop(self):
     # For n scans the number should be n+1 because first scan is unusable
