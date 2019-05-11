@@ -1,6 +1,8 @@
 import random
 import time
 import carla
+import threading
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from carla_properties import CarlaProperties
 from lidar_properties import LIDARProperties
 import utils as utils
@@ -11,23 +13,23 @@ class DataCollector:
   # LIDAR properties
   lidar_properties = LIDARProperties()
   # Spawn points
-  spawn_points = []
+  spawn_points = list()
   # Carla world reference
   world = None
   # Observed actor reference
   actor = None
   # Array of npc actors
-  npcs = []
+  npcs = list()
   # LIDAR reference
   lidar = None
   # array of tuples (LIDAR scan, actor transformation)
-  scans = []
+  scans = list()
   # LIDAR relative position to actor
   lidar_relative_postion = carla.Transform(carla.Location(x=0, y=0, z=4))
   # Number of scans to save
-  scan_number = 3
+  scan_number = 30
   # Number of npc's to spawn
-  npc_number = 0
+  npc_number = 30
   # Indicates if data collection is in progress
   data_collection_in_progress = True
   # Point clouds directory
@@ -79,7 +81,7 @@ class DataCollector:
       spawned_actor.set_autopilot()
       # Save spawned actor reference
       self.npcs.append(spawned_actor)
-    print("NPCs setup done")
+    print("NPCs setup done\n")
 
   def spawn_actor(self):
     print("Actor setup...")
@@ -89,7 +91,7 @@ class DataCollector:
     print(f"\t{actor_blueprint}")
     self.actor = self.world.spawn_actor(actor_blueprint, spawn_point)
     self.actor.set_autopilot()
-    print("Actor setup done")
+    print("Actor setup done\n")
 
   def connect_LIDAR(self):
     print("LIDAR setup...")
@@ -107,10 +109,9 @@ class DataCollector:
     # LIDAR position relative to observed actor
     self.lidar = self.world.try_spawn_actor(lidar_blueprint, self.lidar_relative_postion, attach_to=self.actor)
     self.lidar.listen(lambda data: self.lidar_callback(data))
-    print("LIDAR setup done")
+    print("LIDAR setup done\n")
 
   def lidar_callback(self, data):
-    print(f"\tLidar data frame: {data.frame_number}")
     self.scans.append((data, self.actor.get_transform()))
     if self.reading_should_stop():
       self.destroy()
@@ -120,16 +121,24 @@ class DataCollector:
     # For n scans the number should be n+1 because first scan is unusable
     return len(self.scans) is self.scan_number + 1
 
+  def process_pair(self, scan, transform, index):
+    self.save_scan(scan, f'{self.point_clouds_path}/{scan.frame_number:06d}.ply', index + 1)
+    self.save_transform(transform, f'{self.actor_transforms_path}/{scan.frame_number:06d}.txt', index + 1)
+  
   def collect_data_to_disk(self):
     print("Collecting data...")
     self.save_LIDAR_to_actor_relative_transform()
-    for index, (scan, transform) in enumerate(self.scans[1:]):
-      self.save_scan(scan, f'{self.point_clouds_path}/{scan.frame_number:06d}.ply', index + 1)
-      self.save_transform(transform, f'{self.actor_transforms_path}/{scan.frame_number:06d}.txt', index + 1)
+    start_time = time.time()
+
+    with ThreadPoolExecutor(max_workers=10) as executor:
+      jobs = [executor.submit(self.process_pair, scan, transform, index) for index, (scan, transform) in enumerate(self.scans[1:])]
+      for future in as_completed(jobs):
+        future.result()
     print(f"\tSaved {self.scan_number} scan(s)")
-    print("Data collected")
+    print(f"\tTime elapsed {time.time() - start_time}")
+    print("Data collected\n")
     self.data_collection_in_progress = False
-  
+
   def save_LIDAR_to_actor_relative_transform(self):
     with open(self.lidar_relative_transform_path, 'w+') as file:
       file.write(utils.transform_to_string(self.lidar_relative_postion))
@@ -154,10 +163,10 @@ class DataCollector:
     print("\tDestroying npcs...")
     for npc in self.npcs:
       npc.destroy()
-    print("Destroying objects done")
+    print("Destroying objects done\n")
   
   def loop(self):
-    print("Waiting for data collection to end...")
+    print("Waiting for data collection to end...\n")
     while self.data_collection_in_progress:
       time.sleep(1)
 
