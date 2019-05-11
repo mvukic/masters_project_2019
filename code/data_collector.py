@@ -23,9 +23,9 @@ class DataCollector:
   # array of LIDAR scans
   scans = []
   # Number of scans to save
-  scan_number = 2
+  scan_number = 5
   # Number of npc's to spawn
-  npc_number = 2
+  npc_number = 0
   # Indicates if data collection is in progress
   data_collection_in_progress = True
 
@@ -99,10 +99,11 @@ class DataCollector:
 
   def lidar_callback(self, data):
     print(f"\tLidar data frame: {data.frame_number}")
+    print(self.actor.get_transform())
     self.scans.append(data)
     if self.reading_should_stop():
       self.destroy()
-      self.collect_data_to_disk()
+      # self.collect_data_to_disk()
 
   def reading_should_stop(self):
     # For n scans the number should be n+1 because first scan is unusable
