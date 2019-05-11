@@ -1,0 +1,8 @@
+{
+  "search.exclude": {
+    "**/__pycache__": true
+  },
+  "files.exclude": {
+    "**/__pycache__": true
+  }
+}

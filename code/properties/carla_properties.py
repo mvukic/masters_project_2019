@@ -1,8 +1,7 @@
 
 # Default Carla properties
 class CarlaProperties:
-  number_of_vehicles = 50
-  spawn_delay = 2.0
+  spawn_delay = 1.0
   host = "localhost"
   port = 2000
   recording_path = 'recording/recording.log'
