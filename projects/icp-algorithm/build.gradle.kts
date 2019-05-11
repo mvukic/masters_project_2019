@@ -7,12 +7,19 @@ plugins {
 group = "icp-algorithm"
 version = "1.0-SNAPSHOT"
 
+
 repositories {
     mavenCentral()
 }
 
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
+}
+
+tasks.withType<Jar> {
+    manifest {
+        attributes("Main-Class" to "MainKt")
+    }
 }
 
 tasks.withType<KotlinCompile> {
