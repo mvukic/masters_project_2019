@@ -1,9 +1,9 @@
 import random
 import time
 import carla
-from properties.carla_properties import CarlaProperties
-from properties.lidar_properties import LIDARProperties
-import utils.utils as utils
+from carla_properties import CarlaProperties
+from lidar_properties import LIDARProperties
+import utils as utils
 
 class DataCollector:
   # Carla server properties
