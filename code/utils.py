@@ -1,3 +1,5 @@
+import os
+
 def get_lidar_sensor_blueprint(blueprint_library):
   return blueprint_library.find("sensor.lidar.ray_cast")
 
@@ -20,3 +22,16 @@ def get_vehicle_blueprints(world):
   blueprints = world.get_blueprint_library().filter('vehicle.*')
   blueprints = [x for x in blueprints if int(x.get_attribute('number_of_wheels')) == 4]
   return [x for x in blueprints if not x.id.endswith('isetta')]
+
+def transform_to_string(transform, separator = " "):
+  x = transform.location.x
+  y = transform.location.y
+  z = transform.location.z
+  roll = transform.rotation.roll
+  pitch = transform.rotation.pitch
+  yaw = transform.rotation.yaw
+  return separator.join(map(str, [x, y, z, pitch, yaw, roll]))
+
+def create_directory(path):
+  if not os.path.exists(path):
+    os.makedirs(path)

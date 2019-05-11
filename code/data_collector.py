@@ -20,26 +20,31 @@ class DataCollector:
   npcs = []
   # LIDAR reference
   lidar = None
-  # array of LIDAR scans
+  # array of tuples (LIDAR scan, actor transformation)
   scans = []
   # LIDAR relative position to actor
   lidar_relative_postion = carla.Transform(carla.Location(x=0, y=0, z=4))
-  # Actor transformations
-  transformations = []
   # Number of scans to save
-  scan_number = 2
+  scan_number = 3
   # Number of npc's to spawn
   npc_number = 0
   # Indicates if data collection is in progress
   data_collection_in_progress = True
+  # Point clouds directory
+  point_clouds_path = 'output/point_clouds'
+  # Actor transforms directory
+  actor_transforms_path = 'output/actor_transforms'
+  # Relative transform path
+  lidar_relative_transform_path = 'output/relative_transform.txt'
 
   def start(self):
     self.setup()
+    self.initialize_folders()
     self.get_spawn_points()
     self.spawn_npcs()
     self.spawn_actor()
     # Add some timeout for observed actor to start driving
-    time.sleep(5)
+    time.sleep(1)
     self.connect_LIDAR()
     self.loop()
 
@@ -47,6 +52,10 @@ class DataCollector:
     client = carla.Client(self.carla_properties.host, self.carla_properties.port)
     client.set_timeout(2.0)
     self.world = client.get_world()
+
+  def initialize_folders(self):
+    utils.create_directory(self.actor_transforms_path)
+    utils.create_directory(self.point_clouds_path)
 
   def get_spawn_points(self):
     self.spawn_points = utils.get_spawn_points(self.world)
@@ -102,8 +111,7 @@ class DataCollector:
 
   def lidar_callback(self, data):
     print(f"\tLidar data frame: {data.frame_number}")
-    self.transformations.append(self.actor.get_transform())
-    self.scans.append(data)
+    self.scans.append((data, self.actor.get_transform()))
     if self.reading_should_stop():
       self.destroy()
       self.collect_data_to_disk()
@@ -114,12 +122,26 @@ class DataCollector:
 
   def collect_data_to_disk(self):
     print("Collecting data...")
-    for index, scan in enumerate(self.scans[1:]):
-      scan.save_to_disk('output/lidar/%06d.ply' % scan.frame_number)
-      print(f"\t Saved scan {index+1}")
+    self.save_LIDAR_to_actor_relative_transform()
+    for index, (scan, transform) in enumerate(self.scans[1:]):
+      self.save_scan(scan, f'{self.point_clouds_path}/{scan.frame_number:06d}.ply', index + 1)
+      self.save_transform(transform, f'{self.actor_transforms_path}/{scan.frame_number:06d}.txt', index + 1)
     print(f"\tSaved {self.scan_number} scan(s)")
     print("Data collected")
     self.data_collection_in_progress = False
+  
+  def save_LIDAR_to_actor_relative_transform(self):
+    with open(self.lidar_relative_transform_path, 'w+') as file:
+      file.write(utils.transform_to_string(self.lidar_relative_postion))
+
+  def save_scan(self, scan, path, index = 0):
+      scan.save_to_disk(path)
+      print(f"\t Saved scan {index}")
+
+  def save_transform(self, transform, path, index = 0):
+    with open(path, 'w+') as file:
+      file.write(utils.transform_to_string(transform))
+    print(f"\t Saved transform {index}")
 
   def destroy(self):
     print("Destroying objects...")
