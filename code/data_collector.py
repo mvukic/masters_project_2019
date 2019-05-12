@@ -46,7 +46,7 @@ class DataCollector:
     self.spawn_npcs()
     self.spawn_actor()
     # Add some timeout for observed actor to start driving
-    time.sleep(1)
+    time.sleep(5)
     self.connect_LIDAR()
     self.loop()
 
@@ -111,8 +111,8 @@ class DataCollector:
     self.lidar.listen(lambda data: self.lidar_callback(data))
     print("LIDAR setup done\n")
 
-  def lidar_callback(self, data):
-    self.scans.append((data, self.actor.get_transform()))
+  def lidar_callback(self, scan):
+    self.scans.append((scan, self.actor.get_transform()))
     if self.reading_should_stop():
       self.destroy()
       self.collect_data_to_disk()

@@ -4,7 +4,6 @@ class CarlaProperties:
   spawn_delay = 1.0
   host = "localhost"
   port = 2000
-  recording_path = 'recording/recording.log'
 
 '''
 Vehicles with 4 wheels:
