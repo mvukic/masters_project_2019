@@ -1,12 +1,10 @@
 import models.Data
 import models.Frame
+import org.knowm.xchart.QuickChart
 import java.io.File
 
 fun main(args: Array<String>)  {
     val data = setupData(args[0])
-    data.frames.forEach {
-        println(it.points.size)
-    }
 }
 
  fun setupData(rootPath: String): Data {
