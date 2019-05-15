@@ -21,14 +21,33 @@
 \izvornik
 
 % Dodavanje zahvale ili prazne stranice. Ako ne želite dodati zahvalu, naredbu ostavite radi prazne stranice.
-\zahvala{Ovo je zahvala meni, meni i samo meni!}
+\zahvala{Zahvala}
 
 \tableofcontents
 \include{chapters/uvod}
-\include{chapters/slike}
-\include{chapters/formule}
-\include{chapters/kod}
-\include{chapters/zakljucak}
+
+\chapter{Problem lokalizacije autonomnog vozila}
+\input{chapters/problem_lokalizacije/lokalizacija}
+\input{chapters/problem_lokalizacije/problem}
+
+\chapter{Priprema podataka}
+\input{chapters/podaci/simulator}
+\input{chapters/podaci/opis_okruzenja}
+\input{chapters/podaci/izvor_podataka}
+\input{chapters/podaci/prikupljanje_podataka}
+\input{chapters/podaci/point_cloud}
+\input{chapters/podaci/ground_truth}
+
+\chapter{Algoritmi lokalizacije}
+\input{chapters/algoritmi/obitelj_algoritama}
+\input{chapters/algoritmi/opis_algoritama}
+
+\section{Algoritmi}
+\input{chapters/algoritmi/algoritam_1}
+\input{chapters/algoritmi/algoritam_2}
+
+\input{chapters/ekperimentalni_rezultati}
+\input{chapters/zakljucak}
 
 \bibliography{literatura}
 \bibliographystyle{fer}
