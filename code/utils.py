@@ -27,8 +27,8 @@ def transform_to_string(transform, separator = " "):
   x = transform.location.x
   y = transform.location.y
   z = transform.location.z
-  roll = transform.rotation.roll
   pitch = transform.rotation.pitch
+  roll = transform.rotation.roll
   yaw = transform.rotation.yaw
   return separator.join(map(str, [x, y, z, pitch, yaw, roll]))
 

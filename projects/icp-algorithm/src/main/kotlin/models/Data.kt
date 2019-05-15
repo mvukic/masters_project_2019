@@ -13,6 +13,8 @@ data class Data(
 data class Frame(
     // Scan frame id
     val frameId: String,
+    // Frame timestamp
+    val timestamp: Double,
     // Vehicle transform at this scan
     val transform: Transform,
     // Point cloud points

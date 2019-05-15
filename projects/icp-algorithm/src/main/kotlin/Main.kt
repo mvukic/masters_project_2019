@@ -1,31 +1,47 @@
-import models.Data
-import models.Frame
-import org.knowm.xchart.QuickChart
-import java.io.File
+
+import org.knowm.xchart.SwingWrapper
+import org.knowm.xchart.XYChartBuilder
+import org.knowm.xchart.style.Styler
+import kotlin.math.absoluteValue
+
 
 fun main(args: Array<String>)  {
-    val data = setupData(args[0])
+    val data = setupData(args[0], onlyTransforms = true)
+
+    val locations = data.frames.map { it.transform.location }
+    val coordX = locations.map { it.x }
+    val coordY = locations.map { it.y }
+    val vehicleX = data.frames.map { it.timestamp }
+    val chartLocation = XYChartBuilder().apply {
+        height = 800
+        width = 1000
+        chartTheme = Styler.ChartTheme.Matlab
+        title = "Vehicle movement"
+        xAxisTitle("X coordinate")
+        yAxisTitle("Y coordinate")
+    }.build()
+//    chartLocation.addSeries("Vehicle x location", coordX, vehicleX)
+//    chartLocation.addSeries("Vehicle y location", coordY, vehicleX)
+    chartLocation.addSeries("Vehicle location", coordX, coordY)
+    SwingWrapper(chartLocation).displayChart()
+
+    val yawY = data.frames.sortedBy { it.frameId }.map { it.transform.rotation.yaw.absoluteValue }
+    val rollY = data.frames.sortedBy { it.frameId }.map { it.transform.rotation.roll.absoluteValue }
+    val pitchY = data.frames.sortedBy { it.frameId }.map { it.transform.rotation.pitch.absoluteValue }
+    val frameX = data.frames.sortedBy { it.frameId }.map { it.timestamp }
+    val chartRotation = XYChartBuilder().apply {
+        height = 800
+        width = 1000
+        chartTheme = Styler.ChartTheme.Matlab
+        title = "Vehicle rotation"
+        xAxisTitle("Frame")
+        yAxisTitle("Yaw")
+    }.build()
+    chartRotation.addSeries("Yaw", frameX, yawY)
+    chartRotation.addSeries("Roll", frameX, rollY)
+    chartRotation.addSeries("Pitch", frameX, pitchY)
+    SwingWrapper(chartRotation).displayChart()
 }
 
- fun setupData(rootPath: String): Data {
-     val root = File(rootPath)
-     val transformsDir = root.resolve("actor_transforms")
-     val pointCloudsDir = root.resolve("point_clouds")
-     val relativeTransformFile = root.resolve("relative_transform.txt")
 
-     val transformFiles = transformsDir.walk().filter {it.isFile}
-     val pointCloudFiles = pointCloudsDir.walk().filter {it.isFile}
-     val zipped = transformFiles.zip(pointCloudFiles).toList()
-     val mapped = zipped.map { pair ->
-        val frameId = pair.first.nameWithoutExtension
-        val transform = pair.first.readText().trim().toTransform()
-        val points = pair.second.readLines().drop(7).map { it.trim().toPoint() }
-        Frame(frameId, transform, points)
-     }
-     val relativeTransform = relativeTransformFile.readText().trim().toTransform()
-     return Data(
-         frames = mapped.sortedBy { it.frameId },
-         lidarToVehicleTransform = relativeTransform
-     )
-}
 
