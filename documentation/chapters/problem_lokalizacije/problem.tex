@@ -1,3 +1,14 @@
 \section{Problem lokalizacije}
 
-Problem lokalizacije je netočnost algoritama i šum u očitanjima.
+Sve prethodno navedene imaju nešto zajedničko, a to je da koriste algoritme čiji rezultati nikada nisu posve točni.\\
+Ta netočnost može proizaći zbog sljedećih razloga:
+
+\begin{itemize}
+  \item Šum u očitanjime - u podacima koji se dobiju iz senzora uvijek ima i podataka koji su nastali zbog privremenih objekata (npr. pas koji prolazi pokraj vozila)
+  \item Sinkronizacija obrade i očitanja podataka - zbog prebrzog slanja podataka algoritmu, te se tako mogu neka očitanja preskočiti
+  \item Samog načina izvedbe senzora - možda senzor zbog samog načina fizičke izvedbe ima uračunat šum
+  \item \dots
+\end{itemize}
+
+
+Razne metode lokalizacije već unutar svog tijeka izvođenja imaju metode koje prate veličinu relativne pogreške te ju pokašaju minimizirati nakon svake iteracije ali ta pograška i dalje postoji te će uvijek i postojati. Te pogreške se robota koji rade u skladištima ne moraju uzeti previše ozbiljno, dok se kod autonomnih vozila u svakodnevnome cestovnom prometu ili industrijskih robota te pogreške moraju uvijek uzeti u obzir.

@@ -1,2 +1,13 @@
 \section{Izvor podataka}
-Izvor podataka ...
+Kao izvor podataka za algoritme se koristi već prije spomenuti LIDAR senzor. S obzirom da je senzor simuliran, možemo mu postavljati sljedeće parametre:
+
+\begin{itemize}
+  \item Broj kanala - broj lasera
+  \item Donja granica polja vida - koliko nisko su orijentirani laseri
+  \item Gornja granica polja vida - koliko visoko su orijentirani laseri
+  \item Ukupan broj točaka - ukupan broj točaka po laseru u očitanju
+  \item Frekvencija rotacije - koliko četo se laseri rotiraju
+  \item Vremenski korak - koliko često se podaci očitavaju
+\end{itemize}
+
+Podaci koje nam vrati senzor su zapravo u obliku skupa točaka (eng. Point Cloud).
