@@ -3,6 +3,12 @@
 \usepackage{subcaption}
 \usepackage{amsmath}
 \usepackage{pythonhighlight}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{minted}
+
+% Promjeni listing caption
+\renewcommand{\listingscaption}{Izvorni kod}
 
 \begin{document}
 
@@ -31,12 +37,12 @@
 \input{chapters/problem_lokalizacije/problem} %treba doraditi
 
 \chapter{Priprema podataka}
-\input{chapters/podaci/simulator}
-\input{chapters/podaci/opis_okruzenja}
+\input{chapters/podaci/simulator} %ok
+\input{chapters/podaci/opis_okruzenja} %ok
 \newpage
-\input{chapters/podaci/point_cloud}
-\input{chapters/podaci/ground_truth}
-\input{chapters/podaci/izvor_podataka}
+\input{chapters/podaci/point_cloud} %ok
+\input{chapters/podaci/ground_truth} %ok
+\input{chapters/podaci/izvor_podataka} %ok
 \input{chapters/podaci/prikupljanje_podataka}
 
 \chapter{Algoritmi lokalizacije}
