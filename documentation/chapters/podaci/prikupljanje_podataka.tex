@@ -73,7 +73,7 @@ def get_vehicle_blueprints(world):
   \caption{Dohvaćanje nacrta vozila}
   \label{coderef:vehicle_blueprints}
 \end{listing}
-
+\pagebreak
 Na \ref{coderef:vehicle_blueprints} se vidi kako koristimo knjižnicu nacrta da bi filtrirali nama potrebne nacrte. Koristiti će se samo vozila koja imaju 4 kotača.
 
 \begin{listing}[!ht]
@@ -102,9 +102,9 @@ Sada se definira vozilo koje zapravo promatramo tj. koje ima na sebi lidar senzo
 \begin{listing}[!ht]
   \begin{minted}[frame=lines, linenos]{python}
   def spawn_actor(self):
+    lib = self.world.get_blueprint_library()
     spawn_point = self.spawn_points[0]
-    actor_blueprint = utils.get_vehicle_blueprint(self.world.get_blueprint_library())
-    print(f"\t{actor_blueprint}")
+    actor_blueprint = utils.get_vehicle_blueprint(lib)
     self.actor = self.world.spawn_actor(actor_blueprint, spawn_point)
     self.actor.set_autopilot()
     self.tick()
@@ -118,11 +118,13 @@ Sada slijedi pronalazak nacrta za lidar senzor, postavljanje njegovih atributa, 
 
 \begin{listing}[!ht]
   \begin{minted}[frame=lines, linenos]{python}
+  import carla
+
   class LIDARProp:
     sensor_tick = str(0.0)
-    channels = str(360)
+    channels = str(180)
     laser_range = str(1500.0)
-    rotation_frequency = str(20.0)
+    rotation_frequency = str(120.0)
     points_per_second = str(600_000)
     upper_fov = str(45.0)
     lower_fov = str(-80.0)
@@ -132,10 +134,13 @@ Sada slijedi pronalazak nacrta za lidar senzor, postavljanje njegovih atributa, 
   \label{coderef:lidar_props}
 \end{listing}
 
+Postavke Lidara definiraju pomoću \mintinline{python}{sensor_tick} da simulator treba najbrže što može prikupljati podatke. Varijabla \mintinline{python}{laser_range} definira koliko daleko laser može doprijeti, ovdje je definirano na 1500 centimetara ili 15 metara. Frekcencija rotacije lidara je definirana varijablom \mintinline{python}{rotation_frequency} i iznosi 120 rotacija u minuti. Gornja granica mjerenja lasera je 45°, a donja je -80°. parametar \mintinline{python}{location} definira lokaciju lasera tj. bit će u središtu koordinatnog sustava ali na visini od 4 metra. Sredina tog koordinatnog sustava je zapravo sredina unutarnjeg sustava vozila na kojemu će taj senzor biti pričvršćen.
+
 \begin{listing}[!ht]
   \begin{minted}[frame=lines, linenos, escapeinside=!!]{python}
     def connect_LIDAR(self):
-      blueprint = utils.get_lidar_sensor_blueprint(self.world.get_blueprint_library()) !\label{lineref:get_lidar_blueprint}!
+      lib = self.world.get_blueprint_library()
+      blueprint = utils.get_lidar_sensor_blueprint(lib) !\label{lineref:get_lidar_blueprint}!
       blueprint.set_attribute('sensor_tick', LIDARProp.sensor_tick) !\label{lineref:lidar_prop_start}!
       blueprint.set_attribute('channels', LIDARProp.channels)
       blueprint.set_attribute('range', LIDARProp.laser_range)
@@ -157,11 +162,17 @@ Spremanje podataka se izvršava tek nakon što smo sakupili konačan broj očita
 
 \begin{listing}[!ht]
   \begin{minted}[frame=lines, linenos, escapeinside=!!]{python}
+import utils as utils
+import time
+import threading
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from lidar_properties import LIDARProperties
+
 class DataSaver:
 
   def __init__(self):
-    self.pc_path = 'output/point_clouds'
-    self.trans_path = 'output/actor_transforms'
+    self.pc_path = 'output/pointclouds'
+    self.trans_path = 'output/actortransforms'
     self.rel_path = 'output/relative_transform.txt'
 
   def initialize_folders(self):
@@ -210,4 +221,4 @@ class DataSaver:
   \label{coderef:data_saver_cont}
 \end{listing}
 
-Datoteke s informacijama o lokaciji vozila se sastoje od 2 reda. Prvi red sadrži vremensku oznaku a drugi sadrži lokaciju i transformaciju koji su opisani u prijašnjem poglavlju. Datoteke koje sadrže podatke o jednome očitanju se nalaze u tekstualnim datotekama s ekstenzijom .ply te se sastoji od zaglavlja i po jedan redak za svaku točku u očitanju. Također postoji još jedna datoteka koja samo sadrži relativnu transformaciju između senzora i vozila. Ona se nalazi u direktoriju output.
+Primjeri \ref{coderef:data_saver} i \ref{coderef:data_saver_cont} prikazuju klasu \mintinline{python}{DataSaver} koja služi za spremanje podataka u datoteke. Datoteke s podacima iz senzora se nalaze u direktoriju s nazivom pointclouds, dok se datoteke s podacima o lokaciji vozila nalaze u direktoriju s nazivom actortransforms. Oba ta direktorija se nalaze u direktoriju s nazivom output. Datoteke s informacijama o lokaciji vozila se sastoje od 2 reda. Prvi red sadrži vremensku oznaku a drugi sadrži lokaciju i transformaciju koji su opisani u prijašnjem poglavlju. Datoteke koje sadrže podatke o jednome očitanju se nalaze u tekstualnim datotekama s ekstenzijom .ply te se sastoji od zaglavlja i po jedan redak za svaku točku u očitanju. Također postoji još jedna datoteka koja samo sadrži relativnu transformaciju između senzora i vozila. Ona se nalazi u direktoriju output.

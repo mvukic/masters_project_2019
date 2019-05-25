@@ -18,49 +18,52 @@ fun showGraphs(data: Data) {
         height(height)
         width(width)
         chartTheme = style
-        title = "Vehicle Location"
-        xAxisTitle("X coordinate")
-        yAxisTitle("Y coordinate")
+        title = "Lokacija vozila"
+        xAxisTitle("X koordinata [m]")
+        yAxisTitle("Y koordinata [m]")
     }.build()
-    chartLocation.addSeries("Vehicle location", coordX, coordY)
+    chartLocation.styler.legendPosition = Styler.LegendPosition.OutsideS
+    chartLocation.addSeries("Lokacija vozila", coordX, coordY)
     SwingWrapper(chartLocation).displayChart()
 
     val chartLocationX = XYChartBuilder().apply {
         height(height)
         width(width)
         chartTheme = style
-        title = "Vehicle Coordinate"
-        xAxisTitle("Timestamp")
-        yAxisTitle("Y coordinate")
+        title = "Y koordinate vozila u vremenu"
+        xAxisTitle("Vrijeme [s]")
+        yAxisTitle("Y koordinata [m]")
     }.build()
-    chartLocationX.addSeries("Vehicle y location", timestamps, coordY)
+    chartLocationX.styler.legendPosition = Styler.LegendPosition.OutsideS
+    chartLocationX.addSeries("Y koordinate", timestamps, coordY)
     SwingWrapper(chartLocationX).displayChart()
 
     val chartLocationY = XYChartBuilder().apply {
         height(height)
         width(width)
         chartTheme = style
-        title = "Vehicle Coordinate"
-        xAxisTitle("Timestamp")
-        yAxisTitle("X coordinate")
+        title = "X koordinate vozila u vremenu"
+        xAxisTitle("Vrijeme [s]")
+        yAxisTitle("X koordinata [m]")
     }.build()
-    chartLocationY.addSeries("Vehicle x location", timestamps, coordX)
+    chartLocationY.styler.legendPosition = Styler.LegendPosition.OutsideS
+    chartLocationY.addSeries("X koordinate", timestamps, coordX)
     SwingWrapper(chartLocationY).displayChart()
 
     val yawY = data.frames.sortedBy { it.frameId }.map { it.transform.rotation.yaw.absoluteValue }
     val rollY = data.frames.sortedBy { it.frameId }.map { it.transform.rotation.roll.absoluteValue }
     val pitchY = data.frames.sortedBy { it.frameId }.map { it.transform.rotation.pitch.absoluteValue }
-    val frameX = data.frames.sortedBy { it.frameId }.map { it.timestamp }
     val chartRotation = XYChartBuilder().apply {
         height(height)
         width(width)
         chartTheme = style
-        title = "Vehicle rotation"
-        xAxisTitle("Frame")
-        yAxisTitle("Rotation")
+        title = "Rotacija vozila"
+        xAxisTitle("Vrijeme [s]")
+        yAxisTitle("Rotacija [°]")
     }.build()
-    chartRotation.addSeries("Roll", frameX, rollY)
-    chartRotation.addSeries("Pitch", frameX, pitchY)
-    chartRotation.addSeries("Yaw", frameX, yawY)
+    chartRotation.styler.legendPosition = Styler.LegendPosition.OutsideS
+    chartRotation.addSeries("Valjanje", timestamps, rollY)
+    chartRotation.addSeries("Poniranje", timestamps, pitchY)
+    chartRotation.addSeries("Skretanje", timestamps, yawY)
     SwingWrapper(chartRotation).displayChart()
 }
