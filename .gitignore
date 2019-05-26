@@ -263,3 +263,5 @@ TSWLatexianTemp*
 # python files
 __pycache__/
 *.py[cod]
+
+projects/pcl/.vscode/ipch/
