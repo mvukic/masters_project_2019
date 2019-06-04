@@ -1,10 +1,9 @@
-import models.Frame
-import models.basic.Point
-import samples.SampleData
 
 fun main(args: Array<String>)  {
-    val data = setupData(args[0], onlyTransforms = true)
-    showGraphs(data)
+    val groundTruth = loadGroundTruth(args[0])
+    val icpResult = loadICPResults(args[0])
+//    showGraphs(data)
+
 }
 
 

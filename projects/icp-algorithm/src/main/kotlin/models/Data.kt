@@ -1,11 +1,10 @@
 package models
 
-import models.basic.Point
 import models.basic.Transform
 
 data class Data(
     // List of frames
-    val frames: List<Frame>,
+    val groundTruth: List<Frame>,
     // Relative transform between vehicle and lidar sensor
     val lidarToVehicleTransform: Transform
 )
@@ -16,7 +15,5 @@ data class Frame(
     // Frame timestamp
     val timestamp: Double,
     // Vehicle transform at this scan
-    val transform: Transform,
-    // Point cloud points
-    val points: List<Point>
+    val transform: Transform
 )

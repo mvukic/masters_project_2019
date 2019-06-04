@@ -9,10 +9,10 @@ fun showGraphs(data: Data) {
     val width = 1000
     val style = Styler.ChartTheme.Matlab
 
-    val locations = data.frames.map { it.transform.location }
+    val locations = data.groundTruth.map { it.transform.location }
     val coordX = locations.map { it.x }
     val coordY = locations.map { it.y }
-    val timestamps = data.frames.map { it.timestamp }
+    val timestamps = data.groundTruth.map { it.timestamp }
 
     val chartLocation = XYChartBuilder().apply {
         height(height)
@@ -50,9 +50,9 @@ fun showGraphs(data: Data) {
     chartLocationY.addSeries("X koordinate", timestamps, coordX)
     SwingWrapper(chartLocationY).displayChart()
 
-    val yawY = data.frames.sortedBy { it.frameId }.map { it.transform.rotation.yaw.absoluteValue }
-    val rollY = data.frames.sortedBy { it.frameId }.map { it.transform.rotation.roll.absoluteValue }
-    val pitchY = data.frames.sortedBy { it.frameId }.map { it.transform.rotation.pitch.absoluteValue }
+    val yawY = data.groundTruth.sortedBy { it.frameId }.map { it.transform.rotation.yaw.absoluteValue }
+    val rollY = data.groundTruth.sortedBy { it.frameId }.map { it.transform.rotation.roll.absoluteValue }
+    val pitchY = data.groundTruth.sortedBy { it.frameId }.map { it.transform.rotation.pitch.absoluteValue }
     val chartRotation = XYChartBuilder().apply {
         height(height)
         width(width)
