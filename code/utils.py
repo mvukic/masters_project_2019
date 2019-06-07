@@ -30,7 +30,7 @@ def transform_to_string(transform, separator = " "):
   pitch = transform.rotation.pitch
   roll = transform.rotation.roll
   yaw = transform.rotation.yaw
-  return separator.join(map(str, [x, y, z, pitch, yaw, roll]))
+  return separator.join(map(str, [x, y, z, roll, pitch, yaw]))
 
 def create_directory(path):
   if not os.path.exists(path):

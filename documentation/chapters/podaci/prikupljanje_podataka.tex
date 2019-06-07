@@ -37,7 +37,10 @@ Referentni i testni podaci su prikupljeni iz simualtora ali iz različitih izvor
 \begin{listing}[h!]
   \begin{minted}[frame=lines, linenos]{python}
   def connect_to_carla(self):
-    self.client = carla.Client(CarlaProp.host, CarlaProp.port)
+    self.client = carla.Client(
+      CarlaProp.host,
+      CarlaProp.port
+    )
     self.client.set_timeout(2.0)
     self.world = self.client.get_world()
     settings = self.world.get_settings()
@@ -66,9 +69,16 @@ Sljedeće što slijedi je stvaranje ostalih sudionika prometa tj. ostalih vozila
 \begin{listing}[h!]
   \begin{minted}[frame=lines, linenos]{python}
 def get_vehicle_blueprints(world):
-  blueprints = world.get_blueprint_library().filter('vehicle.*')
-  blueprints = [x for x in blueprints if int(x.get_attribute('number_of_wheels')) == 4]
-  return [x for x in blueprints if not x.id.endswith('isetta')]
+  blueprints = world.get_blueprint_library()
+                    .filter('vehicle.*')
+  blueprints = [
+    x for x in blueprints
+      if int(x.get_attribute('number_of_wheels')) == 4
+  ]
+  return [
+    x for x in blueprints
+      if not x.id.endswith('isetta')
+  ]
   \end{minted}
   \caption{Dohvaćanje nacrta vozila}
   \label{coderef:vehicle_blueprints}
@@ -85,7 +95,10 @@ Na \ref{coderef:vehicle_blueprints} se vidi kako koristimo knjižnicu nacrta da 
       actor_blueprint = random.choice(blueprints)
       print(f"\t{actor_blueprint}")
       actor_spwn_point = points[i]
-      spawned_actor = self.world.try_spawn_actor(actor_blueprint, actor_spwn_point) !\label{lineref:spawn_instance}!
+      spawned_actor = self.world.try_spawn_actor( !\label{lineref:spawn_instance}!
+        actor_blueprint,
+        actor_spwn_point
+      )
       spawned_actor.set_autopilot() !\label{lineref:set_autopilot}!
       self.npcs.append(spawned_actor)
     self.tick()
@@ -105,7 +118,9 @@ Sada se definira vozilo koje zapravo promatramo tj. koje ima na sebi lidar senzo
     lib = self.world.get_blueprint_library()
     spawn_point = self.spawn_points[0]
     actor_blueprint = utils.get_vehicle_blueprint(lib)
-    self.actor = self.world.spawn_actor(actor_blueprint, spawn_point)
+    self.actor = self.world.spawn_actor(
+      actor_blueprint, spawn_point
+    )
     self.actor.set_autopilot()
     self.tick()
   \end{minted}
@@ -128,7 +143,9 @@ Sada slijedi pronalazak nacrta za lidar senzor, postavljanje njegovih atributa, 
     points_per_second = str(600_000)
     upper_fov = str(45.0)
     lower_fov = str(-80.0)
-    location = carla.Transform(carla.Location(x=0, y=0, z=4))
+    location = carla.Transform(
+      carla.Location(x=0, y=0, z=4)
+    )
   \end{minted}
   \caption{LIDAR atributi}
   \label{coderef:lidar_props}
@@ -142,23 +159,47 @@ Pomoću \mintinline{python}{sensor_tick} parametra se definira da simulator treb
     def connect_LIDAR(self):
       lib = self.world.get_blueprint_library()
       blueprint = utils.get_lidar_sensor_blueprint(lib) !\label{lineref:get_lidar_blueprint}!
-      blueprint.set_attribute('sensor_tick', LIDARProp.sensor_tick) !\label{lineref:lidar_prop_start}!
-      blueprint.set_attribute('channels', LIDARProp.channels)
-      blueprint.set_attribute('range', LIDARProp.laser_range)
-      blueprint.set_attribute('rotation_frequency', LIDARProp.rotation_frequency)
-      blueprint.set_attribute('points_per_second', LIDARProp.points_per_second)
-      blueprint.set_attribute('upper_fov', LIDARProp.upper_fov)
-      blueprint.set_attribute('lower_fov', LIDARProp.lower_fov) !\label{lineref:lidar_prop_end}!
+      blueprint.set_attribute( !\label{lineref:lidar_prop_start}!
+        'sensor_tick',
+        LIDARProp.sensor_tick
+      )
+      blueprint.set_attribute(
+        'channels',
+        LIDARProp.channels
+      )
+      blueprint.set_attribute(
+        'range', LIDARProp.laser_range)
+      blueprint.set_attribute(
+        'rotation_frequency',
+        LIDARProp.rotation_frequency
+        )
+      blueprint.set_attribute(
+        'points_per_second',
+        LIDARProp.points_per_second
+        )
+      blueprint.set_attribute(
+        'upper_fov',
+        LIDARProp.upper_fov
+        )
+      blueprint.set_attribute(
+        'lower_fov',
+        LIDARProp.lower_fov
+      ) !\label{lineref:lidar_prop_end}!
       utils.print_sensor_blueprint_data(blueprint)
-      self.lidar = self.world.try_spawn_actor(blueprint, LIDARProp.lidar_relative_postion, attach_to=self.actor)  !\label{lineref:connect_lidar}!
-      self.lidar.listen(lambda data: self.lidar_callback(data))  !\label{lineref:lidar_callback_set}!
+      self.lidar = self.world.try_spawn_actor(  !\label{lineref:connect_lidar}!
+        blueprint, LIDARProp.lidar_relative_postion,
+        attach_to=self.actor
+      )
+      self.lidar.listen(  !\label{lineref:lidar_callback_set}!
+        lambda data: self.lidar_callback(data)
+      )
       self.tick()
   \end{minted}
   \caption{Stvaranje LIDAR senzora}
   \label{coderef:lidar_find_spawn}
 \end{listing}
 
-Na liniji \ref{lineref:get_lidar_blueprint} primjera \ref{coderef:lidar_find_spawn} dohvaćamo nacrt lidar senzora. Tada od linije \ref{lineref:lidar_prop_start} do \ref{lineref:lidar_prop_end} postavljamo zadane postavke nad nacrtom. Konačno na liniji \ref{lineref:connect_lidar} stvaramo instancu senzora ali metodi predajemo dodatan parametar \mintinline{python}{attach_to} koji je je jednak referenci na naše vozilo. Također umjesto stvarnih koordinata, za lokaciju senzora postavljamo lokaciju relativnu naspram lokacije vozila. NA liniji \ref{lineref:lidar_callback_set} postaljamo metodu \mintinline{python}{lidar_callback()} kao metodu koju će simulator pozvati svaki puta kada senzor očita okolinu i pošalje podatke.
+Na liniji \ref{lineref:get_lidar_blueprint} primjera \ref{coderef:lidar_find_spawn} dohvaćamo nacrt lidar senzora. Tada od linije \ref{lineref:lidar_prop_start} do \ref{lineref:lidar_prop_end} postavljamo zadane postavke nad nacrtom. Konačno na liniji \ref{lineref:connect_lidar} stvaramo instancu senzora ali metodi predajemo dodatan parametar \mintinline{python}{attach_to} koji je je jednak referenci na naše vozilo. Također umjesto stvarnih koordinata, za lokaciju senzora postavljamo lokaciju relativnu naspram lokacije vozila. Na liniji \ref{lineref:lidar_callback_set} postaljamo metodu \mintinline{python}{lidar_callback()} kao metodu koju će simulator pozvati svaki puta kada senzor očita okolinu i pošalje podatke.
 Spremanje podataka se izvršava tek nakon što smo sakupili konačan broj očitanja. Za spremanje podataka u datoteke se koristi posebna klasa \mintinline{python}{DataSaver} pokazana na primjeru \ref{coderef:data_saver}.
 
 \begin{listing}[h!]
@@ -166,8 +207,10 @@ Spremanje podataka se izvršava tek nakon što smo sakupili konačan broj očita
 import utils as utils
 import time
 import threading
-from concurrent.futures import ThreadPoolExecutor, as_completed
-from lidar_properties import LIDARProperties
+from concurrent.futures import
+  ThreadPoolExecutor, as_completed
+from lidar_properties import
+  LIDARProperties
 
 class DataSaver:
 
@@ -188,7 +231,9 @@ class DataSaver:
     with ThreadPoolExecutor(max_workers=10) as executor:
       jobs = list()
       for i, (scan, transform) in enumerate(scans[1:]):
-        job = executor.submit(self.process_pair, scan, transform, i)
+        job = executor.submit(
+          self.process_pair, scan, transform, i
+        )
         jobs.append(job)
       for future in as_completed(jobs):
         future.result()
@@ -201,22 +246,28 @@ class DataSaver:
 \begin{listing}[h!]
   \begin{minted}[frame=lines, linenos, escapeinside=!!]{python}
   def process_pair(self, scan, trans, i):
-    scan_path = f'{self.pc_path}/{scan.frame_number:06d}.ply'
-    self.save_scan(scan, scan_path, i + 1)
-    trans_path =  f'{self.trans_path}/{scan.frame_number:06d}.txt'
-    self.save_transform(trans, scan.timestamp, trans_path, i + 1)
+    frame_number = scan.frame_number
+    s_path = f'{self.pc_path}/{frame_number:06d}.ply'
+    self.save_scan(scan, s_path, i + 1)
+    tpath =  f'{self.trans_path}/{frame_number:06d}.txt'
+    self.save_transform(
+      trans, scan.timestamp, tpath, i + 1
+    )
 
   def save_rel_trans(self):
     with open(self.rel_path, 'w+') as file:
-      file.write(utils.transform_to_string(LIDARProp.location))
+      file.write(
+        utils.transform_to_string(LIDARProp.location)
+      )
 
   def save_scan(self, scan, path, i = 0):
       scan.save_to_disk(path)
 
   def save_transform(self, trans, timestamp, path, i = 0):
     with open(path, 'w+') as file:
-      content = f"{timestamp}\n{utils.transform_to_string(trans)}"
-      file.write(content)
+      file.write(
+        f"{timestamp}\n{utils.transform_to_string(trans)}"
+      )
   \end{minted}
   \caption{Klasa za spremanje podataka - nastavak}
   \label{coderef:data_saver_cont}

@@ -24,19 +24,21 @@ class DataCollector:
     # array of tuples (LIDAR scan, actor transformation)
     self.scans = list()
     # Number of scans to save
-    self.scan_number = 200
+    self.scan_number = 300
     # Number of npc's to spawn
-    self.npc_number = 3
+    self.npc_number = 5
     # Indicates if data collection is in progress
     self.data_collection_in_progress = True
     # Debug variable to show current frame number
     self.counter = 1
-    # Get every 15th scan
-    self.every = 10
+    # Get every Nth scan
+    self.every = 1
     # Scan counter
     self.every_counter = 0
     # start time to see if 5 seconds have passed
     self.time_start = 0
+    # actor spawn point index
+    self.actor_spawn_point = None
 
   def start(self):
     self.connect_to_carla()
@@ -58,7 +60,11 @@ class DataCollector:
     self.world.apply_settings(settings)
 
   def get_spawn_points(self):
-    self.spawn_points = utils.get_spawn_points(self.world)
+    points = utils.get_spawn_points(self.world)
+    index = random.randint(0, len(points))
+    self.actor_spawn_point = points[index]
+    del points[index]
+    self.spawn_points = points[:]
 
   def spawn_npcs(self):
     print("NPCs setup...")
@@ -66,15 +72,15 @@ class DataCollector:
       self.npc_number = len(self.spawn_points) - 1
       print(f"\tRequested number of npcs to big, will spawn {self.npc_number} npcs")
     blueprints = utils.get_vehicle_blueprints(self.world)
-    points = self.spawn_points[1:self.npc_number+1]
+    points = self.spawn_points[0:self.npc_number+1]
     for i in range(self.npc_number):
       # Select random actor blueprint
       actor_blueprint = random.choice(blueprints)
       print(f"\t{actor_blueprint}")
       # Get spawn point
-      actor_spwn_point = points[i]
+      spawn_point = points[i]
       # Spawn the actor on selected spawn point
-      spawned_actor = self.world.try_spawn_actor(actor_blueprint, actor_spwn_point)
+      spawned_actor = self.world.try_spawn_actor(actor_blueprint, spawn_point)
       # Set actor to drive itself
       spawned_actor.set_autopilot()
       # Save spawned actor reference
@@ -84,11 +90,9 @@ class DataCollector:
 
   def spawn_actor(self):
     print("Actor setup...")
-    # Use first spawn point for observed actor
-    spawn_point = self.spawn_points[0]
     actor_blueprint = utils.get_vehicle_blueprint(self.world.get_blueprint_library())
     print(f"\t{actor_blueprint}")
-    self.actor = self.world.spawn_actor(actor_blueprint, spawn_point)
+    self.actor = self.world.spawn_actor(actor_blueprint, self.actor_spawn_point)
     self.actor.set_autopilot()
     print("Actor setup done\n")
     self.tick()
@@ -131,7 +135,8 @@ class DataCollector:
 
   def reading_should_stop(self):
     # For n scans the number should be n+1 because first scan is unusable
-    return len(self.scans) is self.scan_number + 1
+    print(f"Scans: {len(self.scans)}/{self.scan_number}")
+    return len(self.scans) >= self.scan_number + 1
   
   def collect_data_to_disk(self):
     print("Collecting data...")

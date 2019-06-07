@@ -17,7 +17,7 @@ class LIDARProperties:
   # Upper laser field of view in degrees
   upper_fov = str(45.0)
   # Lower laser field of view in degrees
-  lower_fov = str(-80.0)
+  lower_fov = str(-60.0)
 
   # LIDAR relative position to actor
   lidar_relative_postion = carla.Transform(carla.Location(x=0, y=0, z=4))

@@ -13,7 +13,7 @@ fun String.toPoint(): Point {
 }
 
 fun String.toTransform(): Transform {
-    val split = this.split(" ")
+    val split = this.split(Regex(" +"))
     return Transform(
         location = Location(
             x = split[0].toFloat(),
@@ -21,9 +21,9 @@ fun String.toTransform(): Transform {
             z = split[2].toFloat()
         ),
         rotation = Rotation(
-            pitch = split[3].toFloat(),
-            yaw = split[4].toFloat(),
-            roll = split[5].toFloat()
+            roll = split[3].toFloat(),
+            pitch = split[4].toFloat(),
+            yaw = split[5].toFloat()
         )
     )
 }

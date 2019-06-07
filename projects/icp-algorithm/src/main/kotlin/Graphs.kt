@@ -12,6 +12,7 @@ fun showGraphs(data: Data) {
     val locations = data.groundTruth.map { it.transform.location }
     val coordX = locations.map { it.x }
     val coordY = locations.map { it.y }
+    val coordZ = locations.map { it.z }
     val timestamps = data.groundTruth.map { it.timestamp }
 
     val chartLocation = XYChartBuilder().apply {
@@ -30,29 +31,41 @@ fun showGraphs(data: Data) {
         height(height)
         width(width)
         chartTheme = style
-        title = "Y koordinate vozila u vremenu"
+        title = "X koordinate vozila u vremenu"
         xAxisTitle("Vrijeme [s]")
-        yAxisTitle("Y koordinata [m]")
+        yAxisTitle("X koordinata [m]")
     }.build()
     chartLocationX.styler.legendPosition = Styler.LegendPosition.OutsideS
-    chartLocationX.addSeries("Y koordinate", timestamps, coordY)
+    chartLocationX.addSeries("X koordinate", timestamps, coordX)
     SwingWrapper(chartLocationX).displayChart()
+
+    val chartLocationZ = XYChartBuilder().apply {
+        height(height)
+        width(width)
+        chartTheme = style
+        title = "Z koordinate vozila u vremenu"
+        xAxisTitle("Vrijeme [s]")
+        yAxisTitle("Z koordinata [m]")
+    }.build()
+    chartLocationZ.styler.legendPosition = Styler.LegendPosition.OutsideS
+    chartLocationZ.addSeries("Z koordinate", timestamps, coordZ)
+    SwingWrapper(chartLocationZ).displayChart()
 
     val chartLocationY = XYChartBuilder().apply {
         height(height)
         width(width)
         chartTheme = style
-        title = "X koordinate vozila u vremenu"
+        title = "Y koordinate vozila u vremenu"
         xAxisTitle("Vrijeme [s]")
-        yAxisTitle("X koordinata [m]")
+        yAxisTitle("Y koordinata [m]")
     }.build()
     chartLocationY.styler.legendPosition = Styler.LegendPosition.OutsideS
-    chartLocationY.addSeries("X koordinate", timestamps, coordX)
+    chartLocationY.addSeries("Y koordinate", timestamps, coordY)
     SwingWrapper(chartLocationY).displayChart()
 
     val yawY = data.groundTruth.sortedBy { it.frameId }.map { it.transform.rotation.yaw.absoluteValue }
-    val rollY = data.groundTruth.sortedBy { it.frameId }.map { it.transform.rotation.roll.absoluteValue }
-    val pitchY = data.groundTruth.sortedBy { it.frameId }.map { it.transform.rotation.pitch.absoluteValue }
+    val rollY = data.groundTruth.sortedBy { it.frameId }.map { it.transform.rotation.roll }
+    val pitchY = data.groundTruth.sortedBy { it.frameId }.map { it.transform.rotation.pitch }
     val chartRotation = XYChartBuilder().apply {
         height(height)
         width(width)

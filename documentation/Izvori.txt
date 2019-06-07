@@ -1,4 +1,4 @@
-colloseum-point-cloud.jpeg
+katedrala
   http://kos.informatik.uni-osnabrueck.de/3Dscans/
 
 apollo_logo.png
