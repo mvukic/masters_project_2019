@@ -22,10 +22,10 @@ fun icpCharts(timestampsFull: List<Double>, icpTransformations: List<TransformMa
 //    rpyCharts(timestamps, roll, pitch, yaw)
 
     // RPY from rotation matrix
-    val rollCalc = icpTransformations.toEuler().map { wrapRadians(it.roll).absoluteValue }
-    val pitchCalc = icpTransformations.toEuler().map { wrapRadians(it.pitch).absoluteValue }
-    val yawCalc = icpTransformations.toEuler().map { wrapRadians(it.yaw).absoluteValue }
-    compareRPY(timestamps, Pair(roll, rollCalc), Pair(pitch, pitchCalc), Pair(yaw, yawCalc))
+    val rollCalc = icpTransformations.toEuler().map { wrapRadians(it.roll) }
+    val pitchCalc = icpTransformations.toEuler().map { wrapRadians(it.pitch) }
+    val yawCalc = icpTransformations.toEuler().map { wrapRadians(it.yaw) }
+//    compareRPY(timestamps, Pair(roll, rollCalc), Pair(pitch, pitchCalc), Pair(yaw, yawCalc))
 }
 
 fun quaternionCharts(transformations: List<TransformMatrix>, timestamps: List<Double>) {

@@ -14,11 +14,12 @@ import kotlin.math.sqrt
 fun calculatePoints(icp: List<TransformMatrix>, realPoints:  List<Point>): List<Point> {
     // List of calculated points
     val calculatedPoints = mutableListOf(realPoints.first())
-    // or each real point
+    // For each real point
     realPoints.forEachIndexed { index, _ ->
         // Skip first real point
         if (index == 0) return@forEachIndexed
         // Multiply rotation matrix with previous real point
+        // Gives us next point according to transformation matrix
         val nrp = icp[index - 1].rotation * realPoints[index - 1]
         // Save point
         calculatedPoints.add(nrp)
@@ -34,9 +35,9 @@ fun calculateEulerAngles(icp: List<Euler>, realAngles:  List<Euler>): List<Euler
     realAngles.forEachIndexed { index, _ ->
         if (index == 0) return@forEachIndexed
         val nea = Euler(
-            roll = realAngles[index - 1].roll.toRad() + icp[index - 1].roll,
-            pitch = realAngles[index - 1].pitch.toRad() + icp[index - 1].pitch,
-            yaw = realAngles[index - 1].yaw.toRad() + icp[index - 1].yaw
+            roll = realAngles[index - 1].roll + icp[index - 1].roll,
+            pitch = realAngles[index - 1].pitch + icp[index - 1].pitch,
+            yaw = realAngles[index - 1].yaw + icp[index - 1].yaw
         )
         calculatedAngles.add(nea)
     }
