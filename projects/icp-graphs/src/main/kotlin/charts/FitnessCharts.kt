@@ -1,6 +1,6 @@
 package charts
 
-import models.basic.TransformMatrix
+import models.icp.TransformMatrix
 import org.knowm.xchart.SwingWrapper
 import org.knowm.xchart.XYChartBuilder
 import org.knowm.xchart.style.Styler

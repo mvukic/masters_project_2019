@@ -1,11 +1,11 @@
 package charts
 
-import models.Frame
+import models.gt.GroundTruthFrame
 import org.knowm.xchart.SwingWrapper
 import org.knowm.xchart.XYChartBuilder
 import org.knowm.xchart.style.Styler
 
-fun groundTruthCharts(frames: List<Frame>) {
+fun groundTruthCharts(frames: List<GroundTruthFrame>) {
     val height = 600
     val width = 1000
 
@@ -19,29 +19,29 @@ fun groundTruthCharts(frames: List<Frame>) {
 
     // Get ground truth rotations
     val angles = frames.map { it.transform.rotation }
-    val quaternion = angles.map { it.toQuaternion() }
+//    val quaternion = angles.map { it.toQuaternion() }
     val roll = angles.map { it.roll }
     val pitch = angles.map { it.pitch }
     val yaw = angles.map { it.yaw }
-    val xQuat = quaternion.map { it.x }
-    val yQuat = quaternion.map { it.y }
-    val zQuat = quaternion.map { it.z }
-    val wQuat = quaternion.map { it.w }
+//    val xQuat = quaternion.map { it.x }
+//    val yQuat = quaternion.map { it.y }
+//    val zQuat = quaternion.map { it.z }
+//    val wQuat = quaternion.map { it.w }
 
-    val rotationsQuaternionChart = XYChartBuilder().apply {
-        height(height)
-        width(width)
-        chartTheme = Styler.ChartTheme.Matlab
-        title = "GT Quaternions"
-        xAxisTitle("timestamp [s]")
-        yAxisTitle("rotations")
-    }.build()
-    rotationsQuaternionChart.styler.legendPosition = Styler.LegendPosition.OutsideS
-    rotationsQuaternionChart.addSeries("X", timestamps, xQuat)
-    rotationsQuaternionChart.addSeries("Y", timestamps, yQuat)
-    rotationsQuaternionChart.addSeries("Z", timestamps, zQuat)
-    rotationsQuaternionChart.addSeries("W", timestamps, wQuat)
-    SwingWrapper(rotationsQuaternionChart).displayChart()
+//    val rotationsQuaternionChart = XYChartBuilder().apply {
+//        height(height)
+//        width(width)
+//        chartTheme = Styler.ChartTheme.Matlab
+//        title = "GT Quaternions"
+//        xAxisTitle("timestamp [s]")
+//        yAxisTitle("rotations")
+//    }.build()
+//    rotationsQuaternionChart.styler.legendPosition = Styler.LegendPosition.OutsideS
+//    rotationsQuaternionChart.addSeries("X", timestamps, xQuat)
+//    rotationsQuaternionChart.addSeries("Y", timestamps, yQuat)
+//    rotationsQuaternionChart.addSeries("Z", timestamps, zQuat)
+//    rotationsQuaternionChart.addSeries("W", timestamps, wQuat)
+//    SwingWrapper(rotationsQuaternionChart).displayChart()
 
     val rotationsEulerChart = XYChartBuilder().apply {
         height(height)
@@ -68,6 +68,20 @@ fun groundTruthCharts(frames: List<Frame>) {
     locationsChart.styler.legendPosition = Styler.LegendPosition.OutsideS
     locationsChart.addSeries("GT location", x, y)
     SwingWrapper(locationsChart).displayChart()
+
+    val coordinatesChart = XYChartBuilder().apply {
+        height(height)
+        width(width)
+        chartTheme = Styler.ChartTheme.Matlab
+        title = "GT coordinates"
+        xAxisTitle("timestamp [s]")
+        yAxisTitle("coordinates [m]")
+    }.build()
+    coordinatesChart.styler.legendPosition = Styler.LegendPosition.OutsideS
+    coordinatesChart.addSeries("X coordinate", timestamps, x)
+    coordinatesChart.addSeries("Y coordinate", timestamps, y)
+    coordinatesChart.addSeries("Z coordinate", timestamps, z)
+    SwingWrapper(coordinatesChart).displayChart()
 
 
 }

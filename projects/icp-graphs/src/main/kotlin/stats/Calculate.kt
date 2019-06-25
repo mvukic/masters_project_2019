@@ -1,6 +1,9 @@
-import models.basic.EulerAngles
-import models.basic.Point
-import models.basic.TransformMatrix
+package stats
+
+import models.shared.Euler
+import models.shared.Point
+import models.icp.TransformMatrix
+import toRad
 import kotlin.math.absoluteValue
 import kotlin.math.pow
 import kotlin.math.sqrt
@@ -26,11 +29,11 @@ fun calculatePoints(icp: List<TransformMatrix>, realPoints:  List<Point>): List<
 /**
  * Calculates euler angles starting from first real angles
  */
-fun calculateEulerAngles(icp: List<EulerAngles>, realAngles:  List<EulerAngles>): List<EulerAngles> {
+fun calculateEulerAngles(icp: List<Euler>, realAngles:  List<Euler>): List<Euler> {
     val calculatedAngles = mutableListOf(realAngles.first())
     realAngles.forEachIndexed { index, _ ->
         if (index == 0) return@forEachIndexed
-        val nea = EulerAngles(
+        val nea = Euler(
             roll = realAngles[index - 1].roll.toRad() + icp[index - 1].roll,
             pitch = realAngles[index - 1].pitch.toRad() + icp[index - 1].pitch,
             yaw = realAngles[index - 1].yaw.toRad() + icp[index - 1].yaw
@@ -40,14 +43,14 @@ fun calculateEulerAngles(icp: List<EulerAngles>, realAngles:  List<EulerAngles>)
     return calculatedAngles
 }
 
-fun calculateAnglesDifferences(angles: List<EulerAngles>): List<EulerAngles> {
+fun calculateAnglesDifferences(angles: List<Euler>): List<Euler> {
     return angles.windowed(2).map {
         val first = it[0]
         val second = it[1]
         val deltaRoll = (first.roll - second.roll).absoluteValue
         val deltaPitch = (first.pitch - second.pitch).absoluteValue
         val deltaYaw = (first.yaw - second.yaw).absoluteValue
-        EulerAngles(deltaRoll, deltaPitch, deltaYaw)
+        Euler(deltaRoll, deltaPitch, deltaYaw)
     }
 }
 
@@ -66,7 +69,7 @@ fun calculateCoordinateDifferences(points: List<Point>): List<Point> {
 }
 
 /**
- * Calcualate distance traveled betweeen points
+ * Calculate distance traveled between points
  */
 fun calculateTravelDistance(points: List<Point>): Double {
     var traveled = 0.0
@@ -77,6 +80,14 @@ fun calculateTravelDistance(points: List<Point>): Double {
         val y2 = it[1].y
         traveled += sqrt((x1 - x2).pow(2) + (y1 - y2).pow(2))
     }
-    println("Real distance traveled: $traveled")
     return traveled
+}
+
+/**
+ * Print distance traveled and time traveled
+ */
+fun distanceAndTime(locations: List<Point>, calculated: List<Point>, timestamps: List<Double>) {
+    println("Real distance traveled: ${calculateTravelDistance(locations)} m")
+    println("Distance with calculated: ${calculateTravelDistance(calculated)} m")
+    println("Travel duration: ${timestamps.last() - timestamps.first()} s")
 }

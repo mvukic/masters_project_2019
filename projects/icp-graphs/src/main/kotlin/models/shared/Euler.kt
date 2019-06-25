@@ -1,10 +1,10 @@
-package models.basic
+package models.shared
 
 import kotlin.math.absoluteValue
 import kotlin.math.cos
 import kotlin.math.sin
 
-data class EulerAngles(val roll: Double, val pitch: Double, val yaw: Double) {
+data class Euler(val roll: Double, val pitch: Double, val yaw: Double) {
 
     fun toQuaternion(): Quaternion {
         val cy = cos(yaw * 0.5)
@@ -22,11 +22,11 @@ data class EulerAngles(val roll: Double, val pitch: Double, val yaw: Double) {
     }
 
     companion object {
-        fun fromString(list: List<String>): EulerAngles {
+        fun fromString(list: List<String>): Euler {
             val roll = list[0].toDouble().absoluteValue
             val pitch = list[1].toDouble().absoluteValue
             val yaw = list[2].toDouble().absoluteValue
-            return EulerAngles(
+            return Euler(
                 roll = roll,
                 pitch = pitch,
                 yaw = yaw
