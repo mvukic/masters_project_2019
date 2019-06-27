@@ -5,7 +5,7 @@ Simulacijsko okruženje će biti Carla zato što ima vrlo široko programsko su�
 \begin{figure}[ht!]
   \centering
   \includegraphics[scale=0.5]{images/carla_town03_example.png}
-  \caption{Primjer mape pod nazivom Town03}
+  \caption{Primjer karte pod nazivom Town03}
   \label{fig:town03_exmaple}
 \end{figure}
 
@@ -21,7 +21,7 @@ Na slici \ref{fig:town03_exmaple} se vidi pogled na jedan od 7 mapa iz perspekti
   \label{fig:rgb_exmaple}
 \end{figure}
 
-RGB kamera je zapravo regularna kamera koja sliku onoga što vidi predstalja pomoću crvene, zelene i plave boje.
+RGB senzor simulira kameru koja može snimati sliku koristeću crvenu, zelenu i plavu boju, tj. regularnu kameru. Ovaj senzor može prikupljati podatke iz simulatora u video obliku ili kao niz slika. Ovaj senzor se može koristiti u metodama lokalizacije koje kao temeljni algoritam koriste prepoznavanje ostalih sudionika u prometu prema obliku tj algoritmi prepoznavaju kontekst slike.
 
 \subsubsection{Senzor dubine}
 \begin{figure}[ht!]
@@ -31,26 +31,27 @@ RGB kamera je zapravo regularna kamera koja sliku onoga što vidi predstalja pom
   \label{fig:depth_exmaple}
 \end{figure}
 
-Senzor dubine prikazuje svaki pixel na slici kamere u nijansama sive boje tj. ovisno koliko je objekt na određnome pixelu odaljen od kamere imat će svijetliju nijansu.
+Ovaj senzor koristi nizove projicirajućih točaka da bi ilustrirao udaljenosti objekata, original na slici \ref{fig:depth_exmaple}. Tada se ti podaci pretvaraju u crno bijelu sliku gdje je svaki pixel u nijansama sive boje tj. ovisno koliko je objekt na određnome pixelu odaljen od kamere imati će svijetliju nijansu, konvertirano na slici \ref{fig:depth_exmaple}.
 
 \newpage
-\subsubsection{Senzor semantičke segmentacije}
+\subsubsection{Semantičke segmentacije}
 \begin{figure}[ht!]
   \centering
   \includegraphics[scale=0.5]{images/sem_seg_exmaple.png}
   \caption{Primjer semantičke segmentacija}
   \label{fig:sem_seg_exmaple}
 \end{figure}
-Ovaj senzor dijeli sliku kamere na semantičke dijelove tj. objekterazličitog tima predstavlja drigim bojama. Na slici \ref{fig:sem_seg_exmaple} se vidi da je nebo crne boje, auti su plave boje, drveće je zeleno itd.
+
+Ovaj senzor zapravo nije senzor ali je grupiran u klasu senzora zato što radi na vrlo sličan način kao i ostali senzori u simulatoru. Ovaj senzor dijeli sliku kamere na semantičke dijelove tj. objekte različitog tipa predstavlja drugim bojama. Na slici \ref{fig:sem_seg_exmaple} se vidi da je nebo crne boje, auti su plave boje, drveće je zeleno itd. OVaj način raspoznavanja objekata je moguć samo u simulator zato što nije potrebno razpoznavati objekte na slici već su oni definirani u simuliranoj okolini.
 
 \subsubsection{LIDAR senzor}
 \begin{figure}[ht!]
   \centering
   \includegraphics[scale=0.5]{images/LIDAR_examaple.png}
-  \caption{LIDAr podaci}
+  \caption{LIDAR podaci}
   \label{fig:lidar_exmaple}
 \end{figure}
-LIDAR senzor je zapravo vertikalan skup lasera koji simuliraju skeniranje od 360 stupnjeva tako da se rotiraju određeni broj puta u sekundi. Povratni podaci senzora su zapravo točke do kojih su laseri uspjeli doći. Na slici \ref{fig:lidar_exmaple} se mogu vidjeti takvi podaci vizualizirani u programu MeshLab. Više o ulaznim parametrima senzora kasnije u radu.
+LIDAR (eng. light detecting and raging) senzor je zapravo vertikalan skup lasera koji simuliraju skeniranje od 360 stupnjeva tako da se rotiraju određeni broj puta u sekundi. Povratni podaci senzora su zapravo točke tj. koordinate relativne naspram samoga senzora do kojih su laseri uspjeli doći. Na slici \ref{fig:lidar_exmaple} se mogu vidjeti takvi podaci vizualizirani u programu MeshLab. Više o ulaznim parametrima senzora kasnije u radu.
 
 \subsubsection{Senzor sudara}
 Ovaj senzor dojavljuje klijentskome programu ako se vozila sudarilo s drugim objektom u simulaciji.

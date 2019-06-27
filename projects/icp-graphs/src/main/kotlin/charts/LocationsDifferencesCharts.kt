@@ -24,10 +24,8 @@ fun locationDifferencesCharts(timestampsFull: List<Double>, locations: List<Poin
     val icpYDelta = icpPointsDiff.map { it.y }
     val icpZDelta = icpPointsDiff.map { it.z }
 
-//    calculatedLocationsDiffChart(timestamps, icpXDelta, icpYDelta, icpZDelta)
-
-//    coordinatesDiffChart(timestamps, Pair(realXDelta, icpXDelta), Pair(realYDelta, icpYDelta), Pair(realZDelta, icpZDelta))
-
+    calculatedLocationsDiffChart(timestamps, icpXDelta, icpYDelta, icpZDelta)
+    coordinatesDiffChart(timestamps, Pair(realXDelta, icpXDelta), Pair(realYDelta, icpYDelta), Pair(realZDelta, icpZDelta))
     overlaidLocations(locations, calculated)
 }
 
@@ -39,8 +37,8 @@ fun overlaidLocations(locations: List<Point>, calculated: List<Point>) {
         width(1000)
         chartTheme = Styler.ChartTheme.Matlab
         title = "Real and calculated locations overlaid"
-        xAxisTitle("timestamps [s]")
-        yAxisTitle("Delta x")
+        xAxisTitle("X coordinates]")
+        yAxisTitle("Y coordinates")
     }.build()
     locationsChart.styler.legendPosition = Styler.LegendPosition.OutsideS
     locationsChart.addSeries("Real location", realCoords.first, realCoords.second)

@@ -26,7 +26,7 @@ class DataCollector:
     # Number of scans to save
     self.scan_number = 300
     # Number of npc's to spawn
-    self.npc_number = 5
+    self.npc_number = 0
     # Indicates if data collection is in progress
     self.data_collection_in_progress = True
     # Debug variable to show current frame number
@@ -80,7 +80,7 @@ class DataCollector:
       # Get spawn point
       spawn_point = points[i]
       # Spawn the actor on selected spawn point
-      spawned_actor = self.world.try_spawn_actor(actor_blueprint, spawn_point)
+      spawned_actor = self.world.try_spawn_actor(actor_blueprint, self.spawn_points[i])
       # Set actor to drive itself
       spawned_actor.set_autopilot()
       # Save spawned actor reference
@@ -92,7 +92,7 @@ class DataCollector:
     print("Actor setup...")
     actor_blueprint = utils.get_vehicle_blueprint(self.world.get_blueprint_library())
     print(f"\t{actor_blueprint}")
-    self.actor = self.world.spawn_actor(actor_blueprint, self.actor_spawn_point)
+    self.actor = self.world.spawn_actor(actor_blueprint, self.spawn_points[30])
     self.actor.set_autopilot()
     print("Actor setup done\n")
     self.tick()

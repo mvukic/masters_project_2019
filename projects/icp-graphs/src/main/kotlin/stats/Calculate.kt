@@ -3,7 +3,7 @@ package stats
 import models.shared.Euler
 import models.shared.Point
 import models.icp.TransformMatrix
-import toRad
+import kotlin.math.PI
 import kotlin.math.absoluteValue
 import kotlin.math.pow
 import kotlin.math.sqrt
@@ -20,8 +20,21 @@ fun calculatePoints(icp: List<TransformMatrix>, realPoints:  List<Point>): List<
         if (index == 0) return@forEachIndexed
         // Multiply rotation matrix with previous real point
         // Gives us next point according to transformation matrix
-        val nrp = icp[index - 1].rotation * realPoints[index - 1]
+        val nrp = icp[index - 1] * realPoints[index - 1]
         // Save point
+        calculatedPoints.add(nrp)
+    }
+    return calculatedPoints
+}
+
+/**
+ * Calculate other points just by using first real point and transformation matrix's
+ */
+fun calculatePointsExperimental(icp: List<TransformMatrix>, realPoints:  List<Point>): List<Point> {
+    // List of calculated points
+    val calculatedPoints = mutableListOf(realPoints.first())
+    icp.forEach { transform ->
+        val nrp = transform.rotation * calculatedPoints.last()
         calculatedPoints.add(nrp)
     }
     return calculatedPoints
@@ -35,9 +48,9 @@ fun calculateEulerAngles(icp: List<Euler>, realAngles:  List<Euler>): List<Euler
     realAngles.forEachIndexed { index, _ ->
         if (index == 0) return@forEachIndexed
         val nea = Euler(
-            roll = realAngles[index - 1].roll + icp[index - 1].roll,
-            pitch = realAngles[index - 1].pitch + icp[index - 1].pitch,
-            yaw = realAngles[index - 1].yaw + icp[index - 1].yaw
+            roll = (Angle(realAngles[index - 1].roll) + Angle(icp[index - 1].roll)).value,
+            pitch = (Angle(realAngles[index - 1].pitch) + Angle(icp[index - 1].pitch)).value,
+            yaw = (Angle(realAngles[index - 1].yaw) + Angle(icp[index - 1].yaw)).value
         )
         calculatedAngles.add(nea)
     }
@@ -48,9 +61,9 @@ fun calculateAnglesDifferences(angles: List<Euler>): List<Euler> {
     return angles.windowed(2).map {
         val first = it[0]
         val second = it[1]
-        val deltaRoll = (first.roll - second.roll).absoluteValue
-        val deltaPitch = (first.pitch - second.pitch).absoluteValue
-        val deltaYaw = (first.yaw - second.yaw).absoluteValue
+        val deltaRoll = (Angle(first.roll) - Angle(second.roll)).value
+        val deltaPitch = (Angle(first.pitch) - Angle(second.pitch)).value
+        val deltaYaw = (Angle(first.yaw) - Angle(second.yaw)).value
         Euler(deltaRoll, deltaPitch, deltaYaw)
     }
 }
@@ -91,4 +104,18 @@ fun distanceAndTime(locations: List<Point>, calculated: List<Point>, timestamps:
     println("Real distance traveled: ${calculateTravelDistance(locations)} m")
     println("Distance with calculated: ${calculateTravelDistance(calculated)} m")
     println("Travel duration: ${timestamps.last() - timestamps.first()} s")
+}
+
+/**
+ * Class used for getting the difference between two angles
+ */
+class Angle(d: Double) {
+    val value = when {
+        d in -PI .. PI -> d
+        d > PI -> (d - PI) % (2*PI) - PI
+        else -> (d + PI) % (2*PI) + PI
+    }
+
+    operator fun minus(other: Angle) = Angle(this.value - other.value)
+    operator fun plus(other: Angle) = Angle(this.value + other.value)
 }

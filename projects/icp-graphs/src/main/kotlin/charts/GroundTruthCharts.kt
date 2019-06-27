@@ -7,6 +7,7 @@ import models.shared.Point
 import org.knowm.xchart.SwingWrapper
 import org.knowm.xchart.XYChartBuilder
 import org.knowm.xchart.style.Styler
+import kotlin.math.absoluteValue
 
 fun groundTruthCharts(gt: GroundTruth) {
 
@@ -15,8 +16,7 @@ fun groundTruthCharts(gt: GroundTruth) {
     val locations = gt.locations()
 
     locationsChart(timestamps, locations)
-
-//    rotationsChart(timestamps, angles)
+    rotationsChart(timestamps, angles)
 }
 
 fun locationsChart(timestamps: List<Double>, locations: List<Point>) {
@@ -28,26 +28,26 @@ fun locationsChart(timestamps: List<Double>, locations: List<Point>) {
         height(600)
         width(1000)
         chartTheme = Styler.ChartTheme.Matlab
-        title = "Ground truth locations"
+        title = "Koordinate vozila"
         xAxisTitle("x [m]")
         yAxisTitle("y [m]")
     }.build()
     locationsChart.styler.legendPosition = Styler.LegendPosition.OutsideS
-    locationsChart.addSeries("GT location", x, y)
+    locationsChart.addSeries("Koordinate vozila", x, y)
     SwingWrapper(locationsChart).displayChart()
 
     val coordinatesChart = XYChartBuilder().apply {
         height(600)
         width(1000)
         chartTheme = Styler.ChartTheme.Matlab
-        title = "Ground truth coordinates"
-        xAxisTitle("timestamp [s]")
-        yAxisTitle("coordinates [m]")
+        title = "Koordinate vozila"
+        xAxisTitle("vrijeme [s]")
+        yAxisTitle("koordinate [m]")
     }.build()
     coordinatesChart.styler.legendPosition = Styler.LegendPosition.OutsideS
-    coordinatesChart.addSeries("X coordinate", timestamps, x)
-    coordinatesChart.addSeries("Y coordinate", timestamps, y)
-    coordinatesChart.addSeries("Z coordinate", timestamps, z)
+    coordinatesChart.addSeries("X koordinate", timestamps, x)
+    coordinatesChart.addSeries("Y koordinate", timestamps, y)
+    coordinatesChart.addSeries("Z koordinate", timestamps, z)
     SwingWrapper(coordinatesChart).displayChart()
 }
 
@@ -55,19 +55,19 @@ fun rotationsChart(timestamps: List<Double>, angles: List<Euler>) {
     val quaternion = angles.map { it.toQuaternion() }
     val roll = angles.map { it.roll }
     val pitch = angles.map { it.pitch }
-    val yaw = angles.map { it.yaw }
+    val yaw = angles.map { it.yaw.absoluteValue }
     val xQuat = quaternion.map { it.x }
     val yQuat = quaternion.map { it.y }
-    val zQuat = quaternion.map { it.z }
+    val zQuat = quaternion.map { it.z.absoluteValue }
     val wQuat = quaternion.map { it.w }
 
     val rotationsQuaternionChart = XYChartBuilder().apply {
         height(600)
         width(1000)
         chartTheme = Styler.ChartTheme.Matlab
-        title = "GT Quaternions"
-        xAxisTitle("timestamp [s]")
-        yAxisTitle("rotations")
+        title = "Rotacija prikazana pomoću kvaterniona"
+        xAxisTitle("vrijeme [s]")
+        yAxisTitle("rotacija [rad]")
     }.build()
     rotationsQuaternionChart.styler.legendPosition = Styler.LegendPosition.OutsideS
     rotationsQuaternionChart.addSeries("X", timestamps, xQuat)
@@ -80,13 +80,13 @@ fun rotationsChart(timestamps: List<Double>, angles: List<Euler>) {
         height(600)
         width(1000)
         chartTheme = Styler.ChartTheme.Matlab
-        title = "GT rotations"
-        xAxisTitle("timestamp [s]")
-        yAxisTitle("rotations")
+        title = "Rotacije"
+        xAxisTitle("vrijeme [s]")
+        yAxisTitle("rotacija [rad]")
     }.build()
     rotationsEulerChart.styler.legendPosition = Styler.LegendPosition.OutsideS
-    rotationsEulerChart.addSeries("GT roll", timestamps, roll)
-    rotationsEulerChart.addSeries("GT Pitch", timestamps, pitch)
-    rotationsEulerChart.addSeries("GT Yaw", timestamps, yaw)
+    rotationsEulerChart.addSeries("Valjanje", timestamps, roll)
+    rotationsEulerChart.addSeries("Poniranje", timestamps, pitch)
+    rotationsEulerChart.addSeries("Skretanje", timestamps, yaw)
     SwingWrapper(rotationsEulerChart).displayChart()
 }

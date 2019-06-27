@@ -1,8 +1,8 @@
 \section{Lokalizacija}
 
-Roboti i vozila u većini slučajeva se primjenjuju za izvođenje repetitivnih ili opasnih po život poslova. Čovjeka zamjenjuje robot ali to znači da je za upravljanje robota zadužen taj isti robot ili neki udaljeni sustav tj. čovjek više nema tu ulogu. U tu svrhu su roboti i vozila opremljeni raznim senzorima da bi se to omogučilo. Svi podaci prikupljeni iz tih senzora se koriste prilikom lokalizacije robota ili vozila.
+Roboti i vozila u većini slučajeva se primjenjuju za izvođenje repetitivnih ili opasnih po život poslova. Čovjeka zamjenjuje robot ali to znači da je za upravljanje robota zadužen taj isti robot ili neki udaljeni sustav, čovjek više nema tu ulogu. U tu svrhu su roboti i vozila opremljeni raznim senzorima da bi se to omogućilo. Svi podaci prikupljeni iz tih senzora se koriste prilikom lokalizacije robota ili vozila.
 
-Lokalizacija je postupak određivanja lokacije objekta u prostoru iz ulaznih podataka. Lokalizacija može biti vrlo zahtjevan zadatak te se u tu svrhu mogu koristiti algoritmi različitih složenosti. Što je algoritam složeniji to se sporije izvodi ali je točiji dok se neki više optimizirani tj. brži algoritmi brže izvode ali postoji veća vjerojatnost da je došlo do pogreške prilikom izvođenja.
+Lokalizacija je postupak određivanja lokacije objekta u prostoru iz senzorskih podataka. Lokalizacija može biti vrlo zahtjevan zadatak te se u tu svrhu mogu koristiti algoritmi različitih složenosti. Što je algoritam složeniji, to se sporije izvodi ali je točiji dok se neki više optimizirani tj. brži algoritmi brže izvode ali se događaju veće greške te se one akumuliraju prilikom izvođenja algoritma.
 
 Koriste se algoritmi za istovremenu lokalizaciju i mapiranje [dodaj SLAM link] tj. za stvaranje karte nepoznatog prostore kojime se robot kreće te koordinate u tome prostoreu. Lokalizacija odgovara `Gdje je robot sada?' tj. gdje je sada naspram prethodne lokacije. Na to pitanje se može odgovoriti ovisno o tome radi li se o lokalizaciji u otvorenome ili zatvorenome prostoru. Lokacija robota je oglavnom prikazana u kartezijskom koordinatnom sustavu, bilo to u 2d ili 3d prostoru.
 
@@ -14,7 +14,7 @@ Postoje dvije vrste lokalizacije:
 \end{itemize}
 
 \newpage
-\subsubsection{Neke metode lokalizacije}
+\subsubsection{Pregled pristupa problemu lokalizacije}
 
 Jedna od najjednostavnijih metoda je "Metoda najmanjih kvadrata" (eng. Least Squares Error) gdje se koristi metoda najmanjih kvadrata za regresijsku analizu podataka. Cilj te metode jest minimizacija pogreške gdje robot jest i gdje bi robot trebao biti tj. ona okvirno procjenjuje gradijent funkcije pomaka robota.
 
@@ -24,5 +24,5 @@ Metoda višestrukih hipoteza (eng. Multiple Hypotesis Localization) pretpostavlj
 
 Metoda iteracije najbližih točaka (eng. Iterative Closest Point) minimizira razliku između dvije skupine točaka tako da iterira između svake dvije točke te pronalazi onu kombinaciju koja daje najmanju grešku. Često se koristi pri rekonstrukciji 2D ili 3D površina nakon skeniranja. Tijekom izvođenja te metode jedna skupina točaka je fiksna tj. referentna dok se druga transformira tako da se najbolje slažu koordinatama u referentnom skupu. Postoje mnoge varijante ICP-a od kojih su point-to-point (usporedba točka-točka) , point-to-plane (usporedba točke-površina) i point-to-line (usporedba točka-linija) najpopularnije.
 
-Metoda usporedbe očitanja (eng. Scan Matching) koristi dva uzastopna očitanja senzora robota poput lasera, sonara, … da se pronađe relativan pomak robota u prostoru. Razlike između dva očitanja senzora se mogu uočiti vrlo lako zbog učestalosti skeniranja tj. frekvencije dohvaćanja senzorskih podataka te o gustoći lasera kojih uglavnom ima od nekoliko stotina do nekoliko tisuća. Načina na koji se zapravo traže razlike između dva očitanja ima mnogo. Koriste se laseri (eng. Laser Range Finders) da bi vidio prepreke i odometrija kotača (eng. Wheel Odometry) da dobije okvirno stanje robota. Odometrija iz kotača ima određenu grešku zbog proklizavanja kotača ili nekog drugog razloga te se ona tada ispravlja pomoću izračunatih vrijednosti odometrije iz lasera. U ovom radu će biti opisan te implementiran način pronalaženja odometrije pomoću korelacije histograma podataka iz lasera.
+Metoda usporedbe očitanja (eng. scan matching) koristi dva uzastopna očitanja senzora robota poput lasera, sonara, … da se pronađe relativan pomak robota u prostoru. Razlike između dva očitanja senzora se mogu uočiti vrlo lako zbog učestalosti skeniranja tj. frekvencije dohvaćanja senzorskih podataka te o gustoći lasera kojih uglavnom ima od nekoliko stotina do nekoliko tisuća. Načina na koji se zapravo traže razlike između dva očitanja ima mnogo. Koriste se laseri (eng. laser range finders) da bi vidio prepreke i odometrija kotača (eng. wheel odometry) da dobije okvirno stanje robota. Odometrija iz kotača ima određenu grešku zbog proklizavanja kotača ili nekog drugog razloga te se ona tada ispravlja pomoću izračunatih vrijednosti odometrije iz lasera. Ova metoda je zapravo metoda iteracije najbližih točaka ali ograničena u dvije dimenzije.
 

@@ -1,3 +1,43 @@
 \section{Obitelj algoritama}
 
-Koruišteni algoritmi su ...
+Algoritmi korišteni za obrađivanje senzorskih podataka pripadaju ICP (eng. iterative closest point) obitelji algoritama. Koristi se za minimizaciju razlika dvije skupine točaka. U ovome slučaju se koristi za minimizaciju razlike između dva oblaka točaka prikupljenih pomoću lidar senzora. Ovaj algoritam radi tako da se jedan skup točaka postavi kao referentni dok se drugi skup pokušava transformirati, uz minimiziranje razlike, u referentni skup. Algoritam iterativno poboljšava transformaciju potrebnu za minimiziranje pogreške. Za računanje pogreške se mogu koristiti kvadrati razlika koordinata dviju točaka. ICP algoritam je jedan od najkorištenijih algoritama za rekonstrukcije trodimenzionalnih objekata. ICP algoritam su prvi puta predstavili Besl i Mckay (ref: https://ieeexplore.ieee.org/document/121791).
+
+\subsubsection{Ulaz i izlaz algoritma}
+
+Ulazi algoritma su referentni i ciljni skupovi točaka, kriterij zaustavljanja iteriranja algoritma te opcionalna inicijalna transformacija tj. translacija i rotacija. Izlaz algoritma je u pravilu matrica koja se sastoji od rotacijskih i translacijskih podataka te karakterističan fitness broj koji prikazuje koliko dobro je poravnanje dvaju skupa točaka zapravo bilo. Izgled izlaza je prikazan na martici \ref{mat:transform_matrix}.
+
+\begin{equation}
+  T =
+  \begin{pmatrix}
+    r_{11} & r_{12} & r_{13} & t_{x}\\
+    r_{21} & r_{22} & r_{23} & t_{y}\\
+    r_{31} & r_{32} & r_{33} & t_{z}\\
+    0      & 0      & 0      & 1
+  \end{pmatrix}
+  \label{mat:transform_matrix}
+\end{equation}
+
+Matrica se zapravo sastoji od rotacijske matrice veličine 3x3 koja se sastoji od elemenata $r_{11}$ do $r_{33}$, te od translacijske matrice koja se sastoji od elemenata $t_{x}$, $t_{y}$ i $t_{z}$. 
+
+\subsubsection{Pseudokod ICP algoritma}
+
+\begin{algorithm}[H]
+\SetAlgoLined
+\KwResult{Transformacijska matrica}
+ priprema skupa točaka\;
+ \For{svaka točka ciljnog skupa}{
+  pronađi najbližu točku u referentnome skupu \;
+  estimiraj translacijsku matricu koristeći srednju pogrešku udaljenosti točaka\;
+  transformiraj ciljne točke\;
+  iteriranje algoritma\;
+ }
+ \caption{Pseudokod ICP algoritma}
+\end{algorithm}
+
+Ukratko ovaj algoritam prolazi kroz svaku točku ciljnoga skupa ili podskupa točaka te traži najbližu točku u referentnome skupu. Tada estimira kombinaciju rotacije i translacije ta bi poravnao te dvije točke tako što računa srednju vrijednost kvadrata razlike koordinata točaka. Algoritam tada to izvodi za ostale točke te se zaustavlja kada dosegne uvjet zaustavljanja. Taj uvjet može biti postavljen kao broj iteracija ili kao minimalna dopuštena vrijednost pogreške.
+
+Ovaj algoritam se može optimizirati na razne načine, a jedan od od najčešćih je da se prvo u skupovima točaka detektiraju neki lako prepoznatljivi oblici poput rubova te se tada uspoređuju samo točke unutar tih oblika. Takav način optimizacije se promatra u poglavlju 4.2.
+
+\subsubsection{ICP biblioteka}
+
+Za izvođenje ICP algoritma u oba primjera se koristi biblioteka PCL (eng. Point Cloud Library) koja je postala standardan način za obradu oblaka točaka. To je biblioteka otvorenoga koda koja se sastoji od implementacija raznih algoritama za obradu dvodimenzionalnih i trodimenzionalnih podataka. Sastoji se od algoritama za detekciju oblika, rekonstrukciju površina, obradu oblaka točaka. Sama biblioteka je napisana u jeziku C++ zbog vrlo visokih performansi te omogućuje izvođenje na raznim platformama od autonomnih automobila do ugrađenih računalnih rješenja u prijenosnim uređajima poput mobilnih uređaja.

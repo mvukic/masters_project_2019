@@ -84,7 +84,7 @@ def get_vehicle_blueprints(world):
   \label{coderef:vehicle_blueprints}
 \end{listing}
 \pagebreak
-Na \ref{coderef:vehicle_blueprints} se vidi kako koristimo knjižnicu nacrta da bi filtrirali nama potrebne nacrte. Koristiti će se samo vozila koja imaju 4 kotača.
+Na kodu \ref{coderef:vehicle_blueprints} se vidi kako koristimo knjižnicu nacrta da bi filtrirali nama potrebne nacrte. Koristiti će se samo vozila koja imaju 4 kotača.
 
 \begin{listing}[h!]
   \begin{minted}[frame=lines, linenos, escapeinside=!!]{python}
@@ -93,7 +93,6 @@ Na \ref{coderef:vehicle_blueprints} se vidi kako koristimo knjižnicu nacrta da 
     points = self.spawn_points[1:self.npc_number+1]
     for i in range(self.npc_number):
       actor_blueprint = random.choice(blueprints)
-      print(f"\t{actor_blueprint}")
       actor_spwn_point = points[i]
       spawned_actor = self.world.try_spawn_actor( !\label{lineref:spawn_instance}!
         actor_blueprint,
