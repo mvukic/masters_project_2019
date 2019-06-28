@@ -21,23 +21,26 @@ Matrica se zapravo sastoji od rotacijske matrice veličine 3x3 koja se sastoji o
 
 \subsubsection{Pseudokod ICP algoritma}
 
-\begin{algorithm}[H]
+\begin{algorithm}[h!]
 \SetAlgoLined
 \KwResult{Transformacijska matrica}
  priprema skupa točaka\;
- \For{svaka točka ciljnog skupa}{
+ \For{Za svaku točka ciljnog skupa}{
   pronađi najbližu točku u referentnome skupu \;
   estimiraj translacijsku matricu koristeći srednju pogrešku udaljenosti točaka\;
   transformiraj ciljne točke\;
-  iteriranje algoritma\;
+  \eIf{uvjet zaustavljanja zadovoljen}{
+    vrati trenutnu transformacijsku matricu\;
+  }{
+    iteriranje algoritma\;
+  }
  }
- \caption{Pseudokod ICP algoritma}
 \end{algorithm}
 
 Ukratko ovaj algoritam prolazi kroz svaku točku ciljnoga skupa ili podskupa točaka te traži najbližu točku u referentnome skupu. Tada estimira kombinaciju rotacije i translacije ta bi poravnao te dvije točke tako što računa srednju vrijednost kvadrata razlike koordinata točaka. Algoritam tada to izvodi za ostale točke te se zaustavlja kada dosegne uvjet zaustavljanja. Taj uvjet može biti postavljen kao broj iteracija ili kao minimalna dopuštena vrijednost pogreške.
 
 Ovaj algoritam se može optimizirati na razne načine, a jedan od od najčešćih je da se prvo u skupovima točaka detektiraju neki lako prepoznatljivi oblici poput rubova te se tada uspoređuju samo točke unutar tih oblika. Takav način optimizacije se promatra u poglavlju 4.2.
 
-\subsubsection{ICP biblioteka}
+\subsubsection{PCL biblioteka}
 
 Za izvođenje ICP algoritma u oba primjera se koristi biblioteka PCL (eng. Point Cloud Library) koja je postala standardan način za obradu oblaka točaka. To je biblioteka otvorenoga koda koja se sastoji od implementacija raznih algoritama za obradu dvodimenzionalnih i trodimenzionalnih podataka. Sastoji se od algoritama za detekciju oblika, rekonstrukciju površina, obradu oblaka točaka. Sama biblioteka je napisana u jeziku C++ zbog vrlo visokih performansi te omogućuje izvođenje na raznim platformama od autonomnih automobila do ugrađenih računalnih rješenja u prijenosnim uređajima poput mobilnih uređaja.

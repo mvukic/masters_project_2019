@@ -272,4 +272,27 @@ class DataSaver:
   \label{coderef:data_saver_cont}
 \end{listing}
 
-Primjeri \ref{coderef:data_saver} i \ref{coderef:data_saver_cont} prikazuju klasu \mintinline{python}{DataSaver} koja služi za spremanje podataka u datoteke. Datoteke s podacima iz senzora se nalaze u direktoriju s nazivom pointclouds, dok se datoteke s podacima o lokaciji vozila nalaze u direktoriju s nazivom actortransforms. Oba ta direktorija se nalaze u direktoriju s nazivom output. Datoteke s informacijama o lokaciji vozila se sastoje od 2 reda. Prvi red sadrži vremensku oznaku a drugi sadrži lokaciju i transformaciju koji su opisani u prijašnjem poglavlju. Datoteke koje sadrže podatke o jednome očitanju se nalaze u tekstualnim datotekama s ekstenzijom .ply te se sastoji od zaglavlja i po jedan redak za svaku točku u očitanju. Također postoji još jedna datoteka koja samo sadrži relativnu transformaciju između senzora i vozila. Ona se nalazi u direktoriju output.
+Primjeri \ref{coderef:data_saver} i \ref{coderef:data_saver_cont} prikazuju klasu \mintinline{python}{DataSaver} koja služi za spremanje podataka u datoteke. Datoteke s podacima iz senzora se nalaze u direktoriju s nazivom pointclouds, dok se datoteke s podacima o lokaciji vozila nalaze u direktoriju s nazivom actortransforms. Oba ta direktorija se nalaze u direktoriju s nazivom $output$. Datoteke s informacijama o lokaciji vozila se sastoje od 2 reda. Prvi red sadrži vremensku oznaku a drugi sadrži lokaciju i transformaciju koji su opisani u prijašnjem poglavlju. Datoteke koje sadrže podatke o jednome očitanju se nalaze u tekstualnim datotekama s ekstenzijom .ply te se sastoji od zaglavlja i po jedan redak za svaku točku u očitanju. Također postoji još jedna datoteka koja samo sadrži relativnu transformaciju između senzora i vozila. Ona se nalazi u direktoriju $output$.
+
+\begin{listing}[h!]
+  \begin{minted}{html}
+    ply
+    format ascii 1.0
+    element vertex 17252
+    property float32 x
+    property float32 y
+    property float32 z
+    end_header
+    -6.6331 4.7159 -3.6613
+    -7.6668 3.6868 -3.6721
+    -6.8233 4.8510 -3.6132
+    -7.2357 4.3627 -3.6467
+    -7.5643 3.8149 -3.6567
+    -6.8332 4.8581 -3.5678
+    .
+    .
+    .
+  \end{minted}
+  \caption{Izgled sadržaja .ply datoteke}
+  \label{files:ply_format}
+\end{listing}
