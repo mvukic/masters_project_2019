@@ -1,16 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="D:\Development\pcl-test\main.cpp">
+    <ClCompile Include="D:\faks\dipl\projects\pcl\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="D:\Development\pcl-test\CMakeLists.txt" />
+    <CustomBuild Include="D:\faks\dipl\projects\pcl\CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source Files">
-      <UniqueIdentifier>{76B14141-E8A1-3F97-BCD4-F3B313B206A5}</UniqueIdentifier>
+      <UniqueIdentifier>{A7CE16BF-6BBC-3D06-9FB8-4884C3846FE5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

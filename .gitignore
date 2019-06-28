@@ -264,4 +264,18 @@ TSWLatexianTemp*
 __pycache__/
 *.py[cod]
 
-projects/pcl/.vscode/ipch/
+## ply files
+*.ply
+
+## all output directories
+code/output/**/*
+code/output_1/**/*
+code/output_2/**/*
+code/output_3/**/*
+code/output_4/**/*
+
+## pcl project
+projects/pcl/build/.vs/
+projects/pcl/build/Debug/
+projects/pcl/build/x64/
+projects/pcl/build/pcl_main.dir/

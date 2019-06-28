@@ -94,13 +94,6 @@ C:/Program Files/CMake/share/cmake-3.14/Modules/Platform/Windows-MSVC-CXX.cmake
 C:/Program Files/CMake/share/cmake-3.14/Modules/Platform/Windows-MSVC.cmake
 C:/Program Files/CMake/share/cmake-3.14/Modules/Platform/Windows.cmake
 C:/Program Files/CMake/share/cmake-3.14/Modules/Platform/WindowsPaths.cmake
-D:/Development/pcl-test/CMakeLists.txt
-D:/Development/pcl-test/build/CMakeFiles/3.14.5/CMakeCCompiler.cmake
-D:/Development/pcl-test/build/CMakeFiles/3.14.5/CMakeCXXCompiler.cmake
-D:/Development/pcl-test/build/CMakeFiles/3.14.5/CMakeRCCompiler.cmake
-D:/Development/pcl-test/build/CMakeFiles/3.14.5/CMakeSystem.cmake
-D:/Development/pcl-test/build/CMakeFiles/feature_tests.c
-D:/Development/pcl-test/build/CMakeFiles/feature_tests.cxx
 D:/Program Files/PCL 1.9.1/3rdParty/VTK/lib/cmake/vtk-8.1/Modules/vtkChartsCore.cmake
 D:/Program Files/PCL 1.9.1/3rdParty/VTK/lib/cmake/vtk-8.1/Modules/vtkCommonColor.cmake
 D:/Program Files/PCL 1.9.1/3rdParty/VTK/lib/cmake/vtk-8.1/Modules/vtkCommonComputationalGeometry.cmake
@@ -230,3 +223,10 @@ D:/Program Files/PCL 1.9.1/cmake/Modules/FindOpenNI2.cmake
 D:/Program Files/PCL 1.9.1/cmake/Modules/FindQhull.cmake
 D:/Program Files/PCL 1.9.1/cmake/PCLConfig.cmake
 D:/Program Files/PCL 1.9.1/cmake/PCLConfigVersion.cmake
+D:/faks/dipl/projects/pcl/CMakeLists.txt
+D:/faks/dipl/projects/pcl/build/CMakeFiles/3.14.5/CMakeCCompiler.cmake
+D:/faks/dipl/projects/pcl/build/CMakeFiles/3.14.5/CMakeCXXCompiler.cmake
+D:/faks/dipl/projects/pcl/build/CMakeFiles/3.14.5/CMakeRCCompiler.cmake
+D:/faks/dipl/projects/pcl/build/CMakeFiles/3.14.5/CMakeSystem.cmake
+D:/faks/dipl/projects/pcl/build/CMakeFiles/feature_tests.c
+D:/faks/dipl/projects/pcl/build/CMakeFiles/feature_tests.cxx
