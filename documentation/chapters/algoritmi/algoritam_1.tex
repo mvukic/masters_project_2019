@@ -8,77 +8,15 @@ Ovaj način uspoređivanja skupova točaka je najjednostavniji. Ne tražimo prep
 
 \begin{listing}[h!]
   \begin{minted}[frame=lines, linenos]{c++}
-typedef PointXYZ PT;
-typedef PointCloud<PT> PointCloudType;
-typedef IterativeClosestPoint<PT, PT, double> ICP;
-
-PointCloudType::Ptr cloud_ref(new PointCloudType());
-PointCloudType::Ptr cloud_target(new PointCloudType());
-PointCloudType::Ptr cloud_reg(new PointCloudType());
-
-string root_point_clouds = "\\point_clouds\\";
-string root_results = "\\icp_results\\";
-  \end{minted}
-  \caption{Generalizirani ICP - konstante}
-  \label{coderef:gen_icp_const}
-\end{listing}
-
-U primjeru izvornoga koda \ref{coderef:gen_icp_const} su definirane konstante poput putanje za spremanje rezultata i putanje s ulaznim datotekama. Također su definirani tipovi točaka \mintinline{c++}{PT} kao \mintinline{c++}{PointXYZ} koje će algoritam koristit te sadrže samo x, y i z koordinate. Mogu se koristiti i drugi oblici točaka. Oblak točaka \mintinline{c++}{PointCloudType} je definiran pomoću prethodne definicije točke. Naposljetku se definira tip \mintinline{c++}{ICP} algoritma tj. s kojim timovima podataka radi. Definiran je pomoću uređene trojke \mintinline{c++}{<PT, PT, double>} što znači da uspoređuje točke tipa \mintinline{c++}{PT}, a rezultate u transformacijsku matricu zapisuje kao \mintinline{c++}{double} vrijednosti.
-
-Definirane su i varijable \mintinline{c++}{cloud_ref} koja pokazuje na referentni skup točaka, \mintinline{c++}{cloud_target} koja pokazuje na ciljni skup točakai \mintinline{c++}{cloud_reg} koja pokazuje na skup točaka nakon poravnanja. One su tipa \mintinline{c++}{boost::shared_ptr} te se kao takve predaju metodama kao pokazivači.
-
-\begin{listing}[h!]
-  \begin{minted}[frame=lines, linenos]{c++}
-ICP setupICP() {
- ICP icp;
- icp.setMaxCorrespondenceDistance(0.05);
- icp.setMaximumIterations(500);
- icp.setTransformationEpsilon(1e-8);
- icp.setEuclideanFitnessEpsilon(1);
- return icp;
-}
-  \end{minted}
-  \caption{Generalizirani ICP - definicija ICP}
-  \label{coderef:gen_icp_def}
-\end{listing}
-
-U primjeru \ref{coderef:gen_icp_def} se definira ICP algoritam tako da mu se predaju uvjeti zaustavljanja te ostali parametri. Trenutno su zadana tri uvjeta zaustavljanja, a oni su:
-
-\begin{enumerate}
-  \item \mintinline{c++}{setMaxCorrespondenceDistance} - uzima u obzir samo točke unutar zadanoga promjera u metrima
-  \item \mintinline{c++}{setMaximumIterations} - maksimalan broj iteracija prilikom estimacije matrice za neku točku
-  \item \mintinline{c++}{setTransformationEpsilon} - maksimalna dozvoljena pogreška
-\end{enumerate}
-
-\begin{listing}[h!]
-  \begin{minted}[frame=lines, linenos]{c++}
-vector<path> get_files() {
- vector<path> paths;
- path p(root_point_clouds);
- directory_iterator end_itr;
- for (directory_iterator itr(p); itr != end_itr; ++itr) {
-  if (is_regular_file(itr->path())) {
-   paths.push_back(itr->path());
-  }
- }
- return paths;
-}
-  \end{minted}
-  \caption{Generalizirani ICP - skupljanje datoteka}
-  \label{coderef:gen_icp_collect_files}
-\end{listing}
-
-Kod u primjeru \ref{coderef:gen_icp_collect_files} koristi metode biblioteke Boost za iteriranje datoteka sa skupovima točaka te vrača vektora s njihovim apsolutnim putanjama.
-
-\begin{listing}[h!]
-  \begin{minted}[frame=lines, linenos]{c++}
 void load_point_cloud(string path, PointCloudType& cloud) {
  pcl::io::loadPLYFile(path, cloud);
 }
 
 void process_files(vector<path> paths, ICP icp) {
  for (long i = 0; i < paths.size() - 1; i++) {
-  load_point_cloud(paths.at(i).string(), *cloud_ref);
+  if (i == 0) {
+   load_point_cloud(paths.at(i).string(), *cloud_ref);
+  }
   load_point_cloud(paths.at(i + 1).string(), *cloud_target);
   string first = paths.at(i).stem().string();
   string second = paths.at(i + 1).stem().string();
@@ -92,31 +30,37 @@ void process_files(vector<path> paths, ICP icp) {
  }
 }
   \end{minted}
-  \caption{Generalizirani ICP - procesiranje datoteka}
+  \caption{Generalizirani ICP - obrada datoteka}
   \label{coderef:gen_icp_process_load}
 \end{listing}
 
-Metodom \mintinline{c++}{process_files} u primjeru \ref{coderef:gen_icp_process_load} se iterira kroz datoteke te se otvaraju u parovima i njihov sadržaj tj. informacije o oblaku točaka se spremaju u globalne varijable \mintinline{c++}{cloud_ref} i \mintinline{c++}{cloud_target}. Na linijama 11 i 12 postavljam ICP algoritmu dodatne ulazne parametre, a to su te varijable. Konačno se pokreće algoritam te se ispituje ako je došlo do konvergencije. Do konvergencije dolazi ako su dva skupa oblaka slična tj. ako predstavljaju isti objekt ili scenu. Očekuje se da uvijek dođe do konvergencije u ovome primjeru. Ako je došlo do konvergencije, spremamo podatke u datoteku. Naposljetku se iz optimizacijskih razloga vrijednost matrice \mintinline{c++}{cloud_target} sprema
+Metodom \mintinline{c++}{process_files} u primjeru \ref{coderef:gen_icp_process_load} se iterira kroz datoteke te se otvaraju u parovima i njihov sadržaj tj. informacije o oblaku točaka se spremaju u globalne varijable \mintinline{c++}{cloud_ref} i \mintinline{c++}{cloud_target}. Na linijama 11 i 12 postavljam ICP algoritmu dodatne ulazne parametre, a to su te varijable. Konačno se pokreće algoritam te se ispituje ako je došlo do konvergencije. Do konvergencije dolazi ako su dva skupa oblaka slična tj. ako predstavljaju isti objekt ali rotiran i/ili translantiran. Očekuje se da uvijek dođe do konvergencije u ovome primjeru. Ako je došlo do konvergencije, spremamo podatke u datoteku. Naposljetku se iz optimizacijskih razloga vrijednost matrice \mintinline{c++}{cloud_target} sprema kao referentni skup točaka.
 
 \subsubsection{Rezultat algoritma}
+
 \begin{listing}[h!]
   \begin{minted}[frame=lines, linenos]{c++}
 void save_matrix(ICP icp, string first, string second) {
- Eigen::Matrix4d transformation = icp.getFinalTransformation();
+ Matrix4d transformation = icp.getFinalTransformation();
  double fitness = icp.getFitnessScore();
  string filename = first + "-" + second + ".txt";
- Eigen::Matrix3d mat = mat4x4_to_3x3(transformation);
- Eigen::Vector3d rpy = mat.eulerAngles(0, 1, 2);
- save_to_file(filename, mat_to_string(transformation), fitness, rpy);
+ Matrix3d mat = mat4x4_to_3x3(transformation);
+ Vector3d rpy = mat.eulerAngles(0, 1, 2);
+ save_to_file(
+   filename,
+   mat_to_string(transformation),
+   fitness,
+   rpy
+  );
 }
   \end{minted}
-  \caption{Generalizirani ICP - spremanje matrice}
+  \caption{Generalizirani ICP - spremanje rezultata}
   \label{coderef:gen_icp_save_matrix}
 \end{listing}
 
-Spremanje rezultata se vrši metodom \mintinline{c++}{save_matrix} u primjeru \ref{coderef:gen_icp_save_matrix}. Matricu transformacije možemo dobiti pozivom \mintinline{c++}{icp.getFinalTransformation()} te je ona oblika \mintinline{c++}{Eigen::Matrix4d} tj. ima 4 redaka i 4 stupaca dok su elemnti tipa \mintinline{c++}{double}. Ta matrica se tada transformira u matricu veličine 3x3 tj. izdvaja se rotacijska matrica zato što takav tip matrice ima ugrađenu metodu \mintinline{c++}{eulerAngles()}. Ta metoda kao argumente prima redosljed rotacija objekta tj. redosljed osi rotacija. U ovome slučaju se prvo predaje 0 što znači da se objekt prvo rotirao oko x osi, tada se predaje što znači da se tada rotirao oko y osi i naposljetku se predaje 2 što znači da je zadnja rotacija bila oko z osi. Metoda vraća vektor od tri elementa koji predstavljaju valjanje, poniranje i skretanje. Konačno se sve te informacije spremaju u datoteku s imenom sastavljenim od dva indetifikatora očitanja tako da se zna koji skupovi točaka su upoređivani. Struktura te datoteke je prikazana na primjeru  \ref{files:icp_file_result}. Prva linija sadrži fitnes vrijednost. Od druge do pete linije se nalazi transformacijska matrica dok se na zadnjoj liniji nalaze Eulerovi kutevi u radijanima.
+Spremanje rezultata se vrši metodom \mintinline{c++}{save_matrix} u primjeru \ref{coderef:gen_icp_save_matrix}. Matricu transformacije možemo dobiti pozivom \mintinline{c++}{icp.getFinalTransformation()} te je ona oblika \mintinline{c++}{Matrix4d} tj. ima 4 redaka i 4 stupaca dok su elemnti tipa \mintinline{c++}{double}. Ta matrica se tada transformira u matricu veličine 3x3 tj. izdvaja se rotacijska matrica zato što takav tip matrice ima ugrađenu metodu \mintinline{c++}{eulerAngles()}. Ta metoda kao argumente prima redosljed rotacija objekta tj. redosljed osi rotacija. U ovome slučaju se prvo predaje 0 što znači da se objekt prvo rotirao oko x osi, tada se predaje što znači da se tada rotirao oko y osi i naposljetku se predaje 2 što znači da je zadnja rotacija bila oko z osi. Metoda vraća vektor od tri elementa koji predstavljaju valjanje, poniranje i skretanje. Konačno se sve te informacije spremaju u datoteku s imenom sastavljenim od dva indetifikatora očitanja tako da se zna koji skupovi točaka su upoređivani. Struktura te datoteke je prikazana na primjeru  \ref{files:icp_file_result}. Prva linija sadrži fitnes vrijednost. Od druge do pete linije se nalazi transformacijska matrica dok se na zadnjoj liniji nalaze Eulerovi kutevi u radijanima.
 \begin{listing}[h!]
-  \begin{minted}{html}
+  \begin{minted}[frame=lines]{html}
 0.0263544
     0.999735   -0.0230172  -0.00046344  -0.00394583
    0.0230173     0.999735  0.000237121  0.000806379
@@ -129,9 +73,8 @@ Spremanje rezultata se vrši metodom \mintinline{c++}{save_matrix} u primjeru \r
 \end{listing}
 
 \subsubsection{Evaluacija rezultata}
-opis konkretnih ulaza podataka:
-  broj datoteka
-  duljina trajanja simulacije
+
+
 
 prikazani na grafovima s referentnim podacima
 kotlin kod za generiranje estimiranih točaka

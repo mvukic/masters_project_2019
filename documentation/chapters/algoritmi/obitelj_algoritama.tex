@@ -24,23 +24,34 @@ Matrica se zapravo sastoji od rotacijske matrice veličine 3x3 koja se sastoji o
 \begin{algorithm}[h!]
 \SetAlgoLined
 \KwResult{Transformacijska matrica}
- priprema skupa točaka\;
- \For{Za svaku točka ciljnog skupa}{
-  pronađi najbližu točku u referentnome skupu \;
-  estimiraj translacijsku matricu koristeći srednju pogrešku udaljenosti točaka\;
-  transformiraj ciljne točke\;
-  \eIf{uvjet zaustavljanja zadovoljen}{
-    vrati trenutnu transformacijsku matricu\;
-  }{
-    iteriranje algoritma\;
-  }
+ priprema skupa točaka P i Q\;
+ \While{uvjet zaustavljanja nije zadovoljen}{
+  pronađi najbliže točke iz skupova ($p_{i}$ i $q_{i}$)\;
+  estimiraj transformacijsku matricu $R$ minimizirajući $\min_{R, t} \sum_{i}^{}||p_{i} - Rq_{i} - t||^2$\;
  }
 \end{algorithm}
 
 Ukratko ovaj algoritam prolazi kroz svaku točku ciljnoga skupa ili podskupa točaka te traži najbližu točku u referentnome skupu. Tada estimira kombinaciju rotacije i translacije ta bi poravnao te dvije točke tako što računa srednju vrijednost kvadrata razlike koordinata točaka. Algoritam tada to izvodi za ostale točke te se zaustavlja kada dosegne uvjet zaustavljanja. Taj uvjet može biti postavljen kao broj iteracija ili kao minimalna dopuštena vrijednost pogreške.
 
-Ovaj algoritam se može optimizirati na razne načine, a jedan od od najčešćih je da se prvo u skupovima točaka detektiraju neki lako prepoznatljivi oblici poput rubova te se tada uspoređuju samo točke unutar tih oblika. Takav način optimizacije se promatra u poglavlju 4.2.
+Ovaj algoritam se može optimizirati na razne načine. Moguće je prvo detektirati posebne podskupove točaka unutar oblaka te eliminirati ostale točke. Također možemo filtrirati točke koje nisu od interesa. Tako se smanjuje količina točaka koje treba usporediti.
 
+Neke od tih metoda filtriranja su:
+\begin{enumerate}
+  \item Voxel grid gdje se cjeli skup točaka dijeli na više područja oblika kocke te se unutar njih filtriraju sve točke osim jedne koja će predstavljati taj skup.
+  \item Statističko filtriranje radi tako da izračuna srednju udaljenost do $k$ najbližih točaka te filtrira samo točke unutar te udaljenosti. Temelji se na Gausovoj raspodjeli.
+  \item Filtracija temeljena ra promjeru samo filtrira točke koje su unutar promjera $d$ oko točke.
+  \item Uvjetno filtriranje koristi uvjete za filtraciju točke. Uvjet može biti da se točka samo uzima u obzir ako joj je koordinata $z$ manja od 15.
+\end{enumerate}
+
+\pagebreak
 \subsubsection{PCL biblioteka}
 
-Za izvođenje ICP algoritma u oba primjera se koristi biblioteka PCL (eng. Point Cloud Library) koja je postala standardan način za obradu oblaka točaka. To je biblioteka otvorenoga koda koja se sastoji od implementacija raznih algoritama za obradu dvodimenzionalnih i trodimenzionalnih podataka. Sastoji se od algoritama za detekciju oblika, rekonstrukciju površina, obradu oblaka točaka. Sama biblioteka je napisana u jeziku C++ zbog vrlo visokih performansi te omogućuje izvođenje na raznim platformama od autonomnih automobila do ugrađenih računalnih rješenja u prijenosnim uređajima poput mobilnih uređaja.
+\begin{figure}[ht!]
+  \centering
+  \includegraphics[scale=0.2]{images/pcl_logo.png}
+  \caption{PCL logo}
+  \label{fig:pcl_logo}
+\end{figure}
+
+Za izvođenje ICP algoritma u oba primjera se koristi biblioteka PCL (eng. Point Cloud Library) koja je zbog širokog broja algoritama i alata postala standard za obradu oblaka točaka. To je biblioteka otvorenoga koda koja se sastoji od implementacija raznih algoritama za obradu dvodimenzionalnih i trodimenzionalnih podataka. Sastoji se od algoritama za detekciju oblika, rekonstrukciju površina, obradu oblaka točaka. Sama biblioteka je napisana u jeziku C++ zbog vrlo visokih performansi te omogućuje izvođenje na raznim platformama od autonomnih automobila do ugrađenih računalnih rješenja u prijenosnim uređajima poput mobilnih uređaja.
+\pagebreak

@@ -1,0 +1,110 @@
+\section{Dijeljeni kod i ulazni podaci}
+
+\subsubsection{Osnovni kod algoritama}
+
+Kod u nastavku je dijeljeni kod tj. koristi se u oba algoritma. Sastoji se od metoda za čitanje datoteka s informacijama o oblacima točaka i metoda za spremanje transformacijskih matrica u datoteke. 
+
+\begin{listing}[h!]
+  \begin{minted}[frame=lines, linenos]{c++}
+typedef PointXYZ PT;
+typedef PointCloud<PT> PointCloudType;
+typedef IterativeClosestPoint<PT, PT, double> ICP;
+
+PointCloudType::Ptr cloud_ref(new PointCloudType());
+PointCloudType::Ptr cloud_target(new PointCloudType());
+PointCloudType::Ptr cloud_reg(new PointCloudType());
+
+string root_point_clouds = "\\point_clouds\\";
+string root_results = "\\icp_results\\";
+  \end{minted}
+  \caption{Generalizirani ICP - konstante}
+  \label{coderef:gen_icp_const}
+\end{listing}
+
+U primjeru izvornoga koda \ref{coderef:gen_icp_const} su definirane konstante poput putanje za spremanje rezultata i putanje s ulaznim datotekama. Također su definirani tipovi točaka \mintinline{c++}{PT} kao \mintinline{c++}{PointXYZ} koje će algoritam koristit te sadrže samo x, y i z koordinate. Mogu se koristiti i drugi oblici točaka. Oblak točaka \mintinline{c++}{PointCloudType} je definiran pomoću prethodne definicije točke. Naposljetku se definira tip \mintinline{c++}{ICP} algoritma tj. s kojim timovima podataka radi. Definiran je pomoću uređene trojke \mintinline{c++}{<PT, PT, double>} što znači da uspoređuje točke tipa \mintinline{c++}{PT}, a rezultate u transformacijsku matricu zapisuje kao \mintinline{c++}{double} vrijednosti.
+
+Definirane su i varijable \mintinline{c++}{cloud_ref} koja pokazuje na referentni skup točaka, \mintinline{c++}{cloud_target} koja pokazuje na ciljni skup točakai \mintinline{c++}{cloud_reg} koja pokazuje na skup točaka nakon poravnanja. One su tipa \mintinline{c++}{boost::shared_ptr} te se kao takve predaju metodama kao pokazivači.
+
+\begin{listing}[h!]
+  \begin{minted}[frame=lines, linenos]{c++}
+ICP setupICP() {
+ ICP icp;
+ icp.setMaxCorrespondenceDistance(0.05);
+ icp.setMaximumIterations(500);
+ icp.setTransformationEpsilon(1e-8);
+ icp.setEuclideanFitnessEpsilon(1);
+ return icp;
+}
+  \end{minted}
+  \caption{Generalizirani ICP - definicija ICP}
+  \label{coderef:gen_icp_def}
+\end{listing}
+
+U primjeru \ref{coderef:gen_icp_def} se definira ICP algoritam tako da mu se predaju uvjeti zaustavljanja te ostali parametri. Trenutno su zadana tri uvjeta zaustavljanja, a oni su:
+
+\begin{enumerate}
+  \item \mintinline{c++}{setMaxCorrespondenceDistance} - uzima u obzir samo točke unutar zadanoga promjera u metrima
+  \item \mintinline{c++}{setMaximumIterations} - maksimalan broj iteracija prilikom estimacije matrice za neku točku
+  \item \mintinline{c++}{setTransformationEpsilon} - maksimalna dozvoljena pogreška
+\end{enumerate}
+
+\begin{listing}[h!]
+  \begin{minted}[frame=lines, linenos]{c++}
+vector<path> get_files() {
+ vector<path> paths;
+ path p(root_point_clouds);
+ directory_iterator end_itr;
+ for (directory_iterator itr(p); itr != end_itr; ++itr) {
+  if (is_regular_file(itr->path())) {
+   paths.push_back(itr->path());
+  }
+ }
+ return paths;
+}
+  \end{minted}
+  \caption{Generalizirani ICP - skupljanje datoteka}
+  \label{coderef:gen_icp_collect_files}
+\end{listing}
+
+Kod u primjeru \ref{coderef:gen_icp_collect_files} koristi metode biblioteke Boost za iteriranje datoteka sa skupovima točaka te vrača vektora s njihovim apsolutnim putanjama.
+
+Kod za stvaranj grafova je jednak bez obzira na korišteni algoritam. Grafovi su stvoreni pomoću jezika Kotlin i biblioteke XCharts. Podaci koji vizualiziraju su usporedbe stvarnih podataka tj. referentnih i podataka dobivenih pomoću algoritama. S obzirom da nam algoritmi kao izlaz daju samo transformacijske matrice, potrebno je nekako te matrice prikazati kao koordinate lokacija i kuteve rotacija.
+
+\begin{listing}[h!]
+  \begin{minted}[frame=lines, linenos]{kotlin}
+fun calculatePoints(
+  icp: List<TransformMatrix>,
+  realPoints:  List<Point>)
+: List<Point> {
+    val calculatedPoints = mutableListOf(realPoints.first())
+    realPoints.drop(1).forEachIndexed { index, _ ->
+        val nrp = icp[index - 1] * realPoints[index - 1]
+        calculatedPoints.add(nrp)
+    }
+    return calculatedPoints
+}
+  \end{minted}
+  \caption{Generiranje estimiranih lokacija}
+  \label{kotlin:gen_est_loc}
+\end{listing}
+
+Kod u primjeru \ref{kotlin:gen_est_loc} je prikazana funkcija za generiranje estimiranih točaka iz stvarnih točaka i transformacijskih matrica. Kao argumente metoda prima listu transformacijskih matrica \mintinline{kotlin}{icp} te listu točaka koje predstavljaju referentne lokacija. Algoritam radi tako da se započinje od prve referentne točke te se na nju primjenjuje prva transformacijska matrica. Tako smo dobili sljedeću estimiranu točku. Nako toga se uzima sljedeća referentna točka te se ona množi s sljedećom transformacijskom matricom.
+
+\subsubsection{Ulazni podaci}
+
+Za oba algoritma će se koristiti dva skupa podataka. Različiti parametri su korišteni prilikom skupljanja oba skupa iz simulatora.
+
+Prvi kup podataka se sastoji od 300 očitanja tj. postoji 300 datoteka sa skupovima točaka. Duljina trajanja te simulacije je 200 sekundi. Parametri koji su korišteni u python skripti za postavljanje lidar senzora su sljedeći:
+\begin{enumerate}
+  \item Maksimalna udaljenost laserske zrake je postavljena na 1500 cm tj. 150 metara
+  \item Maksimalan skup točaka u jednome očitanju je postavljen na 600 000.
+\end{enumerate}
+
+Drugi skup podataka se sastoji od 600 očitanja tj. postoji 300 datoteka sa skupovima točaka. Duljina trajanja te simulacije je 80 sekundi. Parametri koji su korišteni u python skripti za postavljanje lidar senzora su sljedeći:
+\begin{enumerate}
+  \item Maksimalna udaljenost laserske zrake je postavljena na 2000 cm tj. 200 metara
+  \item Maksimalan skup točaka u jednome očitanju je postavljen na 1 000 000.
+\end{enumerate}
+
+
+Prvi niz skupova točaka se skupljao u dužem periodu ali ima samo 300 skupova zato što se koristi svako 15 očitanje. Drugi niz skupova točaka ima 600 očitanja zato što se uzima svako očitanje. Također je drgi skup detaljniji od prvoga te se očekuju bolji rezultati algoritama.

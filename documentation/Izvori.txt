@@ -16,14 +16,14 @@ rfpro_logo.jpg
 Carla sensor examples
   https://carla.readthedocs.io/en/latest/cameras_and_sensors/
 
-
 yaw roll pitch
   https://en.wikipedia.org/wiki/Aircraft_principal_axes#/media/File:Yaw_Axis_Corrected.svg
 
 lidar_arch.jpg
   https://www.renishaw.com/media/img/en/d5f2c0bc53c2419d850b1b979662efe5.jpg
 
-
+point_cloud_logo
+https://en.wikipedia.org/wiki/Point_Cloud_Library#/media/File:Pcl_(PointClouds_library)_logo_with_text.png
 
 
 
