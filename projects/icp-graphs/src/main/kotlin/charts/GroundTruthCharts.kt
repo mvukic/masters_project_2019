@@ -15,7 +15,7 @@ fun groundTruthCharts(gt: GroundTruth) {
     val angles = gt.rotations()
     val locations = gt.locations()
 
-    locationsChart(timestamps, locations)
+//    locationsChart(timestamps, locations)
     rotationsChart(timestamps, angles)
 }
 
@@ -61,20 +61,20 @@ fun rotationsChart(timestamps: List<Double>, angles: List<Euler>) {
     val zQuat = quaternion.map { it.z.absoluteValue }
     val wQuat = quaternion.map { it.w }
 
-    val rotationsQuaternionChart = XYChartBuilder().apply {
-        height(600)
-        width(1000)
-        chartTheme = Styler.ChartTheme.Matlab
-        title = "Rotacija prikazana pomoću kvaterniona"
-        xAxisTitle("vrijeme [s]")
-        yAxisTitle("rotacija [rad]")
-    }.build()
-    rotationsQuaternionChart.styler.legendPosition = Styler.LegendPosition.OutsideS
-    rotationsQuaternionChart.addSeries("X", timestamps, xQuat)
-    rotationsQuaternionChart.addSeries("Y", timestamps, yQuat)
-    rotationsQuaternionChart.addSeries("Z", timestamps, zQuat)
-    rotationsQuaternionChart.addSeries("W", timestamps, wQuat)
-    SwingWrapper(rotationsQuaternionChart).displayChart()
+//    val rotationsQuaternionChart = XYChartBuilder().apply {
+//        height(600)
+//        width(1000)
+//        chartTheme = Styler.ChartTheme.Matlab
+//        title = "Rotacija prikazana pomoću kvaterniona"
+//        xAxisTitle("vrijeme [s]")
+//        yAxisTitle("rotacija [rad]")
+//    }.build()
+//    rotationsQuaternionChart.styler.legendPosition = Styler.LegendPosition.OutsideS
+//    rotationsQuaternionChart.addSeries("X", timestamps, xQuat)
+//    rotationsQuaternionChart.addSeries("Y", timestamps, yQuat)
+//    rotationsQuaternionChart.addSeries("Z", timestamps, zQuat)
+//    rotationsQuaternionChart.addSeries("W", timestamps, wQuat)
+//    SwingWrapper(rotationsQuaternionChart).displayChart()
 
     val rotationsEulerChart = XYChartBuilder().apply {
         height(600)

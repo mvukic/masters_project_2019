@@ -24,7 +24,18 @@ fun loadICPResults(rootPath: String): List<TransformMatrix> {
             translation = TranslationMatrix.fromStringList(upperMat),
             fitness = lines[0].toDouble(),
             rotation = RotationMatrix.fromString(rotMat),
-            angles = Euler.fromString(lines[5].split(Regex(" +")))
+            angles = Euler.fromString(lines[5].split(Regex(" +"))),
+            matrix = loadToMatrix(lines)
         )
     }.sortedBy { it.between.first }
+}
+
+fun loadToMatrix(lines: List<String>): Array<DoubleArray> {
+    return arrayOf(
+        lines[1].split(Regex(" +")).map { it.toDouble() }.toDoubleArray(),
+        lines[2].split(Regex(" +")).map { it.toDouble() }.toDoubleArray(),
+        lines[3].split(Regex(" +")).map { it.toDouble() }.toDoubleArray(),
+        lines[4].split(Regex(" +")).map { it.toDouble() }.toDoubleArray()
+    )
+
 }

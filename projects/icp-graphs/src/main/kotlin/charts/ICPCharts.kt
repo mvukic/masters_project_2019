@@ -19,7 +19,7 @@ fun icpCharts(timestampsFull: List<Double>, icpTransformations: List<TransformMa
     val pitch = icpTransformations.map { wrapRadians(it.angles.pitch) }
     val yaw = icpTransformations.map { wrapRadians(it.angles.yaw) }
 
-//    rpyCharts(timestamps, roll, pitch, yaw)
+    rpyCharts(timestamps, roll, pitch, yaw)
 
     // RPY from rotation matrix
     val rollCalc = icpTransformations.toEuler().map { wrapRadians(it.roll) }
@@ -92,41 +92,41 @@ fun compareRPY(timestamps: List<Double>, roll: Pair<List<Double>, List<Double>>,
 }
 
 fun rpyCharts(timestamps: List<Double>, roll: List<Double>, pitch: List<Double>, yaw: List<Double>) {
-    val rollChart = XYChartBuilder().apply {
-        height(600)
-        width(1000)
-        chartTheme = Styler.ChartTheme.Matlab
-        title = "Rotation roll"
-        xAxisTitle("timestamps [s]")
-        yAxisTitle("roll")
-    }.build()
-    rollChart.styler.legendPosition = Styler.LegendPosition.OutsideS
-    rollChart.addSeries("roll", timestamps, roll)
-    SwingWrapper(rollChart).displayChart()
-
-    val pitchChart = XYChartBuilder().apply {
-        height(600)
-        width(1000)
-        chartTheme = Styler.ChartTheme.Matlab
-        title = "Rotation pitch"
-        xAxisTitle("timestamps [s]")
-        yAxisTitle("pitch")
-    }.build()
-    pitchChart.styler.legendPosition = Styler.LegendPosition.OutsideS
-    pitchChart.addSeries("Pitch", timestamps, pitch)
-    SwingWrapper(pitchChart).displayChart()
-
-    val yawChart = XYChartBuilder().apply {
-        height(600)
-        width(1000)
-        chartTheme = Styler.ChartTheme.Matlab
-        title = "Rotation yaw"
-        xAxisTitle("timestamps [s]")
-        yAxisTitle("yaw")
-    }.build()
-    yawChart.styler.legendPosition = Styler.LegendPosition.OutsideS
-    yawChart.addSeries("Yaw", timestamps, yaw)
-    SwingWrapper(yawChart).displayChart()
+//    val rollChart = XYChartBuilder().apply {
+//        height(600)
+//        width(1000)
+//        chartTheme = Styler.ChartTheme.Matlab
+//        title = "Rotation roll"
+//        xAxisTitle("timestamps [s]")
+//        yAxisTitle("roll")
+//    }.build()
+//    rollChart.styler.legendPosition = Styler.LegendPosition.OutsideS
+//    rollChart.addSeries("roll", timestamps, roll)
+//    SwingWrapper(rollChart).displayChart()
+//
+//    val pitchChart = XYChartBuilder().apply {
+//        height(600)
+//        width(1000)
+//        chartTheme = Styler.ChartTheme.Matlab
+//        title = "Rotation pitch"
+//        xAxisTitle("timestamps [s]")
+//        yAxisTitle("pitch")
+//    }.build()
+//    pitchChart.styler.legendPosition = Styler.LegendPosition.OutsideS
+//    pitchChart.addSeries("Pitch", timestamps, pitch)
+//    SwingWrapper(pitchChart).displayChart()
+//
+//    val yawChart = XYChartBuilder().apply {
+//        height(600)
+//        width(1000)
+//        chartTheme = Styler.ChartTheme.Matlab
+//        title = "Rotation yaw"
+//        xAxisTitle("timestamps [s]")
+//        yAxisTitle("yaw")
+//    }.build()
+//    yawChart.styler.legendPosition = Styler.LegendPosition.OutsideS
+//    yawChart.addSeries("Yaw", timestamps, yaw)
+//    SwingWrapper(yawChart).displayChart()
 
     val rotationsChart = XYChartBuilder().apply {
         height(600)
@@ -137,9 +137,9 @@ fun rpyCharts(timestamps: List<Double>, roll: List<Double>, pitch: List<Double>,
         yAxisTitle("rotation")
     }.build()
     rotationsChart.styler.legendPosition = Styler.LegendPosition.OutsideS
-    rotationsChart.addSeries("Yaw", timestamps, yaw)
     rotationsChart.addSeries("Pitch", timestamps, pitch)
     rotationsChart.addSeries("Roll", timestamps, roll)
+    rotationsChart.addSeries("Yaw", timestamps, yaw)
     SwingWrapper(rotationsChart).displayChart()
 }
 

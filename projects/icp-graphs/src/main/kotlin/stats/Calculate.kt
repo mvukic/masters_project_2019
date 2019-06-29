@@ -3,6 +3,7 @@ package stats
 import models.shared.Euler
 import models.shared.Point
 import models.icp.TransformMatrix
+import models.shared.timesPoint
 import kotlin.math.PI
 import kotlin.math.absoluteValue
 import kotlin.math.pow
@@ -31,11 +32,15 @@ fun calculatePoints(icp: List<TransformMatrix>, realPoints:  List<Point>): List<
  * Calculate other points just by using first real point and transformation matrix's
  */
 fun calculatePointsExperimental(icp: List<TransformMatrix>, realPoints:  List<Point>): List<Point> {
-    // List of calculated points
     val calculatedPoints = mutableListOf(realPoints.first())
-    icp.forEach { transform ->
-        val nrp = transform.rotation * calculatedPoints.last()
-        calculatedPoints.add(nrp)
+    val point = realPoints.first()
+    var transformMatrix = icp.first().matrix
+    // for each transformation
+    icp.drop(1).forEach { transform ->
+        // multiply point and current transformation matrix
+        calculatedPoints.add(transformMatrix.timesPoint(point))
+        // multiply previous transformation matrix and current transformation matrix
+        transformMatrix = transform * transformMatrix
     }
     return calculatedPoints
 }

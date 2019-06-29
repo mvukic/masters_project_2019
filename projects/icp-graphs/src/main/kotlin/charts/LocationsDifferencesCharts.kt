@@ -24,8 +24,8 @@ fun locationDifferencesCharts(timestampsFull: List<Double>, locations: List<Poin
     val icpYDelta = icpPointsDiff.map { it.y }
     val icpZDelta = icpPointsDiff.map { it.z }
 
-    calculatedLocationsDiffChart(timestamps, icpXDelta, icpYDelta, icpZDelta)
-    coordinatesDiffChart(timestamps, Pair(realXDelta, icpXDelta), Pair(realYDelta, icpYDelta), Pair(realZDelta, icpZDelta))
+//    calculatedLocationsDiffChart(timestamps, icpXDelta, icpYDelta, icpZDelta)
+//    coordinatesDiffChart(timestamps, Pair(realXDelta, icpXDelta), Pair(realYDelta, icpYDelta), Pair(realZDelta, icpZDelta))
     overlaidLocations(locations, calculated)
 }
 
