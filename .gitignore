@@ -271,8 +271,10 @@ __pycache__/
 code/output/**/*
 code/output_1/**/*
 code/output_2/**/*
-code/output_3/**/*
-code/output_4/**/*
+code/output_3_alg1/**/*
+code/output_3_alg2_voxel/**/*
+code/output_4_alg1/**/*
+code/output_4_alg2_voxel/**/*
 
 ## pcl project
 projects/pcl/build/.vs/

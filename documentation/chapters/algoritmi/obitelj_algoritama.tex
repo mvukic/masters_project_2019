@@ -1,6 +1,6 @@
 \section{Obitelj algoritama}
 
-Algoritmi korišteni za obrađivanje senzorskih podataka pripadaju ICP (eng. iterative closest point) obitelji algoritama. Koristi se za minimizaciju razlika dvije skupine točaka. U ovome slučaju se koristi za minimizaciju razlike između dva oblaka točaka prikupljenih pomoću lidar senzora. Ovaj algoritam radi tako da se jedan skup točaka postavi kao referentni dok se drugi skup pokušava transformirati, uz minimiziranje razlike, u referentni skup. Algoritam iterativno poboljšava transformaciju potrebnu za minimiziranje pogreške. Za računanje pogreške se mogu koristiti kvadrati razlika koordinata dviju točaka. ICP algoritam je jedan od najkorištenijih algoritama za rekonstrukcije trodimenzionalnih objekata. ICP algoritam su prvi puta predstavili Besl i Mckay (ref: https://ieeexplore.ieee.org/document/121791).
+Algoritmi korišteni za obrađivanje senzorskih podataka pripadaju ICP (eng. iterative closest point) obitelji algoritama. Koristi se za minimizaciju razlika dvije skupine točaka. U ovome slučaju se koristi za minimizaciju razlike između dva oblaka točaka prikupljenih pomoću lidar senzora. Ovaj algoritam radi tako da se jedan skup točaka postavi kao referentni dok se drugi skup pokušava transformirati, uz minimiziranje razlike, u referentni skup. Algoritam iterativno poboljšava transformaciju potrebnu za minimiziranje pogreške. Za računanje pogreške se mogu koristiti kvadrati razlika koordinata dviju točaka. ICP algoritam je jedan od najkorištenijih algoritama za rekonstrukcije trodimenzionalnih objekata. ICP algoritam su prvi puta predstavili Besl i Mckay~\cite{beslmckay121791}.
 
 \subsubsection{Ulaz i izlaz algoritma}
 
@@ -49,7 +49,7 @@ Neke od tih metoda filtriranja su:
 \begin{figure}[ht!]
   \centering
   \includegraphics[scale=0.2]{images/pcl_logo.png}
-  \caption{PCL logo}
+  \caption{PCL logo\cite{logo:pcl}}
   \label{fig:pcl_logo}
 \end{figure}
 

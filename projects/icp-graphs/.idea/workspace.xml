@@ -2,11 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a8c306a1-365e-48cc-95e5-29554b343267" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/Main.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/Main.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/charts/AnglesDifferencesCharts.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/charts/AnglesDifferencesCharts.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/charts/LocationsDifferencesCharts.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/charts/LocationsDifferencesCharts.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/stats/Calculate.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/stats/Calculate.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/stats/MEA.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/stats/MEA.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../documentation/Izvori.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../../documentation/Izvori.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../documentation/chapters/algoritmi/obitelj_algoritama.tex" beforeDir="false" afterPath="$PROJECT_DIR$/../../documentation/chapters/algoritmi/obitelj_algoritama.tex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../documentation/chapters/podaci/simulator.tex" beforeDir="false" afterPath="$PROJECT_DIR$/../../documentation/chapters/podaci/simulator.tex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../documentation/diplomski.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/../../documentation/diplomski.pdf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../documentation/fer.cls" beforeDir="false" afterPath="$PROJECT_DIR$/../../documentation/fer.cls" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../documentation/literatura.bib" beforeDir="false" afterPath="$PROJECT_DIR$/../../documentation/literatura.bib" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../pcl/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../pcl/main.cpp" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/.gradle/" />
@@ -62,8 +65,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/kotlin/Main.kt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="192">
-              <caret line="17" column="56" lean-forward="true" selection-start-line="17" selection-start-column="56" selection-end-line="17" selection-end-column="56" />
+            <state relative-caret-position="76">
+              <caret line="24" column="40" lean-forward="true" selection-start-line="24" selection-start-column="40" selection-end-line="24" selection-end-column="40" />
             </state>
           </provider>
         </entry>
@@ -127,9 +130,9 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="7">
-    <option name="x" value="673" />
-    <option name="y" value="-25" />
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="17" />
+    <option name="y" value="24" />
     <option name="width" value="974" />
     <option name="height" value="766" />
   </component>
@@ -234,7 +237,20 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Kotlin.OUTPUT_3">
+  <component name="RunManager" selected="Kotlin.OUTPUT_4_alg2_voxel">
+    <configuration name="OUTPUT" type="JetRunConfigurationType" factoryName="Kotlin">
+      <module name="icp-graphs.main" />
+      <option name="VM_PARAMETERS" value="" />
+      <option name="PROGRAM_PARAMETERS" value="./code/output/" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="MAIN_CLASS_NAME" value="MainKt" />
+      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$/../.." />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="OUTPUT_1" type="JetRunConfigurationType" factoryName="Kotlin">
       <module name="icp-graphs.main" />
       <option name="VM_PARAMETERS" value="" />
@@ -261,10 +277,10 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="OUTPUT_3" type="JetRunConfigurationType" factoryName="Kotlin">
+    <configuration name="OUTPUT_3_alg1" type="JetRunConfigurationType" factoryName="Kotlin">
       <module name="icp-graphs.main" />
       <option name="VM_PARAMETERS" value="" />
-      <option name="PROGRAM_PARAMETERS" value="./code/output_3/" />
+      <option name="PROGRAM_PARAMETERS" value="./code/output_3_alg1/" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" />
       <option name="PASS_PARENT_ENVS" value="true" />
@@ -274,10 +290,36 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="OUTPUT_4" type="JetRunConfigurationType" factoryName="Kotlin" temporary="true">
+    <configuration name="OUTPUT_3_alg2_voxel" type="JetRunConfigurationType" factoryName="Kotlin">
       <module name="icp-graphs.main" />
       <option name="VM_PARAMETERS" value="" />
-      <option name="PROGRAM_PARAMETERS" value="./code/output_4/" />
+      <option name="PROGRAM_PARAMETERS" value="./code/output_3_alg2_voxel/" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="MAIN_CLASS_NAME" value="MainKt" />
+      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$/../.." />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="OUTPUT_4_alg1" type="JetRunConfigurationType" factoryName="Kotlin" temporary="true">
+      <module name="icp-graphs.main" />
+      <option name="VM_PARAMETERS" value="" />
+      <option name="PROGRAM_PARAMETERS" value="./code/output_4_alg1/" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="MAIN_CLASS_NAME" value="MainKt" />
+      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$/../.." />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="OUTPUT_4_alg2_voxel" type="JetRunConfigurationType" factoryName="Kotlin">
+      <module name="icp-graphs.main" />
+      <option name="VM_PARAMETERS" value="" />
+      <option name="PROGRAM_PARAMETERS" value="./code/output_4_alg2_voxel/" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" />
       <option name="PASS_PARENT_ENVS" value="true" />
@@ -288,14 +330,17 @@
       </method>
     </configuration>
     <list>
-      <item itemvalue="Kotlin.OUTPUT_3" />
+      <item itemvalue="Kotlin.OUTPUT_3_alg1" />
+      <item itemvalue="Kotlin.OUTPUT_3_alg2_voxel" />
+      <item itemvalue="Kotlin.OUTPUT" />
       <item itemvalue="Kotlin.OUTPUT_2" />
       <item itemvalue="Kotlin.OUTPUT_1" />
-      <item itemvalue="Kotlin.OUTPUT_4" />
+      <item itemvalue="Kotlin.OUTPUT_4_alg2_voxel" />
+      <item itemvalue="Kotlin.OUTPUT_4_alg1" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Kotlin.OUTPUT_4" />
+        <item itemvalue="Kotlin.OUTPUT_4_alg1" />
       </list>
     </recent_temporary>
   </component>
@@ -318,7 +363,7 @@
       <workItem from="1561458889366" duration="25037000" />
       <workItem from="1561647021169" duration="4384000" />
       <workItem from="1561810382480" duration="15189000" />
-      <workItem from="1561898726650" duration="6828000" />
+      <workItem from="1561898726650" duration="8908000" />
     </task>
     <task id="LOCAL-00001" summary="fdfdf">
       <created>1561462255058</created>
@@ -345,11 +390,10 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="97144000" />
+    <option name="totallyTimeSpent" value="99224000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="7" />
-    <editor active="true" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.23400854" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -569,8 +613,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/kotlin/Main.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="192">
-          <caret line="17" column="56" lean-forward="true" selection-start-line="17" selection-start-column="56" selection-end-line="17" selection-end-column="56" />
+        <state relative-caret-position="76">
+          <caret line="24" column="40" lean-forward="true" selection-start-line="24" selection-start-column="40" selection-end-line="24" selection-end-column="40" />
         </state>
       </provider>
     </entry>

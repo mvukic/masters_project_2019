@@ -23,12 +23,8 @@ PointCloudType::Ptr cloud_ref(new PointCloudType());
 PointCloudType::Ptr cloud_target(new PointCloudType());
 PointCloudType::Ptr cloud_registered(new PointCloudType());
 
-// Clouds used in feature detection and filtering
-typedef search::KdTree<PT> KDTreeType;
-
 PointCloudType::Ptr cloud_ref_filtered(new PointCloudType());
 PointCloudType::Ptr cloud_target_filtered(new PointCloudType());
-KDTreeType::Ptr kd_tree(new KDTreeType());
 
 string root_point_clouds = "D:\\faks\\dipl\\code\\output\\point_clouds\\";
 string root_results = "D:\\faks\\dipl\\code\\output\\icp_results\\";
@@ -99,8 +95,8 @@ void save_matrix(ICP icp, string first, string second) {
 	string filename = first + "-" + second + ".txt";
 	Eigen::Matrix3d mat = mat4x4_to_3x3(transformation);
 	Eigen::Vector3d rpy = mat.eulerAngles(0, 1, 2);
-	print_4x4_matrix(transformation);
-	//save_to_file(filename, mat_to_string(transformation), fitness, rpy);
+	//print_4x4_matrix(transformation);
+	save_to_file(filename, mat_to_string(transformation), fitness, rpy);
 }
 
 void process_files_genralized(vector<path> paths, ICP icp) {
@@ -129,7 +125,6 @@ void process_files_genralized(vector<path> paths, ICP icp) {
 void downsample_using_voxel_grid(PointCloudType::Ptr& cloud, float leafsize, PointCloudType::Ptr& downsampled) {
 	VoxelGrid<PT> vg;
 	vg.setInputCloud(cloud);
-	// in cm
 	vg.setLeafSize(leafsize, leafsize, leafsize);
 	vg.filter(*downsampled);
 }
@@ -137,13 +132,13 @@ void downsample_using_voxel_grid(PointCloudType::Ptr& cloud, float leafsize, Poi
 void downsample_using_statical_outliner(PointCloudType::Ptr& cloud, PointCloudType::Ptr& cloudFiltered) {
 	StatisticalOutlierRemoval<PT> sor;
 	sor.setInputCloud(cloud);
-	sor.setMeanK(50);
+	sor.setMeanK(15);
 	sor.setStddevMulThresh(1.0);
 	sor.filter(*cloudFiltered);
 }
 
 void process_files_with_feature_detection(vector<path> paths, ICP icp) {
-	for (long i = 0; i < 2; i++) {
+	for (long i = 0; i < paths.size() - 1; i++) {
 		if (i == 0) {
 			load_point_cloud(paths.at(i).string(), *cloud_ref);
 		}
@@ -151,13 +146,19 @@ void process_files_with_feature_detection(vector<path> paths, ICP icp) {
 
 		string first = paths.at(i).stem().string();
 		string second = paths.at(i + 1).stem().string();
-
-		//downsample_using_statical_outliner(cloud_ref, cloud_ref_filtered);
+		cout << first << " " << second << endl;
+		//if (i == 0) {
+		//	downsample_using_statical_outliner(cloud_ref, cloud_ref_filtered);
+		//}
 		//downsample_using_statical_outliner(cloud_target, cloud_target_filtered);
 		if (i == 0) {
-			downsample_using_voxel_grid(cloud_ref, 5.0f, cloud_ref_filtered);
+			downsample_using_voxel_grid(cloud_ref, 1.0f, cloud_ref_filtered);
 		}
-		downsample_using_voxel_grid(cloud_target, 5.0f, cloud_target_filtered);
+		downsample_using_voxel_grid(cloud_target, 1.0f, cloud_target_filtered);
+
+		cout << cloud_ref->size() << " <-> " << cloud_ref_filtered->size() << endl;
+		cout << cloud_target->size() << " <-> " << cloud_target_filtered->size() << endl;
+		cout << endl;
 
 		icp.setInputCloud(cloud_ref_filtered);
 		icp.setInputTarget(cloud_target_filtered);
@@ -165,8 +166,9 @@ void process_files_with_feature_detection(vector<path> paths, ICP icp) {
 		if (icp.hasConverged()) {
 			save_matrix(icp, first, second);
 		}
+
 		*cloud_ref = *cloud_target;
-		*cloud_ref_filtered = *cloud_target_filtered
+		*cloud_ref_filtered = *cloud_target_filtered;
 	}
 }
 
