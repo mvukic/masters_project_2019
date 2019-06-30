@@ -7,9 +7,7 @@ import load.loadICPResults
 import models.shared.Euler
 import models.shared.Point
 import models.icp.toEuler
-import stats.calculateEulerAngles
-import stats.calculatePoints
-import stats.distanceAndTime
+import stats.*
 
 fun main(args: Array<String>)  {
     // Read data from files
@@ -25,13 +23,18 @@ fun main(args: Array<String>)  {
     val calculatedAngles: List<Euler> = calculateEulerAngles(icpTransformations.toEuler(), angles)
 
     // Prints distance and time traveled
-//    distanceAndTime(locations, calculatedLocations, groundTruth.timestamps())
+    distanceAndTime(locations, calculatedLocations, groundTruth.timestamps())
+
+    MEACoordinates(locations, calculatedLocations)
+    MEAAngles(angles, calculatedAngles)
+    MSECoordinates(locations, calculatedLocations)
+    MSEAngles(angles, calculatedAngles)
 
     // Show basic charts
 //    groundTruthCharts(groundTruth)
 //    icpCharts(groundTruth.timestamps(), icpTransformations)
 
     // Show chart indicating location differences
-//    locationDifferencesCharts(groundTruth.timestamps(), locations, calculatedLocations)
+    locationDifferencesCharts(groundTruth.timestamps(), locations, calculatedLocations)
     anglesDifferencesCharts(groundTruth.timestamps(), angles, calculatedAngles)
 }

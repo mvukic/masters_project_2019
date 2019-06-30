@@ -8,28 +8,9 @@ import org.knowm.xchart.style.Styler
 import stats.calculateCoordinateDifferences
 import stats.calculatePointsDifference
 
-fun locationDifferencesCharts(timestampsFull: List<Double>, locations: List<Point>, calculated: List<Point>) {
-    val timestamps = timestampsFull.drop(1)
-    val realPointsDiff = calculateCoordinateDifferences(locations)
-    val icpPointsDiff = calculateCoordinateDifferences(calculated)
-
+fun locationDifferencesCharts(timestamps: List<Double>, locations: List<Point>, calculated: List<Point>) {
     val diffs = calculatePointsDifference(locations, calculated)
-    differenceBetweenRealAndCalcChart(timestampsFull, diffs)
-
-    // Differences between real points
-//    val realXDelta = realPointsDiff.map { it.x }
-//    val realYDelta = realPointsDiff.map { it.y }
-//    val realZDelta = realPointsDiff.map { it.z }
-
-//    realLocationsDiffCharts(timestamps, realXDelta, realYDelta, realZDelta)
-
-    // Differences between calculated points
-//    val icpXDelta = icpPointsDiff.map { it.x }
-//    val icpYDelta = icpPointsDiff.map { it.y }
-//    val icpZDelta = icpPointsDiff.map { it.z }
-
-//    calculatedLocationsDiffChart(timestamps, icpXDelta, icpYDelta, icpZDelta)
-//    coordinatesDiffChart(timestamps, Pair(realXDelta, icpXDelta), Pair(realYDelta, icpYDelta), Pair(realZDelta, icpZDelta))
+    differenceBetweenRealAndCalcChart(timestamps, diffs)
     overlaidLocations(locations, calculated)
 }
 

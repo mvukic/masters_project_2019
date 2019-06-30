@@ -142,7 +142,7 @@ fun calculateEulerDifference(angles: List<Euler>, calculated: List<Euler>): List
         Euler(
             roll = (it.first.roll - it.second.roll).absoluteValue,
             pitch = (it.first.pitch - it.second.pitch).absoluteValue,
-            yaw = if (yaw > 3.1) yaw - PI else yaw
+            yaw = if (yaw > 3.1) (yaw - PI).absoluteValue else yaw
         )
     }
 }

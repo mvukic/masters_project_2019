@@ -7,7 +7,7 @@ Ovaj način uspoređivanja skupova točaka je najjednostavniji. Ne tražimo prep
 \subsubsection{Izvorni kod algoritma}
 Metodom \mintinline{c++}{process_files} u primjeru \ref{coderef:gen_icp_process_load} se iterira kroz datoteke te se otvaraju u parovima i njihov sadržaj tj. informacije o oblaku točaka se spremaju u globalne varijable \mintinline{c++}{cloud_ref} i \mintinline{c++}{cloud_target}. Na linijama 11 i 12 postavljam ICP algoritmu dodatne ulazne parametre, a to su te varijable. Konačno se pokreće algoritam te se ispituje ako je došlo do konvergencije. Do konvergencije dolazi ako su dva skupa oblaka slična tj. ako predstavljaju isti objekt ali rotiran i/ili translantiran. Očekuje se da uvijek dođe do konvergencije u ovome primjeru. Ako je došlo do konvergencije, spremamo podatke u datoteku. Naposljetku se iz optimizacijskih razloga vrijednost matrice \mintinline{c++}{cloud_target} sprema kao referentni skup točaka.
 \begin{listing}[H]
-  \begin{minted}[frame=lines, linenos]{c++}
+  \begin{minted}[frame=lines, linenos]{text}
 void load_point_cloud(string path, PointCloudType& cloud) {
  pcl::io::loadPLYFile(path, cloud);
 }
@@ -40,7 +40,7 @@ void process_files(vector<path> paths, ICP icp) {
 \subsubsection{Rezultat algoritma}
 
 \begin{listing}[H]
-  \begin{minted}[frame=lines, linenos]{c++}
+  \begin{minted}[frame=lines, linenos]{text}
 void save_matrix(ICP icp, string first, string second) {
  Matrix4d transformation = icp.getFinalTransformation();
  double fitness = icp.getFitnessScore();
@@ -61,7 +61,7 @@ void save_matrix(ICP icp, string first, string second) {
 
 Spremanje rezultata se vrši metodom \mintinline{c++}{save_matrix} u primjeru \ref{coderef:gen_icp_save_matrix}. Matricu transformacije možemo dobiti pozivom \mintinline{c++}{icp.getFinalTransformation()} te je ona oblika \mintinline{c++}{Matrix4d} tj. ima 4 redaka i 4 stupaca dok su elemnti tipa \mintinline{c++}{double}. Ta matrica se tada transformira u matricu veličine 3x3 tj. izdvaja se rotacijska matrica zato što takav tip matrice ima ugrađenu metodu \mintinline{c++}{eulerAngles()}. Ta metoda kao argumente prima redosljed rotacija objekta tj. redosljed osi rotacija. U ovome slučaju se prvo predaje 0 što znači da se objekt prvo rotirao oko x osi, tada se predaje što znači da se tada rotirao oko y osi i naposljetku se predaje 2 što znači da je zadnja rotacija bila oko z osi. Metoda vraća vektor od tri elementa koji predstavljaju valjanje, poniranje i skretanje. Konačno se sve te informacije spremaju u datoteku s imenom sastavljenim od dva indetifikatora očitanja tako da se zna koji skupovi točaka su upoređivani. Struktura te datoteke je prikazana na primjeru  \ref{files:icp_file_result}. Prva linija sadrži fitnes vrijednost. Od druge do pete linije se nalazi transformacijska matrica dok se na zadnjoj liniji nalaze Eulerovi kutevi u radijanima.
 \begin{listing}[H]
-  \begin{minted}[frame=lines]{html}
+  \begin{minted}[frame=lines]{text}
 0.0263544
     0.999735   -0.0230172  -0.00046344  -0.00394583
    0.0230173     0.999735  0.000237121  0.000806379
@@ -73,17 +73,131 @@ Spremanje rezultata se vrši metodom \mintinline{c++}{save_matrix} u primjeru \r
   \label{files:icp_file_result}
 \end{listing}
 
-\pagebreak
-\subsubsection{Evaluacija rezultata}
-prikazani na grafovima s referentnim podacima
+\begin{equation}
+  \begin{aligned}
+AM_{x} &= \frac{1}{n}\sum_{i=0}^{n-1} |X_{i} - \hat{X}_{i}|\\
+AM_{y} &= \frac{1}{n}\sum_{i=0}^{n-1} |Y_{i} - \hat{Y}_{i}|\\
+AM_{z} &= \frac{1}{n}\sum_{i=0}^{n-1} |Z_{i} - \hat{Z}_{i}|
+  \end{aligned}
+  \label{eq:coord_am}
+\end{equation}
+\begin{equation}
+  \begin{aligned}
+MSE_{x} &= \frac{1}{n}\sum_{i=0}^{n-1} |X_{i} - \hat{X}_{i}|^2\\
+MSE_{y} &= \frac{1}{n}\sum_{i=0}^{n-1} |Y_{i} - \hat{Y}_{i}|^2\\
+MSE_{z} &= \frac{1}{n}\sum_{i=0}^{n-1} |Z_{i} - \hat{Z}_{i}|^2
+  \end{aligned}
+  \label{eq:coord_mse}
+\end{equation}
 
-grafovi za :
-  overlay location,
-  euler rotacije,
-  razlike koordinata
-  razlike eulerovih rotacija
-ispiši stvarnu duljinu putovanja
-ispiši estimiranu duljinu putovanja
-ispiši MEA lokacija
-ispiši MEA rotacija
+\begin{equation}
+  \begin{aligned}
+ROT_{r} &= \frac{1}{n}\sum_{i=0}^{n-1} |R_{i} - \hat{R}_{i}|\\
+ROT_{p} &= \frac{1}{n}\sum_{i=0}^{n-1} |P_{i} - \hat{P}_{i}|\\
+ROT_{y} &= \frac{1}{n}\sum_{i=0}^{n-1} |Y_{i} - \hat{Y}_{i}|
+  \end{aligned}
+  \label{eq:rot_am}
+\end{equation}
+\begin{equation}
+  \begin{aligned}
+ROT_{r} &= \frac{1}{n}\sum_{i=0}^{n-1} |R_{i} - \hat{R}_{i}|^2\\
+ROT_{p} &= \frac{1}{n}\sum_{i=0}^{n-1} |P_{i} - \hat{P}_{i}|^2\\
+ROT_{y} &= \frac{1}{n}\sum_{i=0}^{n-1} |Y_{i} - \hat{Y}_{i}|^2
+  \end{aligned}
+  \label{eq:rot_mse}
+\end{equation}
+
+Sretnja aritmetička vrijednosti apsolutnih razlika koordinata i rotacija se računa s formulama \ref{eq:coord_am} i \ref{eq:rot_am}. Element $n$ je ukupan broj točaka, $X_{i}$ je stvarna vrijednost koordinate x, dok je $\hat{X}_{i}$ estimirani iznos x koordinate. Element $R_{i}$ je stvarna vrijednost kura valjanja, dok je $\hat{R}_{}$ estimirana vrijednost kuta valjanja. Srednje vrijednosti kvadrata razlika za koordinate i rotacije se računaju s formulama \ref{eq:coord_mse} i \ref{eq:rot_mse}. Rezultati su prikazani u tablici \ref{res:ref_est_table}.
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{ |p{3cm}| |p{3cm}|p{3cm}| }
+    \hline
+    Rezultati& Primjer A& PrimjerB\\
+    \hline
+    Duljina [m]& 677.521& 467.367\\
+    AMx [m]& 1.861& 0.927\\
+    AMy [m]& 2.543& 1.019\\
+    AMz [m]& 0.084& 0.016\\
+    AMr [rad]& 9.887E-4& 2.813E-4\\
+    AMp [rad]& 9.356E-4& 3.680E-4\\
+    AMy [rad]& 0.351& 0.012\\
+    \hline
+    MSEx [m]& 7.301& 1.953\\
+    MSEy [m]& 8.268& 1.442\\
+    MSEz [m]& 0.015& 5.642E-4\\
+    MSEr [rad]& 9.229-6& 1.903E-6\\
+    MSEp [rad]& 4.331-6& 6.047E-7\\
+    MSEy [rad]& 1.981& 2.622E-4\\
+    \hline
+  \end{tabular}
+  \caption{Usporedbe referentnih i estimiranih podataka}
+  \label{res:ref_est_table}
+\end{table}
+\pagebreak
+
+\subsubsection{Evaluacija rezultata za primjer A}
+\begin{figure}[H]
+  \includegraphics[scale=0.4]{images/algo1/primjer3/usporedba_lokacija.png}
+  \caption{Graf lokacije vozila}
+  \label{eval:a1p3_lokacija}
+\end{figure}
+\begin{figure}[H]
+  \includegraphics[scale=0.4]{images/algo1/primjer3/apsolutne_razlike_koordinata.png}
+  \caption{Apsolutne razlike koordinata}
+  \label{eval:a1p3_koord_razlike}
+\end{figure}
+\begin{figure}[H]
+  \includegraphics[scale=0.4]{images/algo1/primjer3/rotacije_razlike.png}
+  \caption{Apsolutne razlike rotacija}
+  \label{eval:a1p3_rot_razlike}
+\end{figure}
+\begin{figure}[H]
+  \includegraphics[scale=0.4]{images/algo1/primjer3/referentno_estimirano_valjanje.png}
+  \caption{Usporedba referentnog i estimiranog valjanja}
+  \label{eval:a1p3_rot_roll}
+\end{figure}
+\begin{figure}[H]
+  \includegraphics[scale=0.4]{images/algo1/primjer3/referentno_estimirano_poniranje.png}
+  \caption{Usporedba referentnog i estimiranog poniranja}
+  \label{eval:a1p3_rot_pitch}
+\end{figure}
+\begin{figure}[H]
+  \includegraphics[scale=0.4]{images/algo1/primjer3/referentno_estimirano_skretanje.png}
+  \caption{Usporedba referentnog i estimiranog skretanja}
+  \label{eval:a1p3_rot_yaw}
+\end{figure}
+
+
+\subsubsection{Evaluacija rezultata za primjer B}
+\begin{figure}[H]
+  \includegraphics[scale=0.4]{images/algo1/primjer4/usporedba_lokacija.png}
+  \caption{Graf lokacije vozila}
+  \label{eval:a1p4_lokacija}
+\end{figure}
+\begin{figure}[H]
+  \includegraphics[scale=0.4]{images/algo1/primjer4/apsolutne_razlike_koordinata.png}
+  \caption{Apsolutne razlike koordinata}
+  \label{eval:a1p4_koord_razlike}
+\end{figure}
+\begin{figure}[H]
+  \includegraphics[scale=0.4]{images/algo1/primjer4/rotacije_razlike.png}
+  \caption{Apsolutne razlike rotacija}
+  \label{eval:a1p4_rot_razlike}
+\end{figure}
+\begin{figure}[H]
+  \includegraphics[scale=0.4]{images/algo1/primjer4/referentno_estimirano_valjanje.png}
+  \caption{Usporedba referentnog i estimiranog valjanja}
+  \label{eval:a1p4_rot_roll}
+\end{figure}
+\begin{figure}[H]
+  \includegraphics[scale=0.4]{images/algo1/primjer4/referentno_estimirano_poniranje.png}
+  \caption{Usporedba referentnog i estimiranog poniranja}
+  \label{eval:a1p4_rot_pitch}
+\end{figure}
+\begin{figure}[H]
+  \includegraphics[scale=0.4]{images/algo1/primjer4/referentno_estimirano_skretanje.png}
+  \caption{Usporedba referentnog i estimiranog skretanja}
+  \label{eval:a1p4_rot_yaw}
+\end{figure}
 \pagebreak

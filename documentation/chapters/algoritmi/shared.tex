@@ -5,7 +5,7 @@
 Kod u nastavku je dijeljeni kod tj. koristi se u oba algoritma. Sastoji se od metoda za čitanje datoteka s informacijama o oblacima točaka i metoda za spremanje transformacijskih matrica u datoteke. 
 
 \begin{listing}[h!]
-  \begin{minted}[frame=lines, linenos]{c++}
+  \begin{minted}[frame=lines, linenos]{text}
 typedef PointXYZ PT;
 typedef PointCloud<PT> PointCloudType;
 typedef IterativeClosestPoint<PT, PT, double> ICP;
@@ -26,7 +26,7 @@ U primjeru izvornoga koda \ref{coderef:gen_icp_const} su definirane konstante po
 Definirane su i varijable \mintinline{c++}{cloud_ref} koja pokazuje na referentni skup točaka, \mintinline{c++}{cloud_target} koja pokazuje na ciljni skup točakai \mintinline{c++}{cloud_reg} koja pokazuje na skup točaka nakon poravnanja. One su tipa \mintinline{c++}{boost::shared_ptr} te se kao takve predaju metodama kao pokazivači.
 
 \begin{listing}[h!]
-  \begin{minted}[frame=lines, linenos]{c++}
+  \begin{minted}[frame=lines, linenos]{text}
 ICP setupICP() {
  ICP icp;
  icp.setMaxCorrespondenceDistance(0.05);
@@ -49,7 +49,7 @@ U primjeru \ref{coderef:gen_icp_def} se definira ICP algoritam tako da mu se pre
 \end{enumerate}
 
 \begin{listing}[h!]
-  \begin{minted}[frame=lines, linenos]{c++}
+  \begin{minted}[frame=lines, linenos]{text}
 vector<path> get_files() {
  vector<path> paths;
  path p(root_point_clouds);
@@ -69,7 +69,7 @@ vector<path> get_files() {
 Kod u primjeru \ref{coderef:gen_icp_collect_files} koristi metode biblioteke Boost za iteriranje datoteka sa skupovima točaka te vrača vektora s njihovim apsolutnim putanjama. Kod za stvaranje grafova je jednak bez obzira na korišteni algoritam. Grafovi su stvoreni pomoću jezika Kotlin i biblioteke XCharts. Podaci koji vizualiziraju su usporedbe stvarnih podataka tj. referentnih i podataka dobivenih pomoću algoritama. S obzirom da nam algoritmi kao izlaz daju samo transformacijske matrice, potrebno je nekako te matrice prikazati kao koordinate lokacija i kuteve rotacija.
 
 \begin{listing}[h!]
-  \begin{minted}[frame=lines, linenos]{kotlin}
+  \begin{minted}[frame=lines, linenos]{text}
 fun calculatePoints(
   icp: List<TransformMatrix>,
   realPoints: List<Point>)
@@ -125,22 +125,22 @@ Prvi kup podataka se sastoji od 300 očitanja tj. postoji 300 datoteka sa skupov
 \end{enumerate}
 \begin{figure}[H]
   \includegraphics[scale=0.4]{images/koordinate1.png}
-  \caption{Graf lokacije vozila A}
+  \caption{Graf lokacije vozila}
   \label{fig:gt1_lokacija}
 \end{figure}
 \begin{figure}[H]
   \includegraphics[scale=0.4]{images/koordinate_vrijeme1.png}
-  \caption{Graf x, y i z koordinata vozila u vremenu A}
+  \caption{Graf x, y i z koordinata vozila u vremenu}
   \label{fig:gt1_lokacija_koord}
 \end{figure}
 \begin{figure}[H]
   \includegraphics[scale=0.4]{images/rotacija_vrijeme1.png}
-  \caption{Valjanje, skretanje i poniranje vozila u vremenu A}
+  \caption{Valjanje, skretanje i poniranje vozila u vremenu}
   \label{fig:gt1_rot_vr}
 \end{figure}
 \begin{figure}[H]
   \includegraphics[scale=0.4]{images/rotacija_kvaterni1.png}
-  \caption{Rotacija vozila u obliku kvaterniona A}
+  \caption{Rotacija vozila u obliku kvaterniona}
   \label{fig:gt1_rot_kv}
 \end{figure}
 
@@ -153,22 +153,22 @@ Drugi skup podataka se sastoji od 600 očitanja tj. postoji 300 datoteka sa skup
 \end{enumerate}
 \begin{figure}[H]
   \includegraphics[scale=0.35]{images/koordinate2.png}
-  \caption{Graf lokacije vozila B}
+  \caption{Graf lokacije vozila}
   \label{fig:gt2_lokacija}
 \end{figure}
 \begin{figure}[H]
   \includegraphics[scale=0.35]{images/koordinate_vrijeme2.png}
-  \caption{Graf x, y i z koordinata vozila u vremenu B}
+  \caption{Graf x, y i z koordinata vozila u vremenu}
   \label{fig:gt2_lokacija_koord}
 \end{figure}
 \begin{figure}[H]
   \includegraphics[scale=0.35]{images/rotacija_vrijeme2.png}
-  \caption{Valjanje, skretanje i poniranje vozila u vremenu B}
+  \caption{Valjanje, skretanje i poniranje vozila u vremenu}
   \label{fig:gt2_rot_vr}
 \end{figure}
 \begin{figure}[H]
   \includegraphics[scale=0.35]{images/rotacija_kvaterni2.png}
-  \caption{Rotacija vozila u obliku kvaterniona B}
+  \caption{Rotacija vozila u obliku kvaterniona}
   \label{fig:gt2_rot_kv}
 \end{figure}
-Prvi niz skupova točaka se skupljao u dužem periodu ali ima samo 300 skupova zato što se koristi svako 15 očitanje. Drugi niz skupova točaka ima 600 očitanja zato što se uzima svako očitanje. Također je drgi skup detaljniji od prvoga te se očekuju bolji rezultati algoritama.
+Prvi niz skupova točaka se skupljao u dužem periodu ali ima samo 300 skupova zato što se koristi svako 15 očitanje. Drugi niz skupova točaka ima 600 očitanja zato što se uzima svako očitanje. Također je drgi skup detaljniji od prvoga te se očekuju bolji rezultati algoritama. Duljinu puta možemo izračunati tako da pronađemo udaljenosti između dvije sljedne točke te ih zbrojimo. Tako dobivena udaljenost za referentni primjer A iznosi 662.3 metra, a za referentni primjer B iznosi 448.2 metra.
