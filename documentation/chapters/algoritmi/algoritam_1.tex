@@ -5,7 +5,7 @@ Ovaj način uspoređivanja skupova točaka je najjednostavniji. Ne tražimo prep
 
 
 \subsubsection{Izvorni kod algoritma}
-Metodom \mintinline{c++}{process_files} u primjeru \ref{coderef:gen_icp_process_load} se iterira kroz datoteke te se otvaraju u parovima i njihov sadržaj tj. informacije o oblaku točaka se spremaju u globalne varijable \mintinline{c++}{cloud_ref} i \mintinline{c++}{cloud_target}. Na linijama 11 i 12 postavljam ICP algoritmu dodatne ulazne parametre, a to su te varijable. Konačno se pokreće algoritam te se ispituje ako je došlo do konvergencije. Do konvergencije dolazi ako su dva skupa oblaka slična tj. ako predstavljaju isti objekt ali rotiran i/ili translantiran. Očekuje se da uvijek dođe do konvergencije u ovome primjeru. Ako je došlo do konvergencije, spremamo podatke u datoteku. Naposljetku se iz optimizacijskih razloga vrijednost matrice \mintinline{c++}{cloud_target} sprema kao referentni skup točaka.
+Metodom \mintinline{text}{process_files} u primjeru \ref{coderef:gen_icp_process_load} se iterira kroz datoteke te se otvaraju u parovima i njihov sadržaj tj. informacije o oblaku točaka se spremaju u globalne varijable \mintinline{text}{cloud_ref} i \mintinline{text}{cloud_target}. Na linijama 11 i 12 postavljam ICP algoritmu dodatne ulazne parametre, a to su te varijable. Konačno se pokreće algoritam te se ispituje ako je došlo do konvergencije. Do konvergencije dolazi ako su dva skupa oblaka slična tj. ako predstavljaju isti objekt ali rotiran i/ili translantiran. Očekuje se da uvijek dođe do konvergencije u ovome primjeru. Ako je došlo do konvergencije, spremamo podatke u datoteku. Naposljetku se iz optimizacijskih razloga vrijednost matrice \mintinline{text}{cloud_target} sprema kao referentni skup točaka.
 \begin{listing}[H]
   \begin{minted}[frame=lines, linenos]{text}
 void load_point_cloud(string path, PointCloudType& cloud) {
@@ -59,7 +59,7 @@ void save_matrix(ICP icp, string first, string second) {
   \label{coderef:gen_icp_save_matrix}
 \end{listing}
 
-Spremanje rezultata se vrši metodom \mintinline{c++}{save_matrix} u primjeru \ref{coderef:gen_icp_save_matrix}. Matricu transformacije možemo dobiti pozivom \mintinline{c++}{icp.getFinalTransformation()} te je ona oblika \mintinline{c++}{Matrix4d} tj. ima 4 redaka i 4 stupaca dok su elemnti tipa \mintinline{c++}{double}. Ta matrica se tada transformira u matricu veličine 3x3 tj. izdvaja se rotacijska matrica zato što takav tip matrice ima ugrađenu metodu \mintinline{c++}{eulerAngles()}. Ta metoda kao argumente prima redosljed rotacija objekta tj. redosljed osi rotacija. U ovome slučaju se prvo predaje 0 što znači da se objekt prvo rotirao oko x osi, tada se predaje što znači da se tada rotirao oko y osi i naposljetku se predaje 2 što znači da je zadnja rotacija bila oko z osi. Metoda vraća vektor od tri elementa koji predstavljaju valjanje, poniranje i skretanje. Konačno se sve te informacije spremaju u datoteku s imenom sastavljenim od dva indetifikatora očitanja tako da se zna koji skupovi točaka su upoređivani. Struktura te datoteke je prikazana na primjeru  \ref{files:icp_file_result}. Prva linija sadrži fitnes vrijednost. Od druge do pete linije se nalazi transformacijska matrica dok se na zadnjoj liniji nalaze Eulerovi kutevi u radijanima.
+Spremanje rezultata se vrši metodom \mintinline{text}{save_matrix} u primjeru \ref{coderef:gen_icp_save_matrix}. Matricu transformacije možemo dobiti pozivom \mintinline{text}{icp.getFinalTransformation()} te je  oblika \mintinline{text}{Matrix4d} tj. ima 4 redaka i 4 stupaca dok su elemnti tipa \mintinline{text}{double}. Ta matrica se tada transformira u matricu veličine 3x3 tj. izdvaja se rotacijska matrica zato što takav tip matrice ima ugrađenu metodu \mintinline{text}{eulerAngles()}. Ta metoda kao argumente prima redosljed rotacija objekta tj. redosljed osi rotacija. U ovome slučaju se prvo predaje 0 što znači da se objekt prvo rotirao oko x osi, tada se predaje što znači da se tada rotirao oko y osi i naposljetku se predaje 2 što znači da je zadnja rotacija bila oko z osi. Metoda vraća vektor od tri elementa koji predstavljaju valjanje, poniranje i skretanje. Konačno se sve te informacije spremaju u datoteku s imenom sastavljenim od dva indetifikatora očitanja tako da se zna koji skupovi točaka su upoređivani. Struktura te datoteke je prikazana na primjeru  \ref{files:icp_file_result}. Prva linija sadrži fitnes vrijednost. Od druge do pete linije se nalazi transformacijska matrica dok se na zadnjoj liniji nalaze Eulerovi kutevi u radijanima.
 \begin{listing}[H]
   \begin{minted}[frame=lines]{text}
 0.0263544
@@ -123,12 +123,12 @@ Sretnja aritmetička vrijednosti apsolutnih razlika koordinata i rotacija se ra�
     AMp [rad]& 9.356E-4& 3.680E-4\\
     AMy [rad]& 0.351& 0.012\\
     \hline
-    MSEx [m]& 7.301& 1.953\\
-    MSEy [m]& 8.268& 1.442\\
-    MSEz [m]& 0.015& 5.642E-4\\
-    MSEr [rad]& 9.229-6& 1.903E-6\\
-    MSEp [rad]& 4.331-6& 6.047E-7\\
-    MSEy [rad]& 1.981& 2.622E-4\\
+    MSEx [$m^2$]& 7.301& 1.953\\
+    MSEy [$m^2$]& 8.268& 1.442\\
+    MSEz [$m^2$]& 0.015& 5.642E-4\\
+    MSEr [$rad^2$]& 9.229-6& 1.903E-6\\
+    MSEp [$rad^2$]& 4.331-6& 6.047E-7\\
+    MSEy [$rad^2$]& 1.981& 2.622E-4\\
     \hline
   \end{tabular}
   \caption{Usporedbe referentnih i estimiranih podataka}

@@ -25,10 +25,11 @@ Lidar se sastoji od sljedećih glavnih dijelova:
 Izgled je ilustriran na slici \ref{fig:lidar_arch}. Ovaj primjer ima samo jedan laser. Servo motor rotira kučište gdje se nalazi laser te tako omogućuje očitanje u svih 360 stupnjeva. Danas se zahtjeva da brzine rotacije budu veće od 1000 okretaja u minuti. Nakošeno zrcalo služi za usmjeravanje zrake. Izvor laserske zrake proizvodi lasere u pulsevima. Te zrake se nalaze u infracrvenome valnome području te su sigurne za vid i male energije. Laserski detektor detektira laserske pulseve te dekodira podatke.
 
 \subsubsection{Rad lidara}
-Lidar može sadržavati razne sustave za lokalizaciju i orijentaciju poput GPS-a, inercijskih sustava (IMU) i ostalih. Koristi dvodimenzionalno očitanje u horizontalnom smijeru i vertikalno polje vida za kreiranje panorame u 360 stupnjeva. Za dekodiranje podataka se koristi vrijeme povratka laserske zrake  i valna duljina ako podržava detekciju boje. Postoji mogućnost nepotpunih očitanja zbog razlike između frekvencije rotacije i frekvencije očitanja senzora. Općenito se udaljenost predmeta s laserom može izračunati formulom \ref{eq:laser_distance_equation} gdje je c brzina svijetlosti, a t vrijeme povratka pulsa zrake.
+Lidar može sadržavati razne sustave za lokalizaciju i orijentaciju poput GPS-a, inercijskih sustava (IMU) i ostalih. Koristi dvodimenzionalno očitanje u horizontalnom smijeru i vertikalno polje vida za kreiranje panorame u 360 stupnjeva. Za dekodiranje podataka se koristi vrijeme povratka laserske zrake  i valna duljina ako podržava detekciju boje. Postoji mogućnost nepotpunih očitanja zbog razlike između frekvencije rotacije i frekvencije očitanja senzora. Općenito se udaljenost predmeta s laserom može izračunati formulom \ref{eq:laser_distance_equation} gdje je $c$ brzina svijetlosti, a $t$ vrijeme povratka pulsa zrake.
 
 \begin{equation}
-  D=\frac{ct}{2}\label{eq:laser_distance_equation}
+  D=\frac{ct}{2}
+  \label{eq:laser_distance_equation}
 \end{equation}
 Ovakav način je pogodan za srednje do velike udaljenosti, dok za vrlo male udaljenosti se koriste druge metode zato što se teško računaju vremena povratka zrake.
 

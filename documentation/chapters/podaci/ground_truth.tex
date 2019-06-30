@@ -1,10 +1,9 @@
 \section{Referentni podaci}
 
-Referentni podaci su oni podaci s kojima se uspoređuju rezultati metoda. Ti referentni podaci su generirani u simulatoru te predstavljaju lokaciju i rotaciju vozila u jednome trenutku. Referentni podaci se zapravo sastoje od lokacije i rotacije vozila.
+Referentni podaci su oni podaci s kojima se uspoređuju rezultati metoda. Ti podaci su generirani u simulatoru te stanje vozila u jednome trenutku u vremenu. Referentni podaci se zapravo sastoje od lokacije i rotacije vozila.
 
 \subsubsection{Lokacija}
 Lokacija vozila je također definirana kao točka u kartezijevom koordinatnome prostoru. Sastoji se od x, y i z koordinata. Slično kao prikazano na slici \ref{fig:point_coordinates}.
-
 
 \subsubsection{Rotacija}
  U trodimenzionalnome prostoru objekt se zapravo može rotirati oko beskonaćnoga broja osi ali se u pravilu uzimaju 3 statičke osi. Te osi se nazivaju os skretanja (eng. yaw), os poniranja (eng. pitch) i os valjanja (eng. roll). 
@@ -16,10 +15,9 @@ Lokacija vozila je također definirana kao točka u kartezijevom koordinatnome p
   \label{fig:yaw_roll_pitch_example}
 \end{figure}
 
-
 Os rotacije je os koja prolazi u smjeru kretanja vozila (x os), os poniranja je zapravo os okomita s os rotacija (z os), dok je os skretanja okomita na obje prethodne osi (y os). Te osi su ilustrirane na slici \ref{fig:yaw_roll_pitch_example}.
 
-Rotacija između dva sustava može biti reprezentirana pomoću rotacijskih matrica. Te matrice su veličine 3x3 te predstavljaju rotaciju oko određene osi.
+Rotacija između dva sustava može biti reprezentirana pomoću rotacijskih matrica\cite{wiki:Rotation_matrix}. Te matrice su veličine 3x3 te predstavljaju rotaciju oko određene osi.
 
 \begin{equation}
   R_{x}(\alpha) =
@@ -60,7 +58,7 @@ Za razliku od rotacijskih matrica Eulerova reprezentacija rotacije se sastoji od
     \begin{bmatrix} X_{o}\\ Y_{o}\\ Z_{o} \end{bmatrix}
     \label{eq:rotate_point}
 \end{gather}
-Kao kompromis između prednosti i nedostataka prethodnih reprezentacija rotacije objekata koristi se sustav kvaterniona (eng. Quaternion). U matematici kvaterniona su skup brojeva koji proširuju kompleksne brojeve. Rotacija je prikazana kao vektor od 4 komponente. Formula \ref{eq:quat_multiply} prikazuje kako se množe kvatrnioni.
+Kao kompromis između prednosti i nedostataka prethodnih reprezentacija rotacije objekata koristi se sustav kvaterniona\cite{wiki:Quaternion} (eng. Quaternion). U matematici kvaterniona su skup brojeva koji proširuju kompleksne brojeve. Rotacija je prikazana kao vektor od 4 komponente. Formula \ref{eq:quat_multiply} prikazuje kako se množe kvaternioni.
 
 \begin{equation}
   i^2 = j^2 = k^2 = ijk = -1
