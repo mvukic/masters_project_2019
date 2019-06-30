@@ -6,27 +6,50 @@ import org.knowm.xchart.SwingWrapper
 import org.knowm.xchart.XYChartBuilder
 import org.knowm.xchart.style.Styler
 import stats.calculateCoordinateDifferences
+import stats.calculatePointsDifference
 
 fun locationDifferencesCharts(timestampsFull: List<Double>, locations: List<Point>, calculated: List<Point>) {
     val timestamps = timestampsFull.drop(1)
     val realPointsDiff = calculateCoordinateDifferences(locations)
     val icpPointsDiff = calculateCoordinateDifferences(calculated)
 
+    val diffs = calculatePointsDifference(locations, calculated)
+    differenceBetweenRealAndCalcChart(timestampsFull, diffs)
+
     // Differences between real points
-    val realXDelta = realPointsDiff.map { it.x }
-    val realYDelta = realPointsDiff.map { it.y }
-    val realZDelta = realPointsDiff.map { it.z }
+//    val realXDelta = realPointsDiff.map { it.x }
+//    val realYDelta = realPointsDiff.map { it.y }
+//    val realZDelta = realPointsDiff.map { it.z }
 
 //    realLocationsDiffCharts(timestamps, realXDelta, realYDelta, realZDelta)
 
     // Differences between calculated points
-    val icpXDelta = icpPointsDiff.map { it.x }
-    val icpYDelta = icpPointsDiff.map { it.y }
-    val icpZDelta = icpPointsDiff.map { it.z }
+//    val icpXDelta = icpPointsDiff.map { it.x }
+//    val icpYDelta = icpPointsDiff.map { it.y }
+//    val icpZDelta = icpPointsDiff.map { it.z }
 
 //    calculatedLocationsDiffChart(timestamps, icpXDelta, icpYDelta, icpZDelta)
 //    coordinatesDiffChart(timestamps, Pair(realXDelta, icpXDelta), Pair(realYDelta, icpYDelta), Pair(realZDelta, icpZDelta))
     overlaidLocations(locations, calculated)
+}
+
+fun differenceBetweenRealAndCalcChart(timestamps: List<Double>, diffs: List<Point>) {
+    val diffX = diffs.map { it.x }
+    val diffY = diffs.map { it.y }
+    val diffZ = diffs.map { it.z }
+    val diffsChart = XYChartBuilder().apply {
+        height(600)
+        width(1000)
+        chartTheme = Styler.ChartTheme.Matlab
+        title = "Apsolutne razlike referentnih podataka i estimacije"
+        xAxisTitle("vrijeme [s]")
+        yAxisTitle("Δ koordinate [m]")
+    }.build()
+    diffsChart.styler.legendPosition = Styler.LegendPosition.OutsideS
+    diffsChart.addSeries("ΔX", timestamps, diffX)
+    diffsChart.addSeries("ΔY", timestamps, diffY)
+    diffsChart.addSeries("ΔZ", timestamps, diffZ)
+    SwingWrapper(diffsChart).displayChart()
 }
 
 fun overlaidLocations(locations: List<Point>, calculated: List<Point>) {
@@ -36,13 +59,13 @@ fun overlaidLocations(locations: List<Point>, calculated: List<Point>) {
         height(600)
         width(1000)
         chartTheme = Styler.ChartTheme.Matlab
-        title = "Real and calculated locations overlaid"
-        xAxisTitle("X coordinates]")
-        yAxisTitle("Y coordinates")
+        title = "Usporedbe lokacija"
+        xAxisTitle("X koordinate [m]")
+        yAxisTitle("Y koordinate [m]")
     }.build()
     locationsChart.styler.legendPosition = Styler.LegendPosition.OutsideS
-    locationsChart.addSeries("Real location", realCoords.first, realCoords.second)
-    locationsChart.addSeries("Calculated location", calculatedCoords.first, calculatedCoords.second)
+    locationsChart.addSeries("Referentne lokacije", realCoords.first, realCoords.second)
+    locationsChart.addSeries("Estimirane lokacije", calculatedCoords.first, calculatedCoords.second)
     SwingWrapper(locationsChart).displayChart()
 }
 
@@ -51,9 +74,9 @@ fun coordinatesDiffChart(timestamps: List<Double>, x: Pair<List<Double>, List<Do
         height(600)
         width(1000)
         chartTheme = Styler.ChartTheme.Matlab
-        title = "Difference between x coordinates"
-        xAxisTitle("timestamps [s]")
-        yAxisTitle("Delta x")
+        title = "Razlika x koordinata"
+        xAxisTitle("vrijeme [s]")
+        yAxisTitle("ΔX")
     }.build()
     xDiffChart.styler.legendPosition = Styler.LegendPosition.OutsideS
     xDiffChart.addSeries("Delta X", timestamps, x.first)

@@ -19,30 +19,6 @@ Lokacija vozila je također definirana kao točka u kartezijevom koordinatnome p
 
 Os rotacije je os koja prolazi u smjeru kretanja vozila (x os), os poniranja je zapravo os okomita s os rotacija (z os), dok je os skretanja okomita na obje prethodne osi (y os). Te osi su ilustrirane na slici \ref{fig:yaw_roll_pitch_example}.
 
-Vizualizacije referentnih podataka za jedan primjer kretanja vozila možemo vidjeti na sljedećim slikama. Na svim grafovima svaka točka predstavlja jedno očitanje. Grafovi su izgrađeni pomoću programskog jezika Kotlin koristeći biblioteku XChart. Slika \ref{fig:gt_lokacija} prikazuje graf lokacija vozila. Slika \ref{fig:gt_lokacija_koord} pokazuje koordinate vozila u vremenu. Možemo vidjeti da se mijenjaju samo x i y koordinate zato što vozilo može samo skretati. Slika \ref{fig:gt_rot_vr} valjanje, poniranje i skretanje oko statičnih osi vozila u vremenu. Također se može uoćiti da se samo skretanje mijenja zato što se vozilo ne može valjati niti ponirati. Slika \ref{fig:gt_rot_kv} također pokazuje rotaciju vozila u vremenu  ali predstavljenu u obliku kvaterniona. 
-
-\begin{figure}[h!]
-  \includegraphics[scale=0.4]{images/koordinate.png}
-  \caption{Graf lokacije vozila}
-  \label{fig:gt_lokacija}
-\end{figure}
-\pagebreak
-\begin{figure}[h!]
-  \includegraphics[scale=0.4]{images/koordinate_vrijeme.png}
-  \caption{Graf x, y i z koordinata vozila u vremenu}
-  \label{fig:gt_lokacija_koord}
-\end{figure}
-\begin{figure}[h!]
-  \includegraphics[scale=0.4]{images/rotacija_vrijeme.png}
-  \caption{Valjanje, skretanje i poniranje vozila u vremenu}
-  \label{fig:gt_rot_vr}
-\end{figure}
-\begin{figure}[h!]
-  \includegraphics[scale=0.4]{images/rotacija_kvaterni.png}
-  \caption{Rotacija vozila u obliku kvaterniona}
-  \label{fig:gt_rot_kv}
-\end{figure}
-
 Rotacija između dva sustava može biti reprezentirana pomoću rotacijskih matrica. Te matrice su veličine 3x3 te predstavljaju rotaciju oko određene osi.
 
 \begin{equation}

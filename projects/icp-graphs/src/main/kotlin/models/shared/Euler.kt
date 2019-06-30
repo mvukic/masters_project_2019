@@ -23,9 +23,9 @@ data class Euler(val roll: Double, val pitch: Double, val yaw: Double) {
 
     companion object {
         fun fromString(list: List<String>): Euler {
-            val roll = list[0].toDouble().absoluteValue
-            val pitch = list[1].toDouble().absoluteValue
-            val yaw = list[2].toDouble().absoluteValue
+            val roll = list[0].toDouble()
+            val pitch = list[1].toDouble()
+            val yaw = list[2].toDouble()
             return Euler(
                 roll = roll,
                 pitch = pitch,

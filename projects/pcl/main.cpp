@@ -154,8 +154,9 @@ void process_files_with_feature_detection(vector<path> paths, ICP icp) {
 
 		//downsample_using_statical_outliner(cloud_ref, cloud_ref_filtered);
 		//downsample_using_statical_outliner(cloud_target, cloud_target_filtered);
-
-		downsample_using_voxel_grid(cloud_ref, 5.0f, cloud_ref_filtered);
+		if (i == 0) {
+			downsample_using_voxel_grid(cloud_ref, 5.0f, cloud_ref_filtered);
+		}
 		downsample_using_voxel_grid(cloud_target, 5.0f, cloud_target_filtered);
 
 		icp.setInputCloud(cloud_ref_filtered);
@@ -165,6 +166,7 @@ void process_files_with_feature_detection(vector<path> paths, ICP icp) {
 			save_matrix(icp, first, second);
 		}
 		*cloud_ref = *cloud_target;
+		*cloud_ref_filtered = *cloud_target_filtered
 	}
 }
 

@@ -5,24 +5,27 @@ Ovaj način uspoređivanja skupova točaka je najjednostavniji. Ne tražimo prep
 
 
 \subsubsection{Izvorni kod algoritma}
-
-\begin{listing}[h!]
+Metodom \mintinline{c++}{process_files} u primjeru \ref{coderef:gen_icp_process_load} se iterira kroz datoteke te se otvaraju u parovima i njihov sadržaj tj. informacije o oblaku točaka se spremaju u globalne varijable \mintinline{c++}{cloud_ref} i \mintinline{c++}{cloud_target}. Na linijama 11 i 12 postavljam ICP algoritmu dodatne ulazne parametre, a to su te varijable. Konačno se pokreće algoritam te se ispituje ako je došlo do konvergencije. Do konvergencije dolazi ako su dva skupa oblaka slična tj. ako predstavljaju isti objekt ali rotiran i/ili translantiran. Očekuje se da uvijek dođe do konvergencije u ovome primjeru. Ako je došlo do konvergencije, spremamo podatke u datoteku. Naposljetku se iz optimizacijskih razloga vrijednost matrice \mintinline{c++}{cloud_target} sprema kao referentni skup točaka.
+\begin{listing}[H]
   \begin{minted}[frame=lines, linenos]{c++}
 void load_point_cloud(string path, PointCloudType& cloud) {
  pcl::io::loadPLYFile(path, cloud);
 }
 
 void process_files(vector<path> paths, ICP icp) {
- for (long i = 0; i < paths.size() - 1; i++) {
+ for (int i = 0; i < paths.size() - 1; i++) {
   if (i == 0) {
    load_point_cloud(paths.at(i).string(), *cloud_ref);
   }
   load_point_cloud(paths.at(i + 1).string(), *cloud_target);
+
   string first = paths.at(i).stem().string();
   string second = paths.at(i + 1).stem().string();
+
   icp.setInputCloud(cloud_ref);
   icp.setInputTarget(cloud_target);
   icp.align(*cloud_reg);
+
   if (icp.hasConverged()) {
    save_matrix(icp, first, second);
   }
@@ -34,11 +37,9 @@ void process_files(vector<path> paths, ICP icp) {
   \label{coderef:gen_icp_process_load}
 \end{listing}
 
-Metodom \mintinline{c++}{process_files} u primjeru \ref{coderef:gen_icp_process_load} se iterira kroz datoteke te se otvaraju u parovima i njihov sadržaj tj. informacije o oblaku točaka se spremaju u globalne varijable \mintinline{c++}{cloud_ref} i \mintinline{c++}{cloud_target}. Na linijama 11 i 12 postavljam ICP algoritmu dodatne ulazne parametre, a to su te varijable. Konačno se pokreće algoritam te se ispituje ako je došlo do konvergencije. Do konvergencije dolazi ako su dva skupa oblaka slična tj. ako predstavljaju isti objekt ali rotiran i/ili translantiran. Očekuje se da uvijek dođe do konvergencije u ovome primjeru. Ako je došlo do konvergencije, spremamo podatke u datoteku. Naposljetku se iz optimizacijskih razloga vrijednost matrice \mintinline{c++}{cloud_target} sprema kao referentni skup točaka.
-
 \subsubsection{Rezultat algoritma}
 
-\begin{listing}[h!]
+\begin{listing}[H]
   \begin{minted}[frame=lines, linenos]{c++}
 void save_matrix(ICP icp, string first, string second) {
  Matrix4d transformation = icp.getFinalTransformation();
@@ -59,7 +60,7 @@ void save_matrix(ICP icp, string first, string second) {
 \end{listing}
 
 Spremanje rezultata se vrši metodom \mintinline{c++}{save_matrix} u primjeru \ref{coderef:gen_icp_save_matrix}. Matricu transformacije možemo dobiti pozivom \mintinline{c++}{icp.getFinalTransformation()} te je ona oblika \mintinline{c++}{Matrix4d} tj. ima 4 redaka i 4 stupaca dok su elemnti tipa \mintinline{c++}{double}. Ta matrica se tada transformira u matricu veličine 3x3 tj. izdvaja se rotacijska matrica zato što takav tip matrice ima ugrađenu metodu \mintinline{c++}{eulerAngles()}. Ta metoda kao argumente prima redosljed rotacija objekta tj. redosljed osi rotacija. U ovome slučaju se prvo predaje 0 što znači da se objekt prvo rotirao oko x osi, tada se predaje što znači da se tada rotirao oko y osi i naposljetku se predaje 2 što znači da je zadnja rotacija bila oko z osi. Metoda vraća vektor od tri elementa koji predstavljaju valjanje, poniranje i skretanje. Konačno se sve te informacije spremaju u datoteku s imenom sastavljenim od dva indetifikatora očitanja tako da se zna koji skupovi točaka su upoređivani. Struktura te datoteke je prikazana na primjeru  \ref{files:icp_file_result}. Prva linija sadrži fitnes vrijednost. Od druge do pete linije se nalazi transformacijska matrica dok se na zadnjoj liniji nalaze Eulerovi kutevi u radijanima.
-\begin{listing}[h!]
+\begin{listing}[H]
   \begin{minted}[frame=lines]{html}
 0.0263544
     0.999735   -0.0230172  -0.00046344  -0.00394583
@@ -72,17 +73,17 @@ Spremanje rezultata se vrši metodom \mintinline{c++}{save_matrix} u primjeru \r
   \label{files:icp_file_result}
 \end{listing}
 
+\pagebreak
 \subsubsection{Evaluacija rezultata}
-
-
-
 prikazani na grafovima s referentnim podacima
-kotlin kod za generiranje estimiranih točaka
+
 grafovi za :
-  lokaciju,
-  euler kuteve,
-  razlike x,y,z
-  razlike eulerovih kuteva
+  overlay location,
+  euler rotacije,
+  razlike koordinata
+  razlike eulerovih rotacija
 ispiši stvarnu duljinu putovanja
 ispiši estimiranu duljinu putovanja
-ispiši MEA
+ispiši MEA lokacija
+ispiši MEA rotacija
+\pagebreak

@@ -5,6 +5,7 @@ import models.icp.toEuler
 import org.knowm.xchart.SwingWrapper
 import org.knowm.xchart.XYChartBuilder
 import org.knowm.xchart.style.Styler
+import stats.wrapRadians
 import kotlin.math.PI
 import kotlin.math.absoluteValue
 import kotlin.math.sign
@@ -12,7 +13,7 @@ import kotlin.math.sign
 fun icpCharts(timestampsFull: List<Double>, icpTransformations: List<TransformMatrix>) {
 
     val timestamps = timestampsFull.drop(1)
-//    quaternionCharts(icpTransformations, timestamps)
+    quaternionCharts(icpTransformations, timestamps)
 
     // Real RPY
     val roll = icpTransformations.map { wrapRadians(it.angles.roll) }
@@ -25,7 +26,7 @@ fun icpCharts(timestampsFull: List<Double>, icpTransformations: List<TransformMa
     val rollCalc = icpTransformations.toEuler().map { wrapRadians(it.roll) }
     val pitchCalc = icpTransformations.toEuler().map { wrapRadians(it.pitch) }
     val yawCalc = icpTransformations.toEuler().map { wrapRadians(it.yaw) }
-//    compareRPY(timestamps, Pair(roll, rollCalc), Pair(pitch, pitchCalc), Pair(yaw, yawCalc))
+    compareRPY(timestamps, Pair(roll, rollCalc), Pair(pitch, pitchCalc), Pair(yaw, yawCalc))
 }
 
 fun quaternionCharts(transformations: List<TransformMatrix>, timestamps: List<Double>) {
@@ -38,15 +39,15 @@ fun quaternionCharts(transformations: List<TransformMatrix>, timestamps: List<Do
         height(600)
         width(1000)
         chartTheme = Styler.ChartTheme.Matlab
-        title = "ICP quaternions"
-        xAxisTitle("timestamps [s]")
-        yAxisTitle("rotations")
+        title = "Estimirana rotacija u kvaternima"
+        xAxisTitle("vrijeme [s]")
+        yAxisTitle("rotacije")
     }.build()
     quaternionChart.styler.legendPosition = Styler.LegendPosition.OutsideS
     quaternionChart.addSeries("X", timestamps, xQuat)
     quaternionChart.addSeries("Y", timestamps, yQuat)
-//    quaternionChart.addSeries("Z", timestamps, zQuat)
-//    quaternionChart.addSeries("W", timestamps, wQuat)
+    quaternionChart.addSeries("Z", timestamps, zQuat)
+    quaternionChart.addSeries("W", timestamps, wQuat)
     SwingWrapper(quaternionChart).displayChart()
 }
 
@@ -57,7 +58,7 @@ fun compareRPY(timestamps: List<Double>, roll: Pair<List<Double>, List<Double>>,
         chartTheme = Styler.ChartTheme.Matlab
         title = "ICP roll comparison (conversion)"
         xAxisTitle("timestamps [s]")
-        yAxisTitle("Roll")
+        yAxisTitle("Valjanje")
     }.build()
     icpRollConversionChart.styler.legendPosition = Styler.LegendPosition.OutsideS
     icpRollConversionChart.addSeries("Roll", timestamps, roll.first)
@@ -141,11 +142,4 @@ fun rpyCharts(timestamps: List<Double>, roll: List<Double>, pitch: List<Double>,
     rotationsChart.addSeries("Roll", timestamps, roll)
     rotationsChart.addSeries("Yaw", timestamps, yaw)
     SwingWrapper(rotationsChart).displayChart()
-}
-
-fun wrapRadians(value: Double): Double {
-    val limit = 3.1
-    val abs = value.absoluteValue
-    val sign = value.sign
-    return if(value > limit) (PI - abs)*sign else abs*sign
 }

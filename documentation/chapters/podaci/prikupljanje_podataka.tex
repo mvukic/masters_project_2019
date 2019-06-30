@@ -1,3 +1,4 @@
+\pagebreak
 \section{Prikupljanje podataka}
 
 Podaci su prikupljeni tako da se simulator pokrene u poslužiteljkom načinu rada te se tada pokreće klijentska skripta napisana u python jeziku. Ta skripta uspostavi kontakt s poslušiteljem te se tako šalju naredbe. Te naredbe će zapravo stvoriti naše vozilo, ostale sudionike i senzor. Nakon što smo prikupili dovoljno podataka skripta će obrisati stvorene objekte i spremiti podatke u datoteke. Tada simulator može prekinuti s radom te se ti podaci mogu obrađivati na bilo koji način.
@@ -132,8 +133,6 @@ Sada slijedi pronalazak nacrta za lidar senzor, postavljanje njegovih atributa, 
 
 \begin{listing}[h!]
   \begin{minted}[frame=lines, linenos]{python}
-  import carla
-
   class LIDARProp:
     sensor_tick = str(0.0)
     channels = str(180)
@@ -149,40 +148,34 @@ Sada slijedi pronalazak nacrta za lidar senzor, postavljanje njegovih atributa, 
   \caption{LIDAR atributi}
   \label{coderef:lidar_props}
 \end{listing}
-
+\pagebreak
 Pomoću \mintinline{python}{sensor_tick} parametra se definira da simulator treba  prikupljati podatke najbrže što može. Varijabla \mintinline{python}{laser_range} definira koliko daleko laser može doprijeti, ovdje je definirano na 1500 centimetara ili 15 metara. Frekcencija rotacije lidara je definirana varijablom \mintinline{python}{rotation_frequency} i iznosi 120 rotacija u minuti. Gornja granica mjerenja lasera je 45°, a donja je -80°. parametar \mintinline{python}{location} definira lokaciju lasera tj. bit će u središtu koordinatnog sustava ali na visini od 4 metra. Sredina tog koordinatnog sustava je zapravo sredina unutarnjeg sustava vozila na kojemu će taj senzor biti pričvršćen.
 
-\pagebreak
 \begin{listing}[h!]
   \begin{minted}[frame=lines, linenos, escapeinside=!!]{python}
     def connect_LIDAR(self):
       lib = self.world.get_blueprint_library()
       blueprint = utils.get_lidar_sensor_blueprint(lib) !\label{lineref:get_lidar_blueprint}!
       blueprint.set_attribute( !\label{lineref:lidar_prop_start}!
-        'sensor_tick',
-        LIDARProp.sensor_tick
+        'sensor_tick', LIDARProp.sensor_tick
       )
       blueprint.set_attribute(
-        'channels',
-        LIDARProp.channels
+        'channels', LIDARProp.channels
       )
       blueprint.set_attribute(
-        'range', LIDARProp.laser_range)
+        'range', LIDARProp.laser_range
+      )
       blueprint.set_attribute(
-        'rotation_frequency',
-        LIDARProp.rotation_frequency
-        )
+        'rotation_frequency',LIDARProp.rotation_frequency
+      )
       blueprint.set_attribute(
-        'points_per_second',
-        LIDARProp.points_per_second
-        )
+        'points_per_second', LIDARProp.points_per_second
+      )
       blueprint.set_attribute(
-        'upper_fov',
-        LIDARProp.upper_fov
-        )
+        'upper_fov', LIDARProp.upper_fov
+      )
       blueprint.set_attribute(
-        'lower_fov',
-        LIDARProp.lower_fov
+        'lower_fov', LIDARProp.lower_fov
       ) !\label{lineref:lidar_prop_end}!
       utils.print_sensor_blueprint_data(blueprint)
       self.lidar = self.world.try_spawn_actor(  !\label{lineref:connect_lidar}!
@@ -208,25 +201,20 @@ import time
 import threading
 from concurrent.futures import
   ThreadPoolExecutor, as_completed
-from lidar_properties import
-  LIDARProperties
+from lidar_properties import LIDARProperties
 
 class DataSaver:
-
   def __init__(self):
     self.pc_path = 'output/pointclouds'
     self.trans_path = 'output/actortransforms'
     self.rel_path = 'output/relative_transform.txt'
-
   def initialize_folders(self):
     utils.create_directory(self.trans_path)
     utils.create_directory(self.pc_path)
-
   def save(self, scans):
     self.initialize_folders()
     self.save_rel_trans()
     start_time = time.time()
-
     with ThreadPoolExecutor(max_workers=10) as executor:
       jobs = list()
       for i, (scan, transform) in enumerate(scans[1:]):
@@ -236,7 +224,6 @@ class DataSaver:
         jobs.append(job)
       for future in as_completed(jobs):
         future.result()
-
   \end{minted}
   \caption{Klasa za spremanje podataka}
   \label{coderef:data_saver}
@@ -252,16 +239,13 @@ class DataSaver:
     self.save_transform(
       trans, scan.timestamp, tpath, i + 1
     )
-
   def save_rel_trans(self):
     with open(self.rel_path, 'w+') as file:
       file.write(
         utils.transform_to_string(LIDARProp.location)
       )
-
   def save_scan(self, scan, path, i = 0):
       scan.save_to_disk(path)
-
   def save_transform(self, trans, timestamp, path, i = 0):
     with open(path, 'w+') as file:
       file.write(
@@ -272,27 +256,36 @@ class DataSaver:
   \label{coderef:data_saver_cont}
 \end{listing}
 
-Primjeri \ref{coderef:data_saver} i \ref{coderef:data_saver_cont} prikazuju klasu \mintinline{python}{DataSaver} koja služi za spremanje podataka u datoteke. Datoteke s podacima iz senzora se nalaze u direktoriju s nazivom pointclouds, dok se datoteke s podacima o lokaciji vozila nalaze u direktoriju s nazivom actortransforms. Oba ta direktorija se nalaze u direktoriju s nazivom $output$. Datoteke s informacijama o lokaciji vozila se sastoje od 2 reda. Prvi red sadrži vremensku oznaku a drugi sadrži lokaciju i transformaciju koji su opisani u prijašnjem poglavlju. Datoteke koje sadrže podatke o jednome očitanju se nalaze u tekstualnim datotekama s ekstenzijom .ply te se sastoji od zaglavlja i po jedan redak za svaku točku u očitanju. Također postoji još jedna datoteka koja samo sadrži relativnu transformaciju između senzora i vozila. Ona se nalazi u direktoriju $output$.
+Primjeri \ref{coderef:data_saver} i \ref{coderef:data_saver_cont} prikazuju klasu \mintinline{python}{DataSaver} koja služi za spremanje podataka u datoteke. Datoteke s podacima iz senzora se nalaze u direktoriju s nazivom pointclouds, dok se datoteke s podacima o lokaciji vozila nalaze u direktoriju s nazivom actortransforms. Oba ta direktorija se nalaze u direktoriju s nazivom $output$. Datoteke s informacijama o lokaciji vozila se sastoje od 2 reda. Prvi red sadrži vremensku oznaku, a drugi sadrži lokaciju i transformaciju koji su opisani u prijašnjem poglavlju. Datoteke koje sadrže podatke o jednome očitanju se nalaze u tekstualnim datotekama s ekstenzijom .ply te se sastoji od zaglavlja i po jedan redak za svaku točku u očitanju. Također postoji još jedna datoteka koja samo sadrži relativnu transformaciju između senzora i vozila. Ona se nalazi u direktoriju $output$.
 
 \begin{listing}[h!]
   \begin{minted}[frame=lines]{html}
-    ply
-    format ascii 1.0
-    element vertex 17252
-    property float32 x
-    property float32 y
-    property float32 z
-    end_header
-    -6.6331 4.7159 -3.6613
-    -7.6668 3.6868 -3.6721
-    -6.8233 4.8510 -3.6132
-    -7.2357 4.3627 -3.6467
-    -7.5643 3.8149 -3.6567
-    -6.8332 4.8581 -3.5678
-    .
-    .
-    .
+ply
+format ascii 1.0
+element vertex 17252
+property float32 x
+property float32 y
+property float32 z
+end_header
+-6.6331 4.7159 -3.6613
+-7.6668 3.6868 -3.6721
+-6.8233 4.8510 -3.6132
+-7.2357 4.3627 -3.6467
+-7.5643 3.8149 -3.6567
+-6.8332 4.8581 -3.5678
+-9.3522 -2.1228 -9.5902
+-9.4462 -2.5989 -9.7976
+-8.9343 -2.8991 -9.3936
+-9.0191 -3.3851 -9.6346
+-9.0191 -3.8595 -9.8117
+-9.0191 -4.3526 -10.0164
+-9.0191 -4.8679 -10.2512
+          .
+          .
+          .
   \end{minted}
   \caption{Izgled sadržaja .ply datoteke}
   \label{files:ply_format}
 \end{listing}
+
+Zaglavlje .ply datoteke u primjeru \ref{files:ply_format} ima definiran ukupan broj točaka kao 17252, tipove svake koordinate kao 32 bitni broj s pomičnim zarezom, te poredak koordinate u svakoj liniji, a to je prvo x, y pa zatim z.

@@ -4,10 +4,7 @@ import models.shared.Euler
 import models.shared.Point
 import models.icp.TransformMatrix
 import models.shared.timesPoint
-import kotlin.math.PI
-import kotlin.math.absoluteValue
-import kotlin.math.pow
-import kotlin.math.sqrt
+import kotlin.math.*
 
 /**
  * Calculates points starting from first real point
@@ -31,19 +28,19 @@ fun calculatePoints(icp: List<TransformMatrix>, realPoints:  List<Point>): List<
 /**
  * Calculate other points just by using first real point and transformation matrix's
  */
-fun calculatePointsExperimental(icp: List<TransformMatrix>, realPoints:  List<Point>): List<Point> {
-    val calculatedPoints = mutableListOf(realPoints.first())
-    val point = realPoints.first()
-    var transformMatrix = icp.first().matrix
-    // for each transformation
-    icp.drop(1).forEach { transform ->
-        // multiply point and current transformation matrix
-        calculatedPoints.add(transformMatrix.timesPoint(point))
-        // multiply previous transformation matrix and current transformation matrix
-        transformMatrix = transform * transformMatrix
-    }
-    return calculatedPoints
-}
+//fun calculatePointsExperimental(icp: List<TransformMatrix>, realPoints:  List<Point>): List<Point> {
+//    val calculatedPoints = mutableListOf(realPoints.first())
+//    val point = realPoints.first()
+//    var transformMatrix = icp.first().matrix
+//    // for each transformation
+//    icp.drop(1).forEach { transform ->
+//        // multiply point and current transformation matrix
+//        calculatedPoints.add(transformMatrix.timesPoint(point))
+//        // multiply previous transformation matrix and current transformation matrix
+//        transformMatrix = transform * transformMatrix
+//    }
+//    return calculatedPoints
+//}
 
 /**
  * Calculates euler angles starting from first real angles
@@ -53,13 +50,24 @@ fun calculateEulerAngles(icp: List<Euler>, realAngles:  List<Euler>): List<Euler
     realAngles.forEachIndexed { index, _ ->
         if (index == 0) return@forEachIndexed
         val nea = Euler(
-            roll = (Angle(realAngles[index - 1].roll) + Angle(icp[index - 1].roll)).value,
-            pitch = (Angle(realAngles[index - 1].pitch) + Angle(icp[index - 1].pitch)).value,
-            yaw = (Angle(realAngles[index - 1].yaw) + Angle(icp[index - 1].yaw)).value
+            roll = realAngles[index - 1].roll + icp[index - 1].roll,
+            pitch = realAngles[index - 1].pitch + icp[index - 1].pitch,
+            yaw = realAngles[index - 1].yaw + icp[index - 1].yaw
         )
         calculatedAngles.add(nea)
     }
     return calculatedAngles
+}
+
+class Angle(d: Double) {
+    val value = when {
+        d in -PI .. PI -> d
+        d > PI -> (d - PI) % (2*PI) - PI
+        else -> (d + PI) % (2*PI) + PI
+    }
+
+    operator fun minus(other: Angle) = Angle(this.value - other.value)
+    operator fun plus(other: Angle) = Angle(this.value + other.value)
 }
 
 fun calculateAnglesDifferences(angles: List<Euler>): List<Euler> {
@@ -111,16 +119,30 @@ fun distanceAndTime(locations: List<Point>, calculated: List<Point>, timestamps:
     println("Travel duration: ${timestamps.last() - timestamps.first()} s")
 }
 
-/**
- * Class used for getting the difference between two angles
- */
-class Angle(d: Double) {
-    val value = when {
-        d in -PI .. PI -> d
-        d > PI -> (d - PI) % (2*PI) - PI
-        else -> (d + PI) % (2*PI) + PI
-    }
+fun wrapRadians(value: Double): Double {
+    val limit = 3.1
+    val abs = value.absoluteValue
+    val sign = value.sign
+    return if(value > limit) (PI - abs)*sign else abs*sign
+}
 
-    operator fun minus(other: Angle) = Angle(this.value - other.value)
-    operator fun plus(other: Angle) = Angle(this.value + other.value)
+fun calculatePointsDifference(locations: List<Point>, calculated: List<Point>): List<Point> {
+    return locations.zip(calculated).map {
+        Point(
+            x = (it.first.x - it.second.x).absoluteValue,
+            y = (it.first.y - it.second.y).absoluteValue,
+            z = (it.first.z - it.second.z).absoluteValue
+        )
+    }
+}
+
+fun calculateEulerDifference(angles: List<Euler>, calculated: List<Euler>): List<Euler> {
+    return angles.zip(calculated).map {
+        val yaw = (it.first.yaw - it.second.yaw).absoluteValue % PI
+        Euler(
+            roll = (it.first.roll - it.second.roll).absoluteValue,
+            pitch = (it.first.pitch - it.second.pitch).absoluteValue,
+            yaw = if (yaw > 3.1) yaw - PI else yaw
+        )
+    }
 }
