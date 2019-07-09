@@ -19,12 +19,6 @@ typedef PointXYZ PT;
 typedef PointCloud<PT> PointCloudType;
 typedef IterativeClosestPoint<PT, PT, double> ICP;
 
-PointCloudType::Ptr cloud_ref(new PointCloudType());
-PointCloudType::Ptr cloud_target(new PointCloudType());
-PointCloudType::Ptr cloud_registered(new PointCloudType());
-
-PointCloudType::Ptr cloud_ref_filtered(new PointCloudType());
-PointCloudType::Ptr cloud_target_filtered(new PointCloudType());
 
 string root_point_clouds = "D:\\faks\\dipl\\code\\output\\point_clouds\\";
 string root_results = "D:\\faks\\dipl\\code\\output\\icp_results\\";
@@ -44,9 +38,9 @@ vector<path> get_files() {
 
 ICP setupICP() {
 	ICP icp;
-	icp.setMaxCorrespondenceDistance(0.05);
-	icp.setMaximumIterations(500);
+	icp.setMaximumIterations(250);
 	icp.setTransformationEpsilon(1e-8);
+	icp.setMaxCorrespondenceDistance(0.05);
 	icp.setEuclideanFitnessEpsilon(1);
 	return icp;
 }
@@ -99,12 +93,23 @@ void save_matrix(ICP icp, string first, string second) {
 	save_to_file(filename, mat_to_string(transformation), fitness, rpy);
 }
 
-void process_files_genralized(vector<path> paths, ICP icp) {
+//Eigen::Matrix4d guessMat() {
+//	Eigen::Matrix4d mat;
+//	mat << 1.0, 0.0, 0.0, -3.05e-8,
+//		0.0, 1.0, 0.0, -3.05e-8,
+//		0.0, 0.0, 1.0, 0.0027,
+//		0.0, 0.0, 0.0, 1.0;
+//	return mat;
+//}
 
-	for (long i = 0; i < paths.size() - 1; i++) {
-		if (i == 0) {
-			load_point_cloud(paths.at(i).string(), *cloud_ref);
-		}
+void process_files_genralized(vector<path> paths, ICP icp) {
+	auto end = paths.size() - 1;
+	auto start = 37;
+	for (long i = start; i < 65; i++) {
+		PointCloudType::Ptr cloud_ref(new PointCloudType());
+		PointCloudType::Ptr cloud_target(new PointCloudType());
+		PointCloudType::Ptr cloud_registered(new PointCloudType());
+		load_point_cloud(paths.at(i).string(), *cloud_ref);
 		load_point_cloud(paths.at(i + 1).string(), *cloud_target);
 
 		string first = paths.at(i).stem().string();
@@ -117,8 +122,6 @@ void process_files_genralized(vector<path> paths, ICP icp) {
 		if (icp.hasConverged()) {
 			save_matrix(icp, first, second);
 		}
-
-		*cloud_ref = *cloud_target;
 	}
 }
 
@@ -129,46 +132,30 @@ void downsample_using_voxel_grid(PointCloudType::Ptr& cloud, float leafsize, Poi
 	vg.filter(*downsampled);
 }
 
-void downsample_using_statical_outliner(PointCloudType::Ptr& cloud, PointCloudType::Ptr& cloudFiltered) {
-	StatisticalOutlierRemoval<PT> sor;
-	sor.setInputCloud(cloud);
-	sor.setMeanK(15);
-	sor.setStddevMulThresh(1.0);
-	sor.filter(*cloudFiltered);
-}
-
 void process_files_with_feature_detection(vector<path> paths, ICP icp) {
-	for (long i = 0; i < paths.size() - 1; i++) {
-		if (i == 0) {
-			load_point_cloud(paths.at(i).string(), *cloud_ref);
-		}
+	auto size = paths.size() - 1;
+	for (long i = 0; i < size; i++) {
+		PointCloudType::Ptr cloud_ref(new PointCloudType());
+		PointCloudType::Ptr cloud_target(new PointCloudType());
+		PointCloudType::Ptr cloud_registered(new PointCloudType());
+		PointCloudType::Ptr cloud_ref_filtered(new PointCloudType());
+		PointCloudType::Ptr cloud_target_filtered(new PointCloudType());
+		load_point_cloud(paths.at(i).string(), *cloud_ref);
 		load_point_cloud(paths.at(i + 1).string(), *cloud_target);
 
 		string first = paths.at(i).stem().string();
 		string second = paths.at(i + 1).stem().string();
-		cout << first << " " << second << endl;
-		//if (i == 0) {
-		//	downsample_using_statical_outliner(cloud_ref, cloud_ref_filtered);
-		//}
-		//downsample_using_statical_outliner(cloud_target, cloud_target_filtered);
-		if (i == 0) {
-			downsample_using_voxel_grid(cloud_ref, 1.0f, cloud_ref_filtered);
-		}
-		downsample_using_voxel_grid(cloud_target, 1.0f, cloud_target_filtered);
 
-		cout << cloud_ref->size() << " <-> " << cloud_ref_filtered->size() << endl;
-		cout << cloud_target->size() << " <-> " << cloud_target_filtered->size() << endl;
-		cout << endl;
+		downsample_using_voxel_grid(cloud_ref, 10.0f, cloud_ref_filtered);
+		downsample_using_voxel_grid(cloud_target, 10.0f, cloud_target_filtered);
 
 		icp.setInputCloud(cloud_ref_filtered);
 		icp.setInputTarget(cloud_target_filtered);
 		icp.align(*cloud_registered);
+
 		if (icp.hasConverged()) {
 			save_matrix(icp, first, second);
 		}
-
-		*cloud_ref = *cloud_target;
-		*cloud_ref_filtered = *cloud_target_filtered;
 	}
 }
 
@@ -176,6 +163,7 @@ void process_files_with_feature_detection(vector<path> paths, ICP icp) {
 int main(int argc, char** argv) {
 	vector<path> paths = get_files();
 	ICP icp = setupICP();
-	process_files_with_feature_detection(paths, icp);
+	process_files_genralized(paths, icp);
+	//process_files_with_feature_detection(paths, icp);
 	return 0;
 }

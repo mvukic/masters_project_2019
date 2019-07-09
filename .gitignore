@@ -273,8 +273,13 @@ code/output_1/**/*
 code/output_2/**/*
 code/output_3_alg1/**/*
 code/output_3_alg2_voxel/**/*
+code/output_3_icp_1/**/*
 code/output_4_alg1/**/*
 code/output_4_alg2_voxel/**/*
+code/output_4_icp_1/**/*
+code/output_5/**/*
+code/output_5_skoro/**/*
+code/output_6/**/*
 
 ## pcl project
 projects/pcl/build/.vs/

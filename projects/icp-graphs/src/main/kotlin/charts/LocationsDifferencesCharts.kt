@@ -5,13 +5,14 @@ import models.shared.toCoordinates
 import org.knowm.xchart.SwingWrapper
 import org.knowm.xchart.XYChartBuilder
 import org.knowm.xchart.style.Styler
-import stats.calculateCoordinateDifferences
+//import stats.calculateCoordinateDifferences
 import stats.calculatePointsDifference
 
 fun locationDifferencesCharts(timestamps: List<Double>, locations: List<Point>, calculated: List<Point>) {
     val diffs = calculatePointsDifference(locations, calculated)
     differenceBetweenRealAndCalcChart(timestamps, diffs)
-    overlaidLocations(locations, calculated)
+//    overlaidLocations(locations, calculated)
+//    overlaidLocations2(locations, calculated)
 }
 
 fun differenceBetweenRealAndCalcChart(timestamps: List<Double>, diffs: List<Point>) {
@@ -22,7 +23,7 @@ fun differenceBetweenRealAndCalcChart(timestamps: List<Double>, diffs: List<Poin
         height(600)
         width(1000)
         chartTheme = Styler.ChartTheme.Matlab
-        title = "Apsolutne razlike referentnih podataka i estimacije"
+        title = "Razlike referentnih i estimiranih lokacija"
         xAxisTitle("vrijeme [s]")
         yAxisTitle("Δ koordinate [m]")
     }.build()
@@ -46,79 +47,96 @@ fun overlaidLocations(locations: List<Point>, calculated: List<Point>) {
     }.build()
     locationsChart.styler.legendPosition = Styler.LegendPosition.OutsideS
     locationsChart.addSeries("Referentne lokacije", realCoords.first, realCoords.second)
-    locationsChart.addSeries("Estimirane lokacije", calculatedCoords.first, calculatedCoords.second)
+//    locationsChart.addSeries("Estimirane lokacije", calculatedCoords.first, calculatedCoords.second)
     SwingWrapper(locationsChart).displayChart()
 }
 
-fun coordinatesDiffChart(timestamps: List<Double>, x: Pair<List<Double>, List<Double>>, y: Pair<List<Double>, List<Double>>, z: Pair<List<Double>, List<Double>>) {
-    val xDiffChart = XYChartBuilder().apply {
+fun overlaidLocations2(locations: List<Point>, calculated: List<Point>) {
+    val realCoords = locations.toCoordinates()
+    val calculatedCoords = calculated.toCoordinates()
+    val locationsChart = XYChartBuilder().apply {
         height(600)
         width(1000)
         chartTheme = Styler.ChartTheme.Matlab
-        title = "Razlika x koordinata"
-        xAxisTitle("vrijeme [s]")
-        yAxisTitle("ΔX")
+        title = "Usporedbe lokacija"
+        xAxisTitle("X koordinate [m]")
+        yAxisTitle("Y koordinate [m]")
     }.build()
-    xDiffChart.styler.legendPosition = Styler.LegendPosition.OutsideS
-    xDiffChart.addSeries("Delta X", timestamps, x.first)
-    xDiffChart.addSeries("Delta X calculated", timestamps, x.second)
-    SwingWrapper(xDiffChart).displayChart()
-
-    val yDiffChart = XYChartBuilder().apply {
-        height(600)
-        width(1000)
-        chartTheme = Styler.ChartTheme.Matlab
-        title = "Difference between y coordinates"
-        xAxisTitle("timestamps [s]")
-        yAxisTitle("Delta y")
-    }.build()
-    yDiffChart.styler.legendPosition = Styler.LegendPosition.OutsideS
-    yDiffChart.addSeries("Delta Y", timestamps, y.first)
-    yDiffChart.addSeries("Delta Y calculated", timestamps, y.second)
-    SwingWrapper(yDiffChart).displayChart()
-
-    val zDiffChart = XYChartBuilder().apply {
-        height(600)
-        width(1000)
-        chartTheme = Styler.ChartTheme.Matlab
-        title = "Difference between z coordinates"
-        xAxisTitle("timestamps [s]")
-        yAxisTitle("Delta z")
-    }.build()
-    zDiffChart.styler.legendPosition = Styler.LegendPosition.OutsideS
-    zDiffChart.addSeries("Delta Z", timestamps, z.first)
-    zDiffChart.addSeries("Delta Z calculated", timestamps, z.second)
-    SwingWrapper(zDiffChart).displayChart()
+    locationsChart.styler.legendPosition = Styler.LegendPosition.OutsideS
+    locationsChart.addSeries("Referentne lokacije", realCoords.first, realCoords.second)
+//    locationsChart.addSeries("Estimirane lokacije", calculatedCoords.first, calculatedCoords.second)
+    SwingWrapper(locationsChart).displayChart()
 }
 
-fun calculatedLocationsDiffChart(timestamps: List<Double>, deltaX: List<Double>, deltaY: List<Double>, deltaZ: List<Double>) {
-    val locationsDiffChart = XYChartBuilder().apply {
-        height(600)
-        width(1000)
-        chartTheme = Styler.ChartTheme.Matlab
-        title = "Locations differences between two consecutive points (calculated)"
-        xAxisTitle("timestamps [s]")
-        yAxisTitle("Delta x, y and z")
-    }.build()
-    locationsDiffChart.styler.legendPosition = Styler.LegendPosition.OutsideS
-    locationsDiffChart.addSeries("Delta X", timestamps, deltaX)
-    locationsDiffChart.addSeries("Delta Y", timestamps, deltaY)
-    locationsDiffChart.addSeries("Delta Z", timestamps, deltaZ)
-    SwingWrapper(locationsDiffChart).displayChart()
-}
-
-fun realLocationsDiffCharts(timestamps: List<Double>, deltaX: List<Double>, deltaY: List<Double>, deltaZ: List<Double>) {
-    val locationsDiffChart = XYChartBuilder().apply {
-        height(600)
-        width(1000)
-        chartTheme = Styler.ChartTheme.Matlab
-        title = "Locations differences between two consecutive points"
-        xAxisTitle("timestamps [s]")
-        yAxisTitle("Delta x, y and z")
-    }.build()
-    locationsDiffChart.styler.legendPosition = Styler.LegendPosition.OutsideS
-    locationsDiffChart.addSeries("Delta X", timestamps, deltaX)
-    locationsDiffChart.addSeries("Delta Y", timestamps, deltaY)
-    locationsDiffChart.addSeries("Delta Z", timestamps, deltaZ)
-    SwingWrapper(locationsDiffChart).displayChart()
-}
+//fun coordinatesDiffChart(timestamps: List<Double>, x: Pair<List<Double>, List<Double>>, y: Pair<List<Double>, List<Double>>, z: Pair<List<Double>, List<Double>>) {
+//    val xDiffChart = XYChartBuilder().apply {
+//        height(600)
+//        width(1000)
+//        chartTheme = Styler.ChartTheme.Matlab
+//        title = "Razlika x koordinata"
+//        xAxisTitle("vrijeme [s]")
+//        yAxisTitle("ΔX")
+//    }.build()
+//    xDiffChart.styler.legendPosition = Styler.LegendPosition.OutsideS
+//    xDiffChart.addSeries("Delta X", timestamps, x.first)
+//    xDiffChart.addSeries("Delta X calculated", timestamps, x.second)
+//    SwingWrapper(xDiffChart).displayChart()
+//
+//    val yDiffChart = XYChartBuilder().apply {
+//        height(600)
+//        width(1000)
+//        chartTheme = Styler.ChartTheme.Matlab
+//        title = "Difference between y coordinates"
+//        xAxisTitle("timestamps [s]")
+//        yAxisTitle("Delta y")
+//    }.build()
+//    yDiffChart.styler.legendPosition = Styler.LegendPosition.OutsideS
+//    yDiffChart.addSeries("Delta Y", timestamps, y.first)
+//    yDiffChart.addSeries("Delta Y calculated", timestamps, y.second)
+//    SwingWrapper(yDiffChart).displayChart()
+//
+//    val zDiffChart = XYChartBuilder().apply {
+//        height(600)
+//        width(1000)
+//        chartTheme = Styler.ChartTheme.Matlab
+//        title = "Difference between z coordinates"
+//        xAxisTitle("timestamps [s]")
+//        yAxisTitle("Delta z")
+//    }.build()
+//    zDiffChart.styler.legendPosition = Styler.LegendPosition.OutsideS
+//    zDiffChart.addSeries("Delta Z", timestamps, z.first)
+//    zDiffChart.addSeries("Delta Z calculated", timestamps, z.second)
+//    SwingWrapper(zDiffChart).displayChart()
+//}
+//
+//fun calculatedLocationsDiffChart(timestamps: List<Double>, deltaX: List<Double>, deltaY: List<Double>, deltaZ: List<Double>) {
+//    val locationsDiffChart = XYChartBuilder().apply {
+//        height(600)
+//        width(1000)
+//        chartTheme = Styler.ChartTheme.Matlab
+//        title = "Locations differences between two consecutive points (calculated)"
+//        xAxisTitle("timestamps [s]")
+//        yAxisTitle("Delta x, y and z")
+//    }.build()
+//    locationsDiffChart.styler.legendPosition = Styler.LegendPosition.OutsideS
+//    locationsDiffChart.addSeries("Delta X", timestamps, deltaX)
+//    locationsDiffChart.addSeries("Delta Y", timestamps, deltaY)
+//    locationsDiffChart.addSeries("Delta Z", timestamps, deltaZ)
+//    SwingWrapper(locationsDiffChart).displayChart()
+//}
+//
+//fun realLocationsDiffCharts(timestamps: List<Double>, deltaX: List<Double>, deltaY: List<Double>, deltaZ: List<Double>) {
+//    val locationsDiffChart = XYChartBuilder().apply {
+//        height(600)
+//        width(1000)
+//        chartTheme = Styler.ChartTheme.Matlab
+//        title = "Locations differences between two consecutive points"
+//        xAxisTitle("timestamps [s]")
+//        yAxisTitle("Delta x, y and z")
+//    }.build()
+//    locationsDiffChart.styler.legendPosition = Styler.LegendPosition.OutsideS
+//    locationsDiffChart.addSeries("Delta X", timestamps, deltaX)
+//    locationsDiffChart.addSeries("Delta Y", timestamps, deltaY)
+//    locationsDiffChart.addSeries("Delta Z", timestamps, deltaZ)
+//    SwingWrapper(locationsDiffChart).displayChart()
+//}

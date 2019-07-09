@@ -1,8 +1,6 @@
-\section{Dijeljeni kod i ulazni podaci}
+\section{Generičan kod i ulazni podaci}
 
-\subsection{Čitanje i pisanje rezultata}
-
-Kod u nastavku je dijeljeni kod tj. koristi se u oba algoritma. Sastoji se od metoda za čitanje datoteka s informacijama o oblacima točaka i metoda za spremanje transformacijskih matrica u datoteke. 
+Kod u nastavku je generičan tj. nema veze s samim algoritmom već služi za dohvat podataka i spremanje rezultata algoritma. Sastoji se od metoda za čitanje datoteka s informacijama o oblacima točaka i metoda za spremanje transformacijskih matrica u datoteke. 
 
 \begin{listing}[h!]
   \begin{minted}[frame=lines, linenos]{text}
@@ -24,9 +22,9 @@ string root_results = "\\icp_results\\";
   \label{coderef:gen_icp_const}
 \end{listing}
 
-U primjeru izvornoga koda \ref{coderef:gen_icp_const} su definirane konstante poput putanje za spremanje rezultata i putanje s ulaznim datotekama. Također su definirani tipovi točaka \mintinline{text}{PT} kao \mintinline{text}{PointXYZ} koje će algoritam koristit te sadrže samo x, y i z koordinate. Mogu se koristiti i drugi oblici točaka. Oblak točaka \mintinline{text}{PointCloudType} je definiran pomoću prethodne definicije točke. Naposljetku se definira tip \mintinline{text}{ICP} algoritma tj. s kojim timovima podataka radi. Definiran je pomoću uređene trojke \mintinline{text}{<PT, PT, double>} što znači da uspoređuje točke tipa \mintinline{text}{PT}, a rezultate u transformacijsku matricu zapisuje kao \mintinline{text}{double} vrijednosti.
+U primjeru izvornoga koda \ref{coderef:gen_icp_const} su definirane konstante poput putanje za spremanje rezultata i putanje s ulaznim datotekama. Također su definirani tipovi točaka \mintinline{text}{PT} kao \mintinline{text}{PointXYZ} koje će algoritam koristit te sadrže samo x, y i z koordinate. Mogu se koristiti i drugi oblici točaka. Oblak točaka \mintinline{text}{PointCloudType} je definiran kao kolekcija prethodno definiranih točaka. Naposljetku se definira tip \mintinline{text}{ICP} algoritma tj. s kojim tipovima podataka radi. Definiran je pomoću uređene trojke \mintinline{text}{<PT, PT, double>} što znači da uspoređuje točke tipa \mintinline{text}{PT}, a rezultate u transformacijsku matricu zapisuje kao \mintinline{text}{double} vrijednosti tj. kao brojeve s pomičnim zarezom dvostruke preciznosti.
 
-Definirane su i varijable \mintinline{text}{cloud_ref} koja pokazuje na referentni skup točaka, \mintinline{text}{cloud_target} koja pokazuje na ciljni skup točakai \mintinline{text}{cloud_reg} koja pokazuje na skup točaka nakon poravnanja. Za algoritme koji koriste filrirane oblake točaka koriste se variable \mintinline{text}{cloud_ref_f} i \mintinline{text}{cloud_target_f}. One su tipa \mintinline{text}{boost::shared_ptr} te se kao takve predaju metodama kao pokazivači.
+Definirane su i varijable \mintinline{text}{cloud_ref} koja pokazuje na referentni skup točaka, \mintinline{text}{cloud_target} koja pokazuje na ciljni skup točaka i \mintinline{text}{cloud_reg} koja pokazuje na aproksimiran skup točaka nakon poravnanja. Za algoritme koji koriste filrirane oblake točaka koriste se varijable \mintinline{text}{cloud_ref_f} i \mintinline{text}{cloud_target_f}. One su tipa \mintinline{text}{boost::shared_ptr} te se kao takve predaju metodama kao pokazivači.
 
 \begin{listing}[h!]
   \begin{minted}[frame=lines, linenos]{text}
@@ -39,16 +37,16 @@ ICP setupICP() {
  return icp;
 }
   \end{minted}
-  \caption{Generalizirani ICP - definicija ICP}
+  \caption{Instance ICP algoritma}
   \label{coderef:gen_icp_def}
 \end{listing}
 \pagebreak
 U primjeru \ref{coderef:gen_icp_def} se definira ICP algoritam tako da mu se predaju uvjeti zaustavljanja te ostali parametri. Trenutno su zadana tri uvjeta zaustavljanja, a oni su:
 
 \begin{enumerate}
-  \item \mintinline{c++}{setMaxCorrespondenceDistance} - uzima u obzir samo točke unutar zadanoga promjera u metrima
-  \item \mintinline{c++}{setMaximumIterations} - maksimalan broj iteracija prilikom estimacije matrice za neku točku
-  \item \mintinline{c++}{setTransformationEpsilon} - maksimalna dozvoljena pogreška
+  \item \mintinline{text}{setMaxCorrespondenceDistance} - uzima u obzir samo točke unutar zadanoga promjera u metrima
+  \item \mintinline{text}{setMaximumIterations} - maksimalan broj iteracija prilikom estimacije tarnsformacije za neku točku
+  \item \mintinline{text}{setTransformationEpsilon} - maksimalna dozvoljena pogreška
 \end{enumerate}
 
 \begin{listing}[h!]
@@ -65,62 +63,56 @@ vector<path> get_files() {
  return paths;
 }
   \end{minted}
-  \caption{Generalizirani ICP - skupljanje datoteka}
+  \caption{Skupljanje ulaznih datoteka}
   \label{coderef:gen_icp_collect_files}
 \end{listing}
 \pagebreak
-Kod u primjeru \ref{coderef:gen_icp_collect_files} koristi metode biblioteke Boost za iteriranje datoteka sa skupovima točaka te vrača vektora s njihovim apsolutnim putanjama. Kod za stvaranje grafova je jednak bez obzira na korišteni algoritam. Grafovi su stvoreni pomoću jezika Kotlin i biblioteke XCharts. Podaci koji vizualiziraju su usporedbe stvarnih podataka tj. referentnih i podataka dobivenih pomoću algoritama. S obzirom da nam algoritmi kao izlaz daju samo transformacijske matrice, potrebno je nekako te matrice prikazati kao koordinate lokacija i kuteve rotacija.
+Kod u primjeru \ref{coderef:gen_icp_collect_files} koristi metode biblioteke Boost\cite{boost} za iteriranje datoteka sa skupovima točaka te vrača vektora s njihovim apsolutnim putanjama. Kod za stvaranje grafova je jednak bez obzira na korišteni algoritam. Grafovi su stvoreni pomoću jezika Kotlin i biblioteke XCharts. Podaci koji vizualiziraju su usporedbe stvarnih podataka tj. referentnih i podataka dobivenih pomoću algoritama. S obzirom da nam algoritmi kao izlaz daju samo transformacijske matrice, potrebno je nekako te matrice prikazati kao koordinate lokacija i kuteve rotacija.
 
 \begin{listing}[h!]
   \begin{minted}[frame=lines, linenos]{text}
-fun calculatePoints(
-  icp: List<TransformMatrix>,
-  realPoints: List<Point>)
-: List<Point> {
-    val calculatedPoints = mutableListOf(realPoints.first())
-    realPoints.drop(1).forEachIndexed { index, _ ->
-        val nrp = icp[index - 1] * realPoints[index - 1]
-        calculatedPoints.add(nrp)
-    }
-    return calculatedPoints
+fun calculatePointsExperimental(
+ icp: List<TransformMatrix>,
+ first: Transform
+): List<Array<DoubleArray>> {
+   val transformations = mutableListOf(pointToMatrix(first))
+   icp.forEach { transform ->
+    val result = multiplySameSizeMat(transformations.last(), transform.matrix)
+    transformations.add(result)
+   }
+  return transformations
 }
   \end{minted}
-  \caption{Generiranje estimiranih lokacija}
+  \caption{Generiranje estimiranih transformacijskih matrica}
   \label{kotlin:gen_est_loc}
 \end{listing}
 
-Kod u primjeru \ref{kotlin:gen_est_loc} je prikazana funkcija za generiranje estimiranih točaka iz stvarnih točaka i transformacijskih matrica. Kao argumente metoda prima listu transformacijskih matrica \mintinline{text}{icp} te listu točaka koje predstavljaju referentne lokacija. Algoritam radi tako da se započinje od prve referentne točke te se na nju primjenjuje prva transformacijska matrica. Tako smo dobili sljedeću estimiranu točku. Nako toga se uzima sljedeća referentna točka te se ona množi s sljedećom transformacijskom matricom. N posljetku smo dobili niz estimiranih točaka koji sada možemo uspoređivati s referentnim nizom. S obzirom da je točka u obliku matrice 3x1, a transformacijska matrica ima oblik 3x3 oni se mogu pomnožiti pravilima množenja matrica. Tako se dobije sljedeća točka u nizu, a taj korak množenja je prikazan formulom \ref{eq:calc_next_point}.
+\begin{listing}[h!]
+  \begin{minted}[frame=lines, linenos]{text}
+fun pointToMatrix(first:  Transform): Array<DoubleArray> {
+ val rotation = first.rotation
+ val location = first.location
+ val rx = rotation.toRx()
+ val ry = rotation.toRy()
+ val rz = rotation.toRz()
+ val result = multiplySameSizeMat(rz, multiplySameSizeMat(ry, rx))
+ return arrayOf(
+  doubleArrayOf(result[0][0], result[0][1], result[0][2], location.x),
+  doubleArrayOf(result[1][0], result[1][1], result[1][2], location.y),
+  doubleArrayOf(result[2][0], result[2][1], result[2][2], location.z),
+  doubleArrayOf(0.0, 0.0, 0.0, 1.0)
+ )
+}
+  \end{minted}
+  \caption{Generiranje estimiranih lokacija}
+  \label{kotlin:init_mat_method}
+\end{listing}
 
-\begin{equation}
-  \begin{pmatrix}
-  X_{n}\\
-  Y_{n}\\
-  Z_{n}\\
-  1
-  \end{pmatrix}
-  =
-  \begin{pmatrix}
-    r_{11} & r_{12} & r_{13} & t_{x}\\
-    r_{21} & r_{22} & r_{23} & t_{y}\\
-    r_{31} & r_{32} & r_{33} & t_{z}\\
-    0      & 0      & 0      & 1
-  \end{pmatrix}
-  \begin{pmatrix}
-    X_{n-1}\\
-    Y_{n-1}\\
-    Z_{n-1}\\
-    1
-  \end{pmatrix}
-  \label{eq:calc_next_point}
-\end{equation}
+Kod u primjeru \ref{kotlin:gen_est_loc} se vidi metoda za generiranje estimiranih točaka iz prve referentne točke i transformacijskih matrica. Kao argumente metoda prima listu transformacijskih matrica \mintinline{text}{icp} te transformaciju prve referentne točke. Algoritam radi tako da prvo izračuna transforamcijsku matricu iz prve referentne točke pomoću metode \ref{kotlin:init_mat_method}. Zapravo se rotacija iz Eulerovog oblika pretvara u zasebne rotacijske matrice te njih pomnoži redosljedom XYZ zbog redosljeda rotacija prilikom ICP estimacije transformacije oblaka točaka. Izgledi pojedinih matrica su prikazani u poglavlju Referentni podaci. Tada se vraća matricu veličine 4x4 koja se sastoji od rotacijske matrice i lokacija. Algoritam koristi prethodnu estimiranu transformacijsku matricu te trenutnu estimiranu transformacijsku matricu tako da iz pomnoži pravilima množenja matrica. Tada se dobije nova matrica koja zapravo predstavlja nove koordinate i nove rotacije naspram prethodne.
 
-\subsection{Ulazni podaci}
+Vizualizacije referentnih podataka za oba primjera kretanja vozila možemo vidjeti na sljedećim grafovima. Na njima svaka točka predstavlja jedno očitanje. Slika \ref{fig:gt1_lokacija} prikazuje graf lokacija vozila. Slika \ref{fig:gt1_lokacija_koord} pokazuje koordinate vozila u vremenu. Možemo vidjeti da se mijenjaju samo x i y koordinate zato što vozilo može samo skretati. Slika \ref{fig:gt1_rot_vr} prikazuje valjanje, poniranje i skretanje oko statičnih osi vozila u vremenu. Također se može uoćiti da se samo skretanje mijenja zato što se vozilo ne može valjati niti ponirati. Slika \ref{fig:gt1_rot_kv} također pokazuje rotaciju vozila u vremenu ali predstavljenu u obliku kvaterniona.
 
-Za oba algoritma će se koristiti dva skupa podataka. Različiti parametri su korišteni prilikom skupljanja oba skupa iz simulatora.
-
-Vizualizacije referentnih podataka za oba primjera kretanja vozila možemo vidjeti na sljedećim grafovima. Na njima svaka točka predstavlja jedno očitanje. Slika \ref{fig:gt1_lokacija} prikazuje graf lokacija vozila. Slika \ref{fig:gt1_lokacija_koord} pokazuje koordinate vozila u vremenu. Možemo vidjeti da se mijenjaju samo x i y koordinate zato što vozilo može samo skretati. Slika \ref{fig:gt1_rot_vr} valjanje, poniranje i skretanje oko statičnih osi vozila u vremenu. Također se može uoćiti da se samo skretanje mijenja zato što se vozilo ne može valjati niti ponirati. Slika \ref{fig:gt1_rot_kv} također pokazuje rotaciju vozila u vremenu ali predstavljenu u obliku kvaterniona. 
-
-\subsubsection{Skup podataka A}
+\subsubsection{Primjer referentnih podataka A}
 Prvi kup podataka se sastoji od 300 očitanja tj. postoji 300 datoteka sa skupovima točaka. Duljina trajanja te simulacije je 200 sekundi. Parametri koji su korišteni u python skripti za postavljanje lidar senzora su sljedeći:
 \begin{enumerate}
   \item Maksimalna udaljenost laserske zrake je postavljena na 1500 cm tj. 15 metara
@@ -148,7 +140,7 @@ Prvi kup podataka se sastoji od 300 očitanja tj. postoji 300 datoteka sa skupov
 \end{figure}
 
 \newpage
-\subsubsection{Skup podataka B}
+\subsubsection{Primjer referentnih podataka B}
 Drugi skup podataka se sastoji od 600 očitanja tj. postoji 300 datoteka sa skupovima točaka. Duljina trajanja te simulacije je 80 sekundi. Parametri koji su korišteni u python skripti za postavljanje lidar senzora su sljedeći:
 \begin{enumerate}
   \item Maksimalna udaljenost laserske zrake je postavljena na 2000 cm tj. 20 metara
@@ -174,4 +166,75 @@ Drugi skup podataka se sastoji od 600 očitanja tj. postoji 300 datoteka sa skup
   \caption{Rotacija vozila u obliku kvaterniona}
   \label{fig:gt2_rot_kv}
 \end{figure}
-Prvi niz skupova točaka se skupljao u dužem periodu ali ima samo 300 skupova zato što se koristi svako 15 očitanje. Drugi niz skupova točaka ima 600 očitanja zato što se uzima svako očitanje. Također je drgi skup detaljniji od prvoga te se očekuju bolji rezultati algoritama. Duljinu puta možemo izračunati tako da pronađemo udaljenosti između dvije sljedne točke te ih zbrojimo. Tako dobivena udaljenost za referentni primjer A iznosi 662.3 metra, a za referentni primjer B iznosi 448.2 metra.
+Prvi niz skupova točaka se skupljao u dužem periodu ali ima samo 300 skupova zato što se koristi svako 15 očitanje. Drugi niz skupova točaka ima 600 očitanja zato što se uzima svako očitanje. Također je drgi skup detaljniji od prvoga što pridonosi točnosti algoritama. Duljinu puta možemo izračunati tako da pronađemo udaljenosti između dvije sljedne točke te ih zbrojimo. Tako dobivena udaljenost za referentni primjer A iznosi 662.3 metra, a za referentni primjer B iznosi 448.2 metra.
+
+\begin{listing}[H]
+  \begin{minted}[frame=lines, linenos]{text}
+void save_matrix(ICP icp, string first, string second) {
+ Matrix4d transformation = icp.getFinalTransformation();
+ double fitness = icp.getFitnessScore();
+ string filename = first + "-" + second + ".txt";
+ Matrix3d mat = mat4x4_to_3x3(transformation);
+ Vector3d rpy = mat.eulerAngles(0, 1, 2);
+ save_to_file(
+   filename,
+   mat_to_string(transformation),
+   fitness,
+   rpy
+  );
+}
+  \end{minted}
+  \caption{Generalizirani ICP - spremanje rezultata}
+  \label{coderef:gen_icp_save_matrix}
+\end{listing}
+
+Spremanje rezultata se vrši metodom \mintinline{text}{save_matrix} u primjeru \ref{coderef:gen_icp_save_matrix}. Matricu transformacije možemo dobiti pozivom \mintinline{text}{icp.getFinalTransformation()} te je  oblika \mintinline{text}{Matrix4d} tj. ima 4 redaka i 4 stupaca dok su elemnti tipa \mintinline{text}{double}. Ta matrica se tada transformira u matricu veličine 3x3 tj. izdvaja se rotacijska matrica zato što takav tip matrice ima ugrađenu metodu \mintinline{text}{eulerAngles()}. Ta metoda kao argumente prima redosljed rotacija objekta tj. redosljed osi rotacija. U ovome slučaju se prvo predaje 0 što znači da se objekt prvo rotirao oko x osi, tada se predaje 1 što znači da se tada rotirao oko y osi i naposljetku se predaje 2 što znači da je zadnja rotacija bila oko z osi. Metoda vraća vektor od tri elementa koji predstavljaju valjanje, poniranje i skretanje. Konačno se sve te informacije spremaju u datoteku s imenom sastavljenim od dva indetifikatora očitanja tako da se zna koji skupovi točaka su upoređivani. Struktura te datoteke je prikazana na primjeru  \ref{files:icp_file_result}. Prva linija sadrži fitnes vrijednost. Od druge do pete linije se nalazi transformacijska matrica dok se na zadnjoj liniji nalaze Eulerovi kutevi u radijanima.
+\begin{listing}[H]
+  \begin{minted}[frame=lines]{text}
+0.0263544
+    0.999735   -0.0230172  -0.00046344  -0.00394583
+   0.0230173     0.999735  0.000237121  0.000806379
+ 0.000457859 -0.000247725            1    0.0091155
+           0            0            0            1
+3.14136 -3.14113 -3.11857
+  \end{minted}
+  \caption{ICP - datoteka s rezultatom}
+  \label{files:icp_file_result}
+\end{listing}
+
+\begin{equation}
+  \begin{aligned}
+AM_{x} &= \frac{1}{n}\sum_{i=0}^{n-1} |X_{i} - \hat{X}_{i}|\\
+AM_{y} &= \frac{1}{n}\sum_{i=0}^{n-1} |Y_{i} - \hat{Y}_{i}|\\
+AM_{z} &= \frac{1}{n}\sum_{i=0}^{n-1} |Z_{i} - \hat{Z}_{i}|
+  \end{aligned}
+  \label{eq:coord_am}
+\end{equation}
+\begin{equation}
+  \begin{aligned}
+MSE_{x} &= \frac{1}{n}\sum_{i=0}^{n-1} |X_{i} - \hat{X}_{i}|^2\\
+MSE_{y} &= \frac{1}{n}\sum_{i=0}^{n-1} |Y_{i} - \hat{Y}_{i}|^2\\
+MSE_{z} &= \frac{1}{n}\sum_{i=0}^{n-1} |Z_{i} - \hat{Z}_{i}|^2
+  \end{aligned}
+  \label{eq:coord_mse}
+\end{equation}
+
+\begin{equation}
+  \begin{aligned}
+ROT_{r} &= \frac{1}{n}\sum_{i=0}^{n-1} |R_{i} - \hat{R}_{i}|\\
+ROT_{p} &= \frac{1}{n}\sum_{i=0}^{n-1} |P_{i} - \hat{P}_{i}|\\
+ROT_{y} &= \frac{1}{n}\sum_{i=0}^{n-1} |Y_{i} - \hat{Y}_{i}|
+  \end{aligned}
+  \label{eq:rot_am}
+\end{equation}
+\begin{equation}
+  \begin{aligned}
+ROT_{r} &= \frac{1}{n}\sum_{i=0}^{n-1} |R_{i} - \hat{R}_{i}|^2\\
+ROT_{p} &= \frac{1}{n}\sum_{i=0}^{n-1} |P_{i} - \hat{P}_{i}|^2\\
+ROT_{y} &= \frac{1}{n}\sum_{i=0}^{n-1} |Y_{i} - \hat{Y}_{i}|^2
+  \end{aligned}
+  \label{eq:rot_mse}
+\end{equation}
+
+Konkretnije numeričke estimacije i pogreške se računaju pomoću sljedećih formula. Sretnja aritmetička vrijednosti razlika koordinata i rotacija se računa s formulama \ref{eq:coord_am} i \ref{eq:rot_am}. Element $n$ je ukupan broj točaka, $X_{i}$ je stvarna vrijednost koordinate x, dok je $\hat{X}_{i}$ estimirani iznos x koordinate. Po istome principu vrijedi za x i y koordinate. Element $R_{i}$ je stvarna vrijednost kuta valjanja, dok je $\hat{R}_{}$ estimirana vrijednost kuta valjanja. Po istome principu vrijedi za skretanje i poniranje. Srednje kvadratične pogreška koordinata i rotacije se računaju s formulama \ref{eq:coord_mse} i \ref{eq:rot_mse}. AM znači aritmetička sredina razlika, dok MSE znači srednja kvadratična pogreška.
+\pagebreak

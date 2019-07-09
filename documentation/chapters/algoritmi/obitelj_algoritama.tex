@@ -1,6 +1,6 @@
 \section{Obitelj algoritama}
 
-Algoritmi korišteni za obrađivanje senzorskih podataka pripadaju ICP\cite{wiki:Iterative_closest_point} (eng. iterative closest point) obitelji algoritama. Koristi se za minimizaciju razlika dvije skupine točaka. U ovome slučaju se koristi za minimizaciju razlike između dva oblaka točaka prikupljenih pomoću lidar senzora. Ovaj algoritam radi tako da se jedan skup točaka postavi kao referentni dok se drugi skup pokušava transformirati, uz minimiziranje razlike, u referentni skup. Algoritam iterativno poboljšava transformaciju potrebnu za minimiziranje pogreške. Za računanje pogreške se mogu koristiti kvadrati razlika koordinata dviju točaka. ICP algoritam je jedan od najkorištenijih algoritama za rekonstrukcije trodimenzionalnih objekata. ICP algoritam su prvi puta predstavili Besl i Mckay\cite{beslmckay121791}.
+Algoritmi korišteni za obrađivanje senzorskih podataka pripadaju ICP\cite{wiki:Iterative_closest_point} (eng. iterative closest point) obitelji algoritama. Koristi se za minimizaciju razlika dvije skupine točaka. U ovome slučaju se koristi za minimizaciju razlike između dva oblaka točaka prikupljenih pomoću lidar senzora. Ovaj algoritam radi tako da se jedan skup točaka postavi kao referentni dok se drugi skup pokušava transformirati, uz minimiziranje razlike, u referentni skup. Algoritam iterativno poboljšava transformaciju potrebnu za minimiziranje pogreške. Za računanje pogreške se mogu koristiti kvadratićna razlika koordinata dviju točaka. ICP algoritam je jedan od najkorištenijih algoritama za rekonstrukcije trodimenzionalnih objekata te su ga prvi puta predstavili Besl i Mckay\cite{beslmckay121791}.
 
 \subsubsection{Ulaz i izlaz algoritma}
 
@@ -33,11 +33,11 @@ Matrica se zapravo sastoji od rotacijske matrice veličine 3x3 koja se sastoji o
 
 Ukratko ovaj algoritam prolazi kroz svaku točku ciljnoga skupa ili podskupa točaka te traži najbližu točku u referentnome skupu. Tada estimira kombinaciju rotacije i translacije ta bi poravnao te dvije točke tako što računa srednju vrijednost kvadrata razlike koordinata točaka. Algoritam tada to izvodi za ostale točke te se zaustavlja kada dosegne uvjet zaustavljanja. Taj uvjet može biti postavljen kao broj iteracija ili kao minimalna dopuštena vrijednost pogreške.
 
-Ovaj algoritam se može optimizirati na razne načine. Moguće je prvo detektirati posebne podskupove točaka unutar oblaka te eliminirati ostale točke. Također možemo filtrirati točke koje nisu od interesa. Tako se smanjuje količina točaka koje treba usporediti.
+Ovaj algoritam se može optimizirati na razne načine. Moguće je prvo detektirati posebne podskupove točaka unutar oblaka te eliminirati ostale točke. Također se mogu filtrirati točke koje nisu od interesa. Tako se smanjuje količina točaka koje treba usporediti.
 
 Neke od tih metoda filtriranja su:
 \begin{enumerate}
-  \item Voxel grid gdje se cjeli skup točaka dijeli na više područja oblika kocke te se unutar njih filtriraju sve točke osim jedne koja će predstavljati taj skup.
+  \item Grupiranje točaka gdje se cjeli skup točaka dijeli na više područja oblika kocke te se unutar njih filtriraju sve točke osim jedne koja će predstavljati taj skup.
   \item Statističko filtriranje radi tako da izračuna srednju udaljenost do $k$ najbližih točaka te filtrira samo točke unutar te udaljenosti. Temelji se na Gausovoj raspodjeli.
   \item Filtracija temeljena ra promjeru samo filtrira točke koje su unutar promjera $d$ oko točke.
   \item Uvjetno filtriranje koristi uvjete za filtraciju točke. Uvjet može biti da se točka samo uzima u obzir ako joj je koordinata $z$ manja od 15.
@@ -53,5 +53,5 @@ Neke od tih metoda filtriranja su:
   \label{fig:pcl_logo}
 \end{figure}
 
-Za izvođenje ICP algoritma u oba primjera se koristi biblioteka PCL (eng. Point Cloud Library) koja je zbog širokog broja algoritama i alata postala standard za obradu oblaka točaka. To je biblioteka otvorenoga koda koja se sastoji od implementacija raznih algoritama za obradu dvodimenzionalnih i trodimenzionalnih podataka. Sastoji se od algoritama za detekciju oblika, rekonstrukciju površina, obradu oblaka točaka. Sama biblioteka je napisana u jeziku C++ zbog vrlo visokih performansi te omogućuje izvođenje na raznim platformama od autonomnih automobila do ugrađenih računalnih rješenja u prijenosnim uređajima poput mobilnih uređaja.
+Za izvođenje ICP algoritma se koristi već gotova implementacija algoritma koja je dio biblioteke PCL\cite{pcl} (eng. Point Cloud Library). Zbog širokog broja algoritama i alata se samtra standardnom bibliotekom za obradu oblaka točaka te lokalizaciju. To je biblioteka otvorenoga koda koja se sastoji od implementacija raznih algoritama za obradu dvodimenzionalnih i trodimenzionalnih podataka. Sastoji se od algoritama za detekciju oblika, rekonstrukciju površina, obradu oblaka točaka. Sama biblioteka je napisana u jeziku C++ te ima vrlo visoke performanse i mogućnost izvođenja na raznim platformama od autonomnih automobila do ugrađenih računalnih rješenja u prijenosnim uređajima poput mobilnih uređaja. Kombinacijom PCL biblioteke i senzora mobilnih uređaja može se koristiti za proširenu ili virtualnu stvarnost.
 \pagebreak

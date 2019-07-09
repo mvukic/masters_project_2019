@@ -28,33 +28,34 @@
 \izvornik
 
 % Dodavanje zahvale ili prazne stranice. Ako ne želite dodati zahvalu, naredbu ostavite radi prazne stranice.
-\zahvala{Zahvala mentoru za strpljenje}
+\zahvala{Zahvala mentoru Doc. Dr. Sc. Ivanu Markoviću za strpljenje i vodstvu}
 
 \tableofcontents
-\include{chapters/uvod}
+\include{chapters/uvod} %ok
 
-\chapter{Problem lokalizacije autonomnog vozila}
-\input{chapters/problem_lokalizacije/lokalizacija}
-\input{chapters/problem_lokalizacije/problem}
+\chapter{Problem lokalizacije vozila}
+\input{chapters/problem_lokalizacije/lokalizacija} %ok
+\input{chapters/problem_lokalizacije/problem} %ok
 
 \chapter{Priprema podataka}
-\input{chapters/podaci/simulator}
-\input{chapters/podaci/opis_okruzenja}
-\input{chapters/podaci/point_cloud}
-\input{chapters/podaci/ground_truth}
-\input{chapters/podaci/izvor_podataka}
-\input{chapters/podaci/prikupljanje_podataka}
+\input{chapters/podaci/simulator} %ok
+\input{chapters/podaci/opis_okruzenja} %ok
+\input{chapters/podaci/point_cloud} %ok
+\input{chapters/podaci/ground_truth} %ok
+\input{chapters/podaci/izvor_podataka} %ok
+\input{chapters/podaci/prikupljanje_podataka} %ok
 
 \chapter{Algoritmi lokalizacije}
-\input{chapters/algoritmi/obitelj_algoritama}
-\input{chapters/algoritmi/shared}
+\input{chapters/algoritmi/obitelj_algoritama} %ok
+\input{chapters/algoritmi/shared} %ok
 
-\section{Algoritmi}
-\input{chapters/algoritmi/algoritam_1}
-\input{chapters/algoritmi/algoritam_2}
+\chapter{Algoritam}
+\input{chapters/algoritmi/algoritam_1} %ok
+%\input{chapters/algoritmi/algoritam_2} %ok
 
-\input{chapters/ekperimentalni_rezultati}
-\input{chapters/zakljucak}
+\chapter{Eksperimentalni rezultati}
+\input{chapters/ekperimentalni_rezultati}%ok
+\input{chapters/zakljucak} %ok
 
 \bibliography{literatura}
 \bibliographystyle{fer}
@@ -62,7 +63,7 @@
 \begin{sazetak}
 Postoje razni algoritmi za lokalizaciju vozila pomoću senzorskih očitanja. S obzirom da ne postoji savršen algoritam rezultati odstupaju od stvarnih vrijednosti. Koristeći simulator sa referentnim podacima možemo jednostavno usporediti stvarne podatke s rezultatima algoritama. Evaluira se algoritam za itaraciju najbliže točke te se rezultati prikazuju u obliku grafova.
 
-\kljucnerijeci{simulacija; lokalizacija; iteracija najbližih točaka; Carla; evaluacija; PCL; oblak točaka}
+\kljucnerijeci{simulacija; lokalizacija; iterativna metoda najbližih točaka; Carla; evaluacija; PCL; oblak točaka}
 \end{sazetak}
 
 % TODO: Navedite naslov na engleskom jeziku.

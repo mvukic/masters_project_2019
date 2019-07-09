@@ -6,10 +6,10 @@ import models.icp.TranslationMatrix
 import models.shared.Euler
 import java.io.File
 
-fun loadICPResults(rootPath: String): List<TransformMatrix> {
+fun loadICPResults(rootPath: String, take: Int = 999): List<TransformMatrix> {
     val root = File(rootPath)
     val icpResultsDir = root.resolve("icp_results")
-    val files = icpResultsDir.walk().filter { it.isFile }.toList()
+    val files = icpResultsDir.walk().filter { it.isFile }.toList().take(take)
     return files.map { file ->
         val (first, second) = file.nameWithoutExtension.split("-")
         val lines = file.readLines().map { it.trim() }

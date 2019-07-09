@@ -10,9 +10,9 @@ import kotlin.math.absoluteValue
 
 fun anglesDifferencesCharts(timestamps: List<Double>, angles: List<Euler>, calculated: List<Euler>) {
     val diffs = calculateEulerDifference(angles, calculated)
+//    diffs.forEach { println("Diff $it") }
     diffBetweenRealAndCalc(timestamps, diffs)
-    overlayRotations(timestamps, angles, calculated)
-
+//    overlayRotations(timestamps, angles, calculated)
 }
 
 fun overlayRotations(timestamps: List<Double>, angles: List<Euler>, calculated: List<Euler>) {

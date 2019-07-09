@@ -4,7 +4,7 @@ from enum import Enum
 carla_version = "5"
 
 carla_path = f"C:\CARLA\CARLA_0.9.{carla_version}\CarlaUE4.exe"
-map_name = "/Game/Carla/Maps/Town01"
+map_name = "/Game/Carla/Maps/Town02"
 quality_level = "-quality-level=Low"
 fps = "-benchmark -fps=15"
 window = "-windowed -ResX=800 -ResY=600"

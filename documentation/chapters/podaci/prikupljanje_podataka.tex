@@ -1,7 +1,7 @@
 \pagebreak
 \section{Prikupljanje podataka}
 
-Podaci su prikupljeni tako da se simulator pokrene u poslužiteljkom načinu rada te se tada pokreće klijentska skripta napisana u python jeziku. Ta skripta uspostavi kontakt s poslušiteljem te se tako šalju naredbe. Te naredbe će zapravo stvoriti naše vozilo, ostale sudionike i senzor. Nakon što smo prikupili dovoljno podataka skripta će obrisati stvorene objekte i spremiti podatke u datoteke. Tada simulator može prekinuti s radom te se ti podaci mogu obrađivati na bilo koji način.
+Podaci su prikupljeni tako da se simulator pokrene u poslužiteljskom načinu rada te se tada pokreće klijentska skripta napisana u python jeziku. Ta skripta uspostavi kontakt s poslušiteljem te se tako šalju naredbe. Te naredbe će zapravo stvoriti naše vozilo, ostale sudionike i senzor. Nakon što smo prikupili dovoljno podataka skripta će obrisati stvorene objekte i spremiti podatke u datoteke. Tada simulator može prekinuti s radom te se ti podaci mogu obrađivati na bilo koji način.
 
 \subsubsection{Pokretanje simulatora}
 
@@ -18,7 +18,7 @@ Podaci su prikupljeni tako da se simulator pokrene u poslužiteljkom načinu rad
   \label{coderef:carla_start}
 \end{listing}
 
-Simulator Carla se pokreće pomoću python skripte zbog boljeg upravljanja parametrima ali  se zapravo sastoji od naredbe pokazane u primjeru \ref{coderef:carla_start}. Simulacija se pokreće u mapi pod nazivom Town01. Kvaliteta je postavljena na najnižu vrijednost kao i broj slika u sekundi zbog boljih performansi izvođenja. Prozor smo postavili na vrlo malu rezoluciju od 800 pixela širine i 600 pixela visine također zbog boljih performansi. Vrlo važan parametar je sučelje preko kojega klijentski program komunicira s poslužiteljem. Ovdje je definiran kao 2000.
+Simulator Carla se pokreće pomoću python skripte zbog boljeg upravljanja parametrima ali se zapravo sastoji od naredbe pokazane u primjeru \ref{coderef:carla_start}. Simulacija se pokreće u mapi pod nazivom Town01. Kvaliteta je postavljena na najnižu vrijednost kao i broj slika u sekundi zbog boljih performansi izvođenja. Prozor smo postavili na vrlo malu rezoluciju od 800 pixela širine i 600 pixela visine također zbog boljih performansi. Vrlo važan parametar je sučelje preko kojega klijentski program komunicira s poslužiteljem. Ovdje je definiran kao 2000.
 
 
 \subsubsection{Klijentska kripta}
@@ -54,7 +54,7 @@ Referentni i testni podaci su prikupljeni iz simualtora ali iz različitih izvor
 
 U primjeru izvornoga koda \ref{coderef:carla_connect} klijent se spaja na Carla poslužitelj čiju smo lokaciju (IP adresu i sučelje) definirali u klasi \mintinline{python}{CarlaProp}. Također postavljamo sinkroni način rada simulatora, a razlog je taj što želimo upravljati frekvencijom slanja podataka iz poslužitelja prema klijentima. Varijabla \mintinline{python}{self.world} služi za izvođenje svih operacija koje su vezane uz svijet.
 
-Svaka mapa ima već unaprijed definirane točke stvaranja tj. koordinate u svijetu na kojima možemo stvoriti objekte. Te koordinate se nalaze na cestama. Njih možemo dobiti naredbom prikazanom na primjeru izvornoga koda \ref{coderef:spawn_points}. 
+Svaka karta ima već unaprijed definirane točke stvaranja tj. koordinate u svijetu na kojima možemo stvoriti objekte. Te koordinate se nalaze na cestama. Njih možemo dobiti naredbom prikazanom na primjeru izvornoga koda \ref{coderef:spawn_points}. 
 
 \begin{listing}[h!]
   \begin{minted}[frame=lines, linenos]{html}
@@ -85,7 +85,7 @@ def get_vehicle_blueprints(world):
   \label{coderef:vehicle_blueprints}
 \end{listing}
 \pagebreak
-Na kodu \ref{coderef:vehicle_blueprints} se vidi kako koristimo knjižnicu nacrta da bi filtrirali nama potrebne nacrte. Koristiti će se samo vozila koja imaju 4 kotača.
+U izvornome kodu \ref{coderef:vehicle_blueprints} se vidi kako se koristi knjižnica nacrta da bi filtrirali potrebni nacrti. Koriste se samo vozila koja imaju 4 kotača.
 
 \begin{listing}[h!]
   \begin{minted}[frame=lines, linenos, escapeinside=!!]{html}
@@ -107,7 +107,7 @@ Na kodu \ref{coderef:vehicle_blueprints} se vidi kako koristimo knjižnicu nacrt
   \label{coderef:vehicle_spawning}
 \end{listing}
 
-Koristeću točke stvaranja i nacrte vozila sada se mogu ta vozila stvoriti u svijetu. Na \ref{coderef:vehicle_spawning} se koristeći petljom stvara unaprijed zadan broj ostalih sudionika definiranih u varijabli klase \mintinline{python}{self.npc_number}. Njihove reference se tada spremaju u listu zato što se na kraju izvođenja moraju uništiti. Stvaranje instance nacrta se izvodi naredbom na liniji \ref{lineref:spawn_instance}. Također smo svakoj instanci definirali autonomni način rada na liniji \ref{lineref:set_autopilot}.
+Koristeći točke stvaranja i nacrte vozila sada se mogu ta vozila stvoriti u svijetu. Na \ref{coderef:vehicle_spawning} se koristeći petljom stvara unaprijed zadan broj ostalih sudionika definiranih u varijabli klase \mintinline{python}{self.npc_number}. Njihove reference se tada spremaju u listu zato što se na kraju izvođenja moraju uništiti. Stvaranje instance nacrta se izvodi naredbom na liniji \ref{lineref:spawn_instance}. Također se svakoj instanci definira autonomni način rada na liniji \ref{lineref:set_autopilot}.
 
 Sada se definira vozilo koje zapravo promatramo tj. koje ima na sebi lidar senzor. To se radi na približno jednak način kao u primjeru \ref{coderef:vehicle_spawning}. Izvorni kod je prikazan na primjeru \ref{coderef:actor_spawning}.
 
@@ -149,7 +149,7 @@ Sada slijedi pronalazak nacrta za lidar senzor, postavljanje njegovih atributa, 
   \label{coderef:lidar_props}
 \end{listing}
 \pagebreak
-Pomoću \mintinline{python}{sensor_tick} parametra se definira da simulator treba  prikupljati podatke najbrže što može. Varijabla \mintinline{python}{laser_range} definira koliko daleko laser može doprijeti, ovdje je definirano na 1500 centimetara ili 15 metara. Frekcencija rotacije lidara je definirana varijablom \mintinline{python}{rotation_frequency} i iznosi 120 rotacija u minuti. Gornja granica mjerenja lasera je 45°, a donja je -80°. parametar \mintinline{python}{location} definira lokaciju lasera tj. bit će u središtu koordinatnog sustava ali na visini od 4 metra. Sredina tog koordinatnog sustava je zapravo sredina unutarnjeg sustava vozila na kojemu će taj senzor biti pričvršćen.
+Pomoću \mintinline{python}{sensor_tick} parametra se definira da simulator treba prikupljati podatke najbrže što može. Varijabla \mintinline{python}{laser_range} definira koliko daleko laser može doprijeti, ovdje je definirano na 1500 centimetara ili 15 metara. Frekcencija rotacije lidara je definirana varijablom \mintinline{python}{rotation_frequency} i iznosi 120 rotacija u minuti. Gornja granica mjerenja lasera je 45°, a donja je -80°. parametar \mintinline{python}{location} definira lokaciju lasera tj. bit će u središtu koordinatnog sustava ali na visini od 4 metra. Sredina tog koordinatnog sustava je zapravo sredina unutarnjeg sustava vozila na kojemu će taj senzor biti pričvršćen.
 
 \begin{listing}[h!]
   \begin{minted}[frame=lines, linenos, escapeinside=!!]{html}
@@ -191,7 +191,7 @@ Pomoću \mintinline{python}{sensor_tick} parametra se definira da simulator treb
   \label{coderef:lidar_find_spawn}
 \end{listing}
 
-Na liniji \ref{lineref:get_lidar_blueprint} primjera \ref{coderef:lidar_find_spawn} dohvaćamo nacrt lidar senzora. Tada od linije \ref{lineref:lidar_prop_start} do \ref{lineref:lidar_prop_end} postavljamo zadane postavke nad nacrtom. Konačno na liniji \ref{lineref:connect_lidar} stvaramo instancu senzora ali metodi predajemo dodatan parametar \mintinline{python}{attach_to} koji je je jednak referenci na naše vozilo. Također umjesto stvarnih koordinata, za lokaciju senzora postavljamo lokaciju relativnu naspram lokacije vozila. Na liniji \ref{lineref:lidar_callback_set} postaljamo metodu \mintinline{python}{lidar_callback()} kao metodu koju će simulator pozvati svaki puta kada senzor očita okolinu i pošalje podatke.
+Na liniji \ref{lineref:get_lidar_blueprint} primjera \ref{coderef:lidar_find_spawn} se dohvaća nacrt lidar senzora. Tada od linije \ref{lineref:lidar_prop_start} do \ref{lineref:lidar_prop_end} se postavljaju zadane postavke nad nacrtom. Konačno na liniji \ref{lineref:connect_lidar} se stvara instanca senzora ali se metodi predaje dodatan parametar \mintinline{python}{attach_to} koji je jednak referenci na naše vozilo. Također umjesto stvarnih koordinata, za lokaciju senzora se postavlja lokaciju relativnu naspram lokacije vozila. Na liniji \ref{lineref:lidar_callback_set} se postalja metoda \mintinline{python}{lidar_callback()} kao metodu koju će simulator pozvati svaki puta kada senzor očita okolinu i pošalje podatke.
 Spremanje podataka se izvršava tek nakon što smo sakupili konačan broj očitanja. Za spremanje podataka u datoteke se koristi posebna klasa \mintinline{python}{DataSaver} pokazana na primjeru \ref{coderef:data_saver}.
 
 \begin{listing}[h!]

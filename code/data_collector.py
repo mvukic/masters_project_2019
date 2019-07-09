@@ -43,10 +43,10 @@ class DataCollector:
   def start(self):
     self.connect_to_carla()
     self.get_spawn_points()
-    self.spawn_npcs()
+    # self.spawn_npcs()
     self.spawn_actor()
     # Add some timeout for observed actor to start driving
-    time.sleep(10)
+    time.sleep(2)
     self.connect_LIDAR()
     self.loop()
 
@@ -92,7 +92,7 @@ class DataCollector:
     print("Actor setup...")
     actor_blueprint = utils.get_vehicle_blueprint(self.world.get_blueprint_library())
     print(f"\t{actor_blueprint}")
-    self.actor = self.world.spawn_actor(actor_blueprint, self.spawn_points[30])
+    self.actor = self.world.spawn_actor(actor_blueprint, self.spawn_points[35])
     self.actor.set_autopilot()
     print("Actor setup done\n")
     self.tick()
@@ -136,7 +136,7 @@ class DataCollector:
   def reading_should_stop(self):
     # For n scans the number should be n+1 because first scan is unusable
     print(f"Scans: {len(self.scans)}/{self.scan_number}")
-    return len(self.scans) >= self.scan_number + 1
+    return len(self.scans) >= self.scan_number + 5
   
   def collect_data_to_disk(self):
     print("Collecting data...")
@@ -165,12 +165,17 @@ class DataCollector:
     while self.data_collection_in_progress:
       time.sleep(1)
 
+  def stop(self):
+    self.data_collection_in_progress = False
+    self.destroy()
+
   def tick(self):
     self.world.tick()
 
 if __name__ == '__main__':
+  dataCollector = DataCollector()
   try:
-    dataCollector = DataCollector()
     dataCollector.start()
   except KeyboardInterrupt:
+    dataCollector.stop()
     pass
