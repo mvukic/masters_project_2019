@@ -25,7 +25,10 @@
 \maketitle
 
 % Ispis stranice s napomenom o umetanju izvornika rada. Uklonite naredbu \izvornik ako želite izbaciti tu stranicu.
-\izvornik
+%\izvornik
+\begin{center}
+  \makebox[\textwidth]{\includegraphics[width=\paperwidth]{images/izvornik.png}}
+\end{center}
 
 % Dodavanje zahvale ili prazne stranice. Ako ne želite dodati zahvalu, naredbu ostavite radi prazne stranice.
 \zahvala{Zahvala mentoru Doc. Dr. Sc. Ivanu Markoviću za strpljenje i vodstvu}
@@ -61,15 +64,15 @@
 \bibliographystyle{fer}
 
 \begin{sazetak}
-Postoje razni algoritmi za lokalizaciju vozila pomoću senzorskih očitanja. S obzirom da ne postoji savršen algoritam rezultati odstupaju od stvarnih vrijednosti. Koristeći simulator sa referentnim podacima možemo jednostavno usporediti stvarne podatke s rezultatima algoritama. Evaluira se algoritam za itaraciju najbliže točke te se rezultati prikazuju u obliku grafova.
+Postoje razni algoritmi za lokalizaciju vozila pomoću senzorskih očitanja. S obzirom da ne postoji savršen algoritam rezultati odstupaju od stvarnih vrijednosti. Koristeći simulator sa referentnim podacima možemo jednostavno usporediti stvarne podatke s rezultatima algoritama. Evaluiraju se generalizirajući algoritam iteracije najbliže točke te također taj isti algoritam ali s prijašnjim filtriranjem podataka. Rezultati su prikazani grafovima razlika koordinata i rotacija na poskupovima referentnih podataka. Također su izračunate srednje pogreške i prikazane tablično zbog jednostavnije usporedbe. Predstavljen je specifičan način evaluaciju algoritama korištenjem simulatora, ali čiji se koraci mogu općenito primjeniti na druge izvore podataka i druge algoritme.
 
 \kljucnerijeci{simulacija; lokalizacija; iteracija najbližih točaka; Carla; evaluacija; PCL; oblak točaka}
 \end{sazetak}
-
+\pagebreak
 % TODO: Navedite naslov na engleskom jeziku.
 \engtitle{Autonomous vehicle localization in a simulated urban environment}
 \begin{abstract}
-There are various algorithms for vehicle localization using sensory readings. Since there is no perfect algorithm, the results deviate from the actual values. Using a simulator with reference data, we can easily compare actual data with the results of algorithms. An iterative closest point algorithm is evaluated and the results are displayed in the form of graphs.
+There are various vehicle location algorithms using sensory readings. Since there is no perfect algorithm the results deviate from the actual values. Using a simulator with reference data, we can easily compare actual data with algorithm results. Evaluated algorithms are generalized iterative closest point and previous algorithm but with the previous data filtering. The results are shown using graphs of the coordinate differences and rotation differences between estimated values and referent values. Mean errors were also calculated and displayed in the table. A specific way of evaluating algorithms using a simulator was presented but whose steps generally be applied to other data sources and other algorithms.
 
 \keywords{simulation; localization; iterative closest point; Carla; evaluation; PCL; point cloud}
 \end{abstract}
