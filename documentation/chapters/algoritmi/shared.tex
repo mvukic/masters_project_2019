@@ -1,6 +1,6 @@
-\section{Generičan kod i ulazni podaci}
+\section{Dijeljeni kod i ulazni podaci}
 
-Kod u nastavku je generičan tj. nema veze s samim algoritmom već služi za dohvat podataka i spremanje rezultata algoritma. Sastoji se od metoda za čitanje datoteka s informacijama o oblacima točaka i metoda za spremanje transformacijskih matrica u datoteke. 
+Kod u nastavku je zajednički za oba algoritma tj. nema veze s samim algoritmom već služi za dohvat podataka i spremanje rezultata algoritma. Sastoji se od metoda za čitanje datoteka s informacijama o oblacima točaka i metoda za spremanje transformacijskih matrica u datoteke. 
 
 \begin{listing}[h!]
   \begin{minted}[frame=lines, linenos]{text}
@@ -67,7 +67,7 @@ vector<path> get_files() {
   \label{coderef:gen_icp_collect_files}
 \end{listing}
 \pagebreak
-Kod u primjeru \ref{coderef:gen_icp_collect_files} koristi metode biblioteke Boost\cite{boost} za iteriranje datoteka sa skupovima točaka te vrača vektora s njihovim apsolutnim putanjama. Kod za stvaranje grafova je jednak bez obzira na korišteni algoritam. Grafovi su stvoreni pomoću jezika Kotlin i biblioteke XCharts. Podaci koji vizualiziraju su usporedbe stvarnih podataka tj. referentnih i podataka dobivenih pomoću algoritama. S obzirom da nam algoritmi kao izlaz daju samo transformacijske matrice, potrebno je nekako te matrice prikazati kao koordinate lokacija i kuteve rotacija.
+Kod u primjeru \ref{coderef:gen_icp_collect_files} koristi metode biblioteke Boost\cite{boost} za iteriranje datoteka sa skupovima točaka te vrača vektora s njihovim putanjama. Kod za stvaranje grafova je jednak bez obzira na korišteni algoritam. Grafovi su stvoreni pomoću jezika Kotlin i biblioteke XCharts. Podaci koji vizualiziraju su usporedbe stvarnih podataka tj. referentnih i podataka dobivenih pomoću algoritama. S obzirom da nam algoritmi kao izlaz daju samo transformacijske matrice, potrebno je nekako te matrice prikazati kao koordinate lokacija i kuteve rotacija.
 
 \begin{listing}[h!]
   \begin{minted}[frame=lines, linenos]{text}
@@ -75,9 +75,10 @@ fun calculatePointsExperimental(
  icp: List<TransformMatrix>,
  first: Transform
 ): List<Array<DoubleArray>> {
-   val transformations = mutableListOf(pointToMatrix(first))
+   val transformations = mutableListOf(pointToMat(first))
+   val last = transformations.last()
    icp.forEach { transform ->
-    val result = multiplySameSizeMat(transformations.last(), transform.matrix)
+    val result = mult(last, transform.matrix)
     transformations.add(result)
    }
   return transformations
@@ -88,19 +89,19 @@ fun calculatePointsExperimental(
 \end{listing}
 
 \begin{listing}[h!]
-  \begin{minted}[frame=lines, linenos]{text}
-fun pointToMatrix(first:  Transform): Array<DoubleArray> {
- val rotation = first.rotation
- val location = first.location
- val rx = rotation.toRx()
- val ry = rotation.toRy()
- val rz = rotation.toRz()
- val result = multiplySameSizeMat(rz, multiplySameSizeMat(ry, rx))
+  \begin{minted}[frame=lines, linenos, escapeinside=!!]{text}
+fun pointToMat(first:  Transform): Array<DoubleArray> {
+ val rot = first.rotation
+ val loc = first.location
+ val rx = rot.toRx()
+ val ry = rot.toRy()
+ val rz = rot.toRz()
+ val res = multi(rz, multi(ry, rx)) !\label{lineref:multiply_matrices_xyz}!
  return arrayOf(
-  doubleArrayOf(result[0][0], result[0][1], result[0][2], location.x),
-  doubleArrayOf(result[1][0], result[1][1], result[1][2], location.y),
-  doubleArrayOf(result[2][0], result[2][1], result[2][2], location.z),
-  doubleArrayOf(0.0, 0.0, 0.0, 1.0)
+  arrayOf(res[0][0], res[0][1], res[0][2], loc.x),
+  arrayOf(res[1][0], res[1][1], res[1][2], loc.y),
+  arrayOf(res[2][0], res[2][1], res[2][2], loc.z),
+  arrayOf(0.0, 0.0, 0.0, 1.0)
  )
 }
   \end{minted}
@@ -108,10 +109,10 @@ fun pointToMatrix(first:  Transform): Array<DoubleArray> {
   \label{kotlin:init_mat_method}
 \end{listing}
 
-Kod u primjeru \ref{kotlin:gen_est_loc} se vidi metoda za generiranje estimiranih točaka iz prve referentne točke i transformacijskih matrica. Kao argumente metoda prima listu transformacijskih matrica \mintinline{text}{icp} te transformaciju prve referentne točke. Algoritam radi tako da prvo izračuna transforamcijsku matricu iz prve referentne točke pomoću metode \ref{kotlin:init_mat_method}. Zapravo se rotacija iz Eulerovog oblika pretvara u zasebne rotacijske matrice te njih pomnoži redosljedom XYZ zbog redosljeda rotacija prilikom ICP estimacije transformacije oblaka točaka. Izgledi pojedinih matrica su prikazani u poglavlju Referentni podaci. Tada se vraća matricu veličine 4x4 koja se sastoji od rotacijske matrice i lokacija. Algoritam koristi prethodnu estimiranu transformacijsku matricu te trenutnu estimiranu transformacijsku matricu tako da iz pomnoži pravilima množenja matrica. Tada se dobije nova matrica koja zapravo predstavlja nove koordinate i nove rotacije naspram prethodne.
+Kod u primjeru \ref{kotlin:gen_est_loc} se vidi metoda za generiranje estimiranih točaka iz prve referentne točke i transformacijskih matrica. Kao argumente metoda prima listu transformacijskih matrica \mintinline{text}{icp} te transformaciju prve referentne točke. Algoritam radi tako da prvo izračuna transforamcijsku matricu iz prve referentne točke pomoću metode \ref{kotlin:init_mat_method}. Zapravo se rotacija iz Eulerovog oblika pretvara u zasebne rotacijske matrice te njih pomnoži redosljedom XYZ zbog redosljeda rotacija prilikom ICP estimacije transformacije oblaka točaka. Izgledi pojedinih matrica su prikazani u poglavlju Referentni podaci. Tada se vraća matricu veličine 4x4 koja se sastoji od rotacijske matrice i lokacija. Algoritam koristi prethodno estimiranu transformacijsku matricu te trenutnu estimiranu transformacijsku matricu tako da iz pomnoži pravilima množenja matrica. Tada se dobije nova matrica koja zapravo predstavlja nove koordinate i nove rotacije naspram prethodne. Na liniji \ref{lineref:multiply_matrices_xyz} primjera \ref{kotlin:gen_est_loc} se vidi kako se zapravo primjenjuje formula $R = R_{z}(\gamma)R_{y}(\beta)R_{x}(\alpha)$. Taj redosljed množenja matrica rotacija je vrlo bitan.
 
 Vizualizacije referentnih podataka za oba primjera kretanja vozila možemo vidjeti na sljedećim grafovima. Na njima svaka točka predstavlja jedno očitanje. Slika \ref{fig:gt1_lokacija} prikazuje graf lokacija vozila. Slika \ref{fig:gt1_lokacija_koord} pokazuje koordinate vozila u vremenu. Možemo vidjeti da se mijenjaju samo x i y koordinate zato što vozilo može samo skretati. Slika \ref{fig:gt1_rot_vr} prikazuje valjanje, poniranje i skretanje oko statičnih osi vozila u vremenu. Također se može uoćiti da se samo skretanje mijenja zato što se vozilo ne može valjati niti ponirati. Slika \ref{fig:gt1_rot_kv} također pokazuje rotaciju vozila u vremenu ali predstavljenu u obliku kvaterniona.
-
+\pagebreak
 \subsubsection{Primjer referentnih podataka A}
 Prvi kup podataka se sastoji od 300 očitanja tj. postoji 300 datoteka sa skupovima točaka. Duljina trajanja te simulacije je 200 sekundi. Parametri koji su korišteni u python skripti za postavljanje lidar senzora su sljedeći:
 \begin{enumerate}

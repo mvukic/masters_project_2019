@@ -13,7 +13,7 @@ import kotlin.math.absoluteValue
 fun main(args: Array<String>)  {
     // Read data from files
     val allGt = loadGroundTruth(args[0])
-    val groundTruth = allGt.copy(frames = allGt.frames)
+    val groundTruth = allGt.copy(frames = allGt.frames.take(11))
     val icpTransformations = loadICPResults(args[0])
 
     // Ground truth locations, rotations

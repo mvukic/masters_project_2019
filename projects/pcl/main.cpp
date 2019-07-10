@@ -133,21 +133,23 @@ void downsample_using_voxel_grid(PointCloudType::Ptr& cloud, float leafsize, Poi
 }
 
 void process_files_with_feature_detection(vector<path> paths, ICP icp) {
-	auto size = paths.size() - 1;
-	for (long i = 0; i < size; i++) {
+	auto end = paths.size() - 1;
+	auto start = 38;
+	for (long i = start; i < 65; i++) {
 		PointCloudType::Ptr cloud_ref(new PointCloudType());
 		PointCloudType::Ptr cloud_target(new PointCloudType());
 		PointCloudType::Ptr cloud_registered(new PointCloudType());
 		PointCloudType::Ptr cloud_ref_filtered(new PointCloudType());
 		PointCloudType::Ptr cloud_target_filtered(new PointCloudType());
+
 		load_point_cloud(paths.at(i).string(), *cloud_ref);
 		load_point_cloud(paths.at(i + 1).string(), *cloud_target);
 
 		string first = paths.at(i).stem().string();
 		string second = paths.at(i + 1).stem().string();
 
-		downsample_using_voxel_grid(cloud_ref, 10.0f, cloud_ref_filtered);
-		downsample_using_voxel_grid(cloud_target, 10.0f, cloud_target_filtered);
+		downsample_using_voxel_grid(cloud_ref, 1.0f, cloud_ref_filtered);
+		downsample_using_voxel_grid(cloud_target, 1.0f, cloud_target_filtered);
 
 		icp.setInputCloud(cloud_ref_filtered);
 		icp.setInputTarget(cloud_target_filtered);
@@ -163,7 +165,7 @@ void process_files_with_feature_detection(vector<path> paths, ICP icp) {
 int main(int argc, char** argv) {
 	vector<path> paths = get_files();
 	ICP icp = setupICP();
-	process_files_genralized(paths, icp);
-	//process_files_with_feature_detection(paths, icp);
+	//process_files_genralized(paths, icp);
+	process_files_with_feature_detection(paths, icp);
 	return 0;
 }

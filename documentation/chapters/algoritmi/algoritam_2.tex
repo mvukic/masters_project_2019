@@ -1,4 +1,4 @@
-\section{ICP algoritam s grupacijom točaka}
+\section{ICP algoritam s grupiranjem točaka}
 
 \subsubsection{Opis algoritma}
 Koristi se metoda iteracije najbližih točaka s grupiranjem točaka\cite{pcl:voxelgrid}. Radi tako da se cijeli oblak točaka podijeli na kocke zadane veličine te se tada unutar te kocke filtriraju točke na temelju njihove centroide\cite{wiki:Centroid}. U jednome od očitanja iz primjera A se broj točaka s 35222 smanjio na 1548 što značajno ubrzava ICP algoritam. Ovaj algoritam zapravo aproksimira skup točaka samo jednom točkom. U primjeru \ref{coderef:voxel_grouping} se vidi da je parametar visine, širine i duljine kocke uvijek jednak i iznosi 1 centimetar što znači da će se oblak točaka podijeliti na kocke veličine 1 centimetar. Performanse toga algoritma kao i točnost reprezentacije originalnog oblaka ovise o tom parametru kao i gustoći točaka.

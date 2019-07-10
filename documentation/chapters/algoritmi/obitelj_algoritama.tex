@@ -18,10 +18,10 @@ Ulazi algoritma su referentni i ciljni skupovi točaka, kriterij zaustavljanja i
 \end{equation}
 
 Matrica se zapravo sastoji od rotacijske matrice veličine 3x3 koja se sastoji od elemenata $r_{11}$ do $r_{33}$, te od translacijske matrice koja se sastoji od elemenata $t_{x}$, $t_{y}$ i $t_{z}$. 
+\pagebreak
 
 \subsubsection{Pseudokod ICP algoritma}
-
-\begin{algorithm}[h!]
+\begin{algorithm}[H]
 \SetAlgoLined
 \KwResult{Transformacijska matrica}
  priprema skupa točaka P i Q\;
@@ -30,10 +30,7 @@ Matrica se zapravo sastoji od rotacijske matrice veličine 3x3 koja se sastoji o
   estimiraj transformacijsku matricu $R$ minimizirajući $\min_{R, t} \sum_{i}^{}||p_{i} - Rq_{i} - t||^2$\;
  }
 \end{algorithm}
-
-Ukratko ovaj algoritam prolazi kroz svaku točku ciljnoga skupa ili podskupa točaka te traži najbližu točku u referentnome skupu. Tada estimira kombinaciju rotacije i translacije ta bi poravnao te dvije točke tako što računa srednju vrijednost kvadrata razlike koordinata točaka. Algoritam tada to izvodi za ostale točke te se zaustavlja kada dosegne uvjet zaustavljanja. Taj uvjet može biti postavljen kao broj iteracija ili kao minimalna dopuštena vrijednost pogreške.
-
-Ovaj algoritam se može optimizirati na razne načine. Moguće je prvo detektirati posebne podskupove točaka unutar oblaka te eliminirati ostale točke. Također se mogu filtrirati točke koje nisu od interesa. Tako se smanjuje količina točaka koje treba usporediti.
+Ukratko ovaj algoritam prolazi kroz svaku točku ciljnoga skupa ili podskupa točaka te traži najbližu točku u referentnome skupu. Tada estimira kombinaciju rotacije i translacije ta bi poravnao te dvije točke tako što računa srednju vrijednost kvadrata razlike koordinata točaka. Algoritam tada to izvodi za ostale točke te se zaustavlja kada dosegne uvjet zaustavljanja. Taj uvjet može biti postavljen kao broj iteracija ili kao minimalna dopuštena vrijednost pogreške. Ovaj algoritam se može optimizirati na razne načine. Moguće je prvo detektirati posebne podskupove točaka unutar oblaka te eliminirati ostale točke. Također se mogu filtrirati točke koje nisu od interesa. Tako se smanjuje količina točaka koje treba usporediti.
 
 Neke od tih metoda filtriranja su:
 \begin{enumerate}
