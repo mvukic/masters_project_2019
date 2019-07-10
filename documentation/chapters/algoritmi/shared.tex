@@ -114,7 +114,7 @@ Kod u primjeru \ref{kotlin:gen_est_loc} se vidi metoda za generiranje estimirani
 Vizualizacije referentnih podataka za oba primjera kretanja vozila možemo vidjeti na sljedećim grafovima. Na njima svaka točka predstavlja jedno očitanje. Slika \ref{fig:gt1_lokacija} prikazuje graf lokacija vozila. Slika \ref{fig:gt1_lokacija_koord} pokazuje koordinate vozila u vremenu. Možemo vidjeti da se mijenjaju samo x i y koordinate zato što vozilo može samo skretati. Slika \ref{fig:gt1_rot_vr} prikazuje valjanje, poniranje i skretanje oko statičnih osi vozila u vremenu. Također se može uoćiti da se samo skretanje mijenja zato što se vozilo ne može valjati niti ponirati. Slika \ref{fig:gt1_rot_kv} također pokazuje rotaciju vozila u vremenu ali predstavljenu u obliku kvaterniona.
 \pagebreak
 \subsubsection{Primjer referentnih podataka A}
-Prvi kup podataka se sastoji od 300 očitanja tj. postoji 300 datoteka sa skupovima točaka. Duljina trajanja te simulacije je 200 sekundi. Parametri koji su korišteni u python skripti za postavljanje lidar senzora su sljedeći:
+Prvi skup podataka se sastoji od 300 očitanja tj. postoji 300 datoteka sa skupovima točaka. Duljina trajanja te simulacije je 200 sekundi. Parametri koji su korišteni u python skripti za postavljanje lidar senzora su sljedeći:
 \begin{enumerate}
   \item Maksimalna udaljenost laserske zrake je postavljena na 1500 cm tj. 15 metara
   \item Maksimalan skup točaka u jednome očitanju je postavljen na 600 000.
@@ -142,7 +142,7 @@ Prvi kup podataka se sastoji od 300 očitanja tj. postoji 300 datoteka sa skupov
 
 \newpage
 \subsubsection{Primjer referentnih podataka B}
-Drugi skup podataka se sastoji od 600 očitanja tj. postoji 300 datoteka sa skupovima točaka. Duljina trajanja te simulacije je 80 sekundi. Parametri koji su korišteni u python skripti za postavljanje lidar senzora su sljedeći:
+Drugi skup podataka se sastoji od 600 očitanja tj. postoji 600 datoteka sa skupovima točaka. Duljina trajanja te simulacije je 80 sekundi. Parametri koji su korišteni u python skripti za postavljanje lidar senzora su sljedeći:
 \begin{enumerate}
   \item Maksimalna udaljenost laserske zrake je postavljena na 2000 cm tj. 20 metara
   \item Maksimalan skup točaka u jednome očitanju je postavljen na 1 000 000.
@@ -167,7 +167,7 @@ Drugi skup podataka se sastoji od 600 očitanja tj. postoji 300 datoteka sa skup
   \caption{Rotacija vozila u obliku kvaterniona}
   \label{fig:gt2_rot_kv}
 \end{figure}
-Prvi niz skupova točaka se skupljao u dužem periodu ali ima samo 300 skupova zato što se koristi svako 15 očitanje. Drugi niz skupova točaka ima 600 očitanja zato što se uzima svako očitanje. Također je drgi skup detaljniji od prvoga što pridonosi točnosti algoritama. Duljinu puta možemo izračunati tako da pronađemo udaljenosti između dvije sljedne točke te ih zbrojimo. Tako dobivena udaljenost za referentni primjer A iznosi 662.3 metra, a za referentni primjer B iznosi 448.2 metra.
+Prvi niz skupova točaka se skupljao u dužem periodu ali ima samo 300 skupova zato što se koristi svako 15 očitanje. Drugi niz skupova točaka ima 600 očitanja zato što se uzima svako očitanje. Također je drugi skup detaljniji od prvoga što pridonosi točnosti algoritama. Duljinu puta možemo izračunati tako da pronađemo udaljenosti između dvije sljedne točke te ih zbrojimo. Tako dobivena udaljenost za referentni primjer A iznosi 662.3 metra, a za referentni primjer B iznosi 448.2 metra.
 
 \begin{listing}[H]
   \begin{minted}[frame=lines, linenos]{text}
